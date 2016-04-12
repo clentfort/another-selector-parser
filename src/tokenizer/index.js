@@ -56,7 +56,7 @@ export class Tokenizer {
         ++this.position; return { type: tt.bracketR };
       case 58: // ":"
         ++this.position; return { type: tt.colon };
-      case 44: //,
+      case 44: // ,
         ++this.position; return { type: tt.comma };
       case 46: // "."
         ++this.position; return { type: tt.dot };
@@ -94,6 +94,9 @@ export class Tokenizer {
       case 34: // '"'
       case 39: // "'"
         return this._readString(charCode);
+      case 48: case 49: case 50: case 51: case 52: // 0 - 4
+      case 53: case 54: case 55: case 56: case 57: // 5 - 9 
+        return this._readNumber();
     }
     throw new UnexpectedCharacterError(
       codePointToString(charCode), 
@@ -113,6 +116,34 @@ export class Tokenizer {
       this.position, 
       codePointToString(61), // '="
     );
+  }
+
+  _readNumber(): Token {
+    let value = '';
+    let divisor = 10;
+    let isFloat = false;
+    while (true) {
+      let charCode = this.input.charCodeAt(this.position);
+      let char = this.input[this.position++];
+      if (charCode >= 48 && charCode <= 57) {
+        value += char;
+      } else if (charCode === 46) { // "."
+        if (isFloat) {
+          throw new UnexpectedCharacterError(
+            codePointToString(charCode),
+            this.position,
+          );
+        }
+        value += char;
+        isFloat = true;
+      } else {
+        break;
+      }
+    }
+    return { 
+      type: tt.num, 
+      value: isFloat ? parseFloat(value) : parseInt(value),
+    };
   }
 
   _readString(quote: number): Token {

@@ -50,7 +50,7 @@ describe('tokenize', () => {
     });
 
     // Test for unfinished attribute matcher
-    it('throws on incompleted attribute matchers', () => {
+    it('throws on incomplete attribute matchers', () => {
       expect(() => tokenize('$').next()).toThrow();
     });
 
@@ -153,6 +153,28 @@ describe('tokenize', () => {
       expect(() => tokenize(`"\\\f"`).next()).toThrow();
       expect(() => tokenize(`"\\\r"`).next()).toThrow();
       expect(() => tokenize(`"\\\n"`).next()).toThrow();
+    });
+  });
+
+  describe('numbers', () => {
+    it('parses integers', () => {
+      expect(tokenize('123456789').next().value).toEqual({
+        type: tt.num,
+        value: 123456789,
+      });
+    });
+
+    it('parses floats', () => {
+      expect(tokenize('0.2').next().value).toEqual({
+        type: tt.num,
+        value: 0.2,
+      });
+    });
+
+    it('throws on incorrectly formatted numbers', () => {
+      expect(() => tokenize('0..').next()).toThrow();
+      expect(() => tokenize('0.0.').next()).toThrow();
+      expect(() => tokenize('0.0.0').next()).toThrow();
     });
   });
 });
