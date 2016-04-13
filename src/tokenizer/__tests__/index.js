@@ -26,14 +26,14 @@ describe('tokenize', () => {
       ':': { type: tt.colon },
       ',': { type: tt.comma },
       ".": { type: tt.dot },
-      '>': { type: tt.greater },
       '(': { type: tt.parenL },
       ')': { type: tt.parenR },
       '%': { type: tt.percentage },
       '|': { type: tt.pipe },
       '+': { type: tt.plus },
       '*': { type: tt.star },
-      '~': { type: tt.tilde },
+      '>': { type: tt.combinator, value: '>' },
+      '~': { type: tt.combinator, value: '~' },
       '=': { type: tt.attrMatcher, value: '=' },
       '$=': { type: tt.attrMatcher, value: '$=' },
       '*=': { type: tt.attrMatcher, value: '*=' },
@@ -54,21 +54,21 @@ describe('tokenize', () => {
     });
 
     it('throws on unknown tokens', () => {
-      expect(() => tokenize('!').next()).toThrow();
+      expect(() => tokenize('-').next()).toThrow();
     });
   });
 
   describe('ids', () => {
-    it('parses IDs', () => {
+    it('parses hashs', () => {
       expect(tokenize('#someid').next().value).toEqual({
-        type: tt.id,
+        type: tt.hash,
         value: 'someid',
       });
     });
 
-    it('parses IDs with escaped tokens', () => {
+    it('parses hashs with escaped tokens', () => {
       expect(tokenize('#\\41-').next().value).toEqual({
-        type: tt.id,
+        type: tt.hash,
         value: `${String.fromCodePoint(0x41)}-`,
       });
     });
@@ -196,12 +196,6 @@ describe('tokenize', () => {
         value: `${String.fromCodePoint(0x49)} X`,
       });
     });
-
-    it('throws on escaped line-breaks', () => {
-      expect(() => tokenize(`"\\\f"`).next()).toThrow();
-      expect(() => tokenize(`"\\\r"`).next()).toThrow();
-      expect(() => tokenize(`"\\\n"`).next()).toThrow();
-    });
   });
 
   describe('numbers', () => {
@@ -212,17 +206,95 @@ describe('tokenize', () => {
       });
     });
 
-    it('parses floats', () => {
-      expect(tokenize('0.2').next().value).toEqual({
+    it('parses negative integers', () => {
+      expect(tokenize('-10').next().value).toEqual({
         type: tt.num,
-        value: 0.2,
+        value: -10,
       });
     });
 
-    it('throws on incorrectly formatted numbers', () => {
-      expect(() => tokenize('0..').next()).toThrow();
-      expect(() => tokenize('0.0.').next()).toThrow();
-      expect(() => tokenize('0.0.0').next()).toThrow();
+    it('parses floats', () => {
+      expect(tokenize('1.0').next().value).toEqual({
+        type: tt.num,
+        value: 1.0,
+      });
+
+      expect(tokenize('+1.0').next().value).toEqual({
+        type: tt.num,
+        value: 1.0,
+      });
+
+      expect(tokenize('.1').next().value).toEqual({
+        type: tt.num,
+        value: .1,
+      });
+
+      expect(tokenize('+.1').next().value).toEqual({
+        type: tt.num,
+        value: .1,
+      });
+
+      expect(tokenize('1e10').next().value).toEqual({
+        type: tt.num,
+        value: 1e10,
+      });
+
+      expect(tokenize('1e+10').next().value).toEqual({
+        type: tt.num,
+        value: 1e+10,
+      });
+      
+      expect(tokenize('1e-10').next().value).toEqual({
+        type: tt.num,
+        value: 1e-10,
+      });
+
+      expect(tokenize('1E10').next().value).toEqual({
+        type: tt.num,
+        value: 1E10,
+      });
+
+      expect(tokenize('1.5e10').next().value).toEqual({
+        type: tt.num,
+        value: 1.5e10,
+      });
+
+      expect(tokenize('1.5e+10').next().value).toEqual({
+        type: tt.num,
+        value: 1.5e+10,
+      });
+      
+      expect(tokenize('1.5e-10').next().value).toEqual({
+        type: tt.num,
+        value: 1.5e-10,
+      });
+    });
+
+    it('parses negative floats', () => {
+      expect(tokenize('-1.0').next().value).toEqual({
+        type: tt.num,
+        value: -1.0,
+      });
+
+      expect(tokenize('-.1').next().value).toEqual({
+        type: tt.num,
+        value: -.1,
+      });
+
+      expect(tokenize('-.1e1').next().value).toEqual({
+        type: tt.num,
+        value: -.1e1,
+      });
+
+      expect(tokenize('-.1e+1').next().value).toEqual({
+        type: tt.num,
+        value: -.1e+1,
+      });
+
+      expect(tokenize('-.1e-1').next().value).toEqual({
+        type: tt.num,
+        value: -.1e-1,
+      });
     });
   });
 });

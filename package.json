@@ -34,7 +34,6 @@
     "babel-preset-stage-0": "^6.5.0",
     "eslint": "^2.7.0",
     "eslint-config-airbnb": "^7.0.0",
-    "eslint-plugin-flowtype": "^2.2.6",
     "jest-cli": "^11.0.0"
   },
   "jest": {

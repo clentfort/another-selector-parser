@@ -1,14 +1,16 @@
 /* @flow */
 import codePointToString from './util/codePointToString';
-import isNewLine from './util/isNewLine';
+import isDigit from './util/isDigit';
 import isHexDigit from './util/isHexDigit';
+import isNewLine from './util/isNewLine';
 import isWhitespace from './util/isWhitespace';
-import { 
-  EmptyIdTokenError, 
-  UnexpectedCharacterError, 
-  UnexpectedEofError, 
+import {
+  EmptyHashTokenError,
+  InvalidNumberError,
+  UnexpectedCharacterError,
+  UnexpectedEofError,
   UnterminatedCommentError,
-  UnterminatedStringError, 
+  UnterminatedStringError,
 } from './util/Errors';
 
 import { types as tt } from './types';
@@ -32,7 +34,7 @@ export class Tokenizer {
     while (this.position < this.input.length) {
       // @TODO: Use something similar to [fullCharCodeAtPos]
       // (https://github.com/babel/babylon/blob/master/src/tokenizer/index.js#L149-L155)
-      let charCode = this.input.charCodeAt(this.position);
+      const charCode = this.input.charCodeAt(this.position);
       if (charCode === 47) { // "/"
         this._skipComment();
       } else {
@@ -40,6 +42,18 @@ export class Tokenizer {
       }
     }
     yield { type: tt.eof };
+  }
+
+  _consumeDigits(): number {
+    const start = this.position;
+    while (this.position < this.input.length) {
+      if (isDigit(this.input.charCodeAt(this.position))) {
+        ++this.position;
+      } else {
+        break;
+      }
+    }
+    return this.position - start;
   }
 
   _getCharCodeOrThrowEof(): number {
@@ -57,22 +71,16 @@ export class Tokenizer {
         ++this.position; return { type: tt.bracketR };
       case 58: /* ":" */
         ++this.position; return { type: tt.colon };
-      case 44: /* , */
+      case 44: /* "," */
         ++this.position; return { type: tt.comma };
-      case 46: /* "." */
-        ++this.position; return { type: tt.dot };
-      case 45: /* "-" */
-        ++this.position; return { type: tt.minus };
       case 40: /* "(" */
         ++this.position; return { type: tt.parenL };
       case 41: /* ")" */
         ++this.position; return { type: tt.parenR };
       case 37: /* "%" */
         ++this.position; return { type: tt.percentage };
-      case 43: /* "+" */
-        ++this.position; return { type: tt.plus };
       case 62: /* ">" */
-        ++this.position; return { type: tt.greater };
+        ++this.position; return { type: tt.combinator, value: '>' };
       case 61: /* "=" */
         ++this.position; return { type: tt.attrMatcher, value: '=' };
       case 42: /* "*" */
@@ -85,7 +93,11 @@ export class Tokenizer {
       case 126: /* "~" */
         return this._readTilde();
       case 35:
-        return this._readId();
+        return this._readHash();
+      case 43: /* "+" */
+      case 45: /* "-" */
+      case 46: /* "." */
+        return this._readPlusMinusDot(charCode);
       case 9: /* "\t" (Tab) */
       case 10: /* "\n" (Line break) */
       case 12: /* "\f" (Form feed) */
@@ -98,11 +110,12 @@ export class Tokenizer {
       case 48: case 49: case 50: case 51: case 52: /* 0 - 4 */
       case 53: case 54: case 55: case 56: case 57: /* 5 - 9  */
         return this._readNumber();
+      default:
+        throw new UnexpectedCharacterError(
+          codePointToString(charCode),
+          this.position,
+        );
     }
-    throw new UnexpectedCharacterError(
-      codePointToString(charCode), 
-      this.position,
-    );
   }
 
   _readAttrMatcher(): Token {
@@ -113,22 +126,22 @@ export class Tokenizer {
       return { type: tt.attrMatcher, value: `${type}=` };
     }
     throw new UnexpectedCharacterError(
-      codePointToString(charCode), 
-      this.position, 
+      codePointToString(charCode),
+      this.position,
       codePointToString(61), // '="
     );
   }
 
-  _readId(): Token {
+  _readHash(): Token {
     let value = '';
     let chunkStart = ++this.position;
     while (this.position < this.input.length) {
       const charCode = this.input.charCodeAt(this.position);
       /* See https://www.w3.org/TR/CSS21/syndata.html#value-def-identifier) */
       if (
-        (charCode === 45) /* "-" */ || 
-        (charCode === 95) /* "_" */ || 
-        (charCode >= 48 && charCode <= 57) /* 0 - 9 */ ||
+        (charCode === 45) /* "-" */ ||
+        (charCode === 95) /* "_" */ ||
+        (isDigit(charCode)) /* 0 - 9 */ ||
         (charCode >= 65 && charCode <= 90) /* A - Z */ ||
         (charCode >= 97 && charCode <= 122) /* a - z */ ||
         (charCode >= 0x00A0 && charCode <= 0x10FFFF)
@@ -144,42 +157,82 @@ export class Tokenizer {
     }
     value += this.input.slice(chunkStart, this.position++);
     if (value.length === 0) {
-      throw new EmptyIdTokenError(this.position);
+      throw new EmptyHashTokenError(this.position);
     }
-    return { type: tt.id, value };
+    return { type: tt.hash, value };
   }
 
   _readNumber(): Token {
-    let value = '';
+    const start = this.position;
     let isFloat = false;
-    while (true) {
-      let charCode = this.input.charCodeAt(this.position);
-      let char = this.input[this.position++];
-      if (charCode >= 48 && charCode <= 57) {
-        value += char;
-      } else if (charCode === 46) { // "."
-        if (isFloat) {
-          throw new UnexpectedCharacterError(
-            codePointToString(charCode),
-            this.position,
-          );
-        }
-        value += char;
-        isFloat = true;
-      } else {
-        break;
-      }
+    let charCode = this.input.charCodeAt(this.position);
+
+    if (charCode === 43 || charCode === 45) { /* "+", "-" */
+      ++this.position;
     }
-    return { 
-      type: tt.num, 
-      value: isFloat ? parseFloat(value) : parseInt(value),
+    if (charCode === 46) { /* "." */
+      ++this.position;
+      isFloat = true;
+    }
+
+    this._consumeDigits();
+    charCode = this.input.charCodeAt(this.position);
+
+    if (charCode === 46) { /* "." */
+      // If isFloat is true we already saw a "."
+      if (isFloat) {
+        throw new InvalidNumberError(start);
+      }
+
+      ++this.position;
+      isFloat = true;
+      this._consumeDigits();
+      charCode = this.input.charCodeAt(this.position);
+    }
+
+    if (charCode === 69 || charCode === 101) { /* "E", "e" */
+      charCode = this.input.charCodeAt(++this.position);
+      if (charCode === 43 || charCode === 45) { /* "+", "-" */
+        ++this.position;
+      }
+      if (this._consumeDigits() === 0) {
+        throw new InvalidNumberError(start);
+      }
+      isFloat = true;
+    }
+
+    const value = this.input.slice(start, this.position);
+    return {
+      type: tt.num,
+      value: isFloat ? parseFloat(value) : parseInt(value, 10),
+    };
+  }
+
+  _readPlusMinusDot(charCode: number): Token {
+    const nextCharCode = this.input.charCodeAt(this.position + 1);
+    if (isDigit(nextCharCode) || nextCharCode === 46) { /* "." */
+      return this._readNumber();
+    }
+    if (charCode === 45) { /* "-" */
+      throw new UnexpectedCharacterError('-', this.position);
+    }
+
+    ++this.position;
+    if (charCode === 43) {
+      return {
+        type: tt.plus,
+      };
+    }
+
+    return {
+      type: tt.dot,
     };
   }
 
   _readString(quote: number): Token {
     let value = '';
     let chunkStart = ++this.position;
-    while (true) {
+    for (;;) {
       if (this.position >= this.input.length) {
         throw new UnterminatedStringError(this.position);
       }
@@ -199,48 +252,49 @@ export class Tokenizer {
       }
     }
     value += this.input.slice(chunkStart, this.position++);
-    return { type: tt.string, value }; 
+    return { type: tt.string, value };
   }
 
   _readEscapedChar(): string {
-    let charCode = this.input.charCodeAt(++this.position);
+    const charCode = this.input.charCodeAt(++this.position);
     switch (charCode) {
       case 48: case 49: case 50: case 51: case 52: // 0 - 4
       case 53: case 54: case 55: case 56: case 57: // 5 - 9
       case 65: case 66: case 67: case 68: case 69: case 70: // A - F
       case 97: case 98: case 99: case 100: case 101: case 102: // a - f
         return codePointToString(this._readHexChar());
-      case 110: ++this.position; return "\n";
-      case 114: ++this.position; return "\r";
-      case 116: ++this.position; return "\t";
+      case 110: ++this.position; return '\n';
+      case 114: ++this.position; return '\r';
+      case 116: ++this.position; return '\t';
       /**
        * Copied from [Babylon](https://github.com/babel/babylon/blob/master/src/tokenizer/index.js#L676)
        * If they do it, it must be right, right?
        */
-      case 118: ++this.position; return "\u000b";
-      case 10: case 12: case 13:
-        throw new UnexpectedCharacterError(
-          codePointToString(charCode), 
-          this.position,
-        );
+      case 118: ++this.position; return '\u000b';
       default: ++this.position; return String.fromCharCode(charCode);
     }
   }
 
   _readHexChar(): number {
-    let chunk = this.input[this.position++];
-    for (let i = 0; i < 5; ++i) {
-      const charCode = this.input.charCodeAt(this.position);
-      if (isHexDigit(charCode)) {
-        chunk += this.input[this.position++];
+    const chunkStart = this.position;
+    for (let i = 0; i < 6; ++i) {
+      if (isHexDigit(this.input.charCodeAt(this.position))) {
+        ++this.position;
       } else {
         break;
       }
     }
 
-    // Consume a single whitespace if it directly follows the escape sequence
-    if (isWhitespace(this.input.charCodeAt(this.position))) {
+    const chunk = this.input.slice(chunkStart, this.position);
+    // Consume a single whitespace or a "\r\n" if it directly follows the escape
+    // sequence
+    const charCode = this.input.charCodeAt(this.position);
+    if (isWhitespace(charCode)) {
       ++this.position;
+      // Consumed "\r", check if we can consume "\n"
+      if (charCode === 13 && this.input.charCodeAt(this.position) === 10) {
+        ++this.position;
+      }
     }
     return parseInt(chunk, 16);
   }
@@ -251,7 +305,7 @@ export class Tokenizer {
       ++this.position;
       return { type: tt.attrMatcher, value: '~=' };
     }
-    return { type: tt.tilde };
+    return { type: tt.combinator, value: '~' };
   }
 
   _readTokenOrAttrMatcher(token: Token): Token {
@@ -269,7 +323,7 @@ export class Tokenizer {
    */
   _readWhitespace(): Token {
     while (++this.position < this.input.length) {
-      let charCode = this.input.charCodeAt(this.position);
+      const charCode = this.input.charCodeAt(this.position);
       if (isWhitespace(charCode)) {
         ++this.position;
       } else if (charCode === 47) { // "/"
@@ -286,8 +340,8 @@ export class Tokenizer {
     const charCode = this._getCharCodeOrThrowEof();
     if (charCode !== 42) {
       throw new UnexpectedCharacterError(
-        codePointToString(charCode), 
-        this.position, 
+        codePointToString(charCode),
+        this.position,
         codePointToString(42), // "*"
       );
     }

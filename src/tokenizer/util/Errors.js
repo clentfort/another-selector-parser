@@ -1,8 +1,14 @@
 /* @flow */
 
-export class EmptyIdTokenError extends Error {
+export class EmptyHashTokenError extends Error {
   constructor(position: number) {
     super(`Empty Id token at position ${position}.`);
+  }
+}
+
+export class InvalidNumberError extends Error {
+  constructor(position: number) {
+    super(`Invalid number starting at position ${position}.`);
   }
 }
 

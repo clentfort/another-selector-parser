@@ -2,11 +2,9 @@
   "extends": "airbnb/base",
   "parser": "babel-eslint",
   "plugins": [
-    "flowtype"
   ],
   "rules": {
     "no-param-reassign": ["error", { "props": false }],
-    "no-use-before-define": "off",
-    "flowtype/space-before-type-colon": ["warn", "never"],
+    "no-use-before-define": "off"
   }
 }
