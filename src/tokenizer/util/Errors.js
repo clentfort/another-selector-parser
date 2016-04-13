@@ -1,5 +1,11 @@
 /* @flow */
 
+export class EmptyIdTokenError extends Error {
+  constructor(position: number) {
+    super(`Empty Id token at position ${position}.`);
+  }
+}
+
 export class UnexpectedCharacterError extends Error {
   constructor(actual: string, position: number, expected: ?string) {
     if (!!expected) {

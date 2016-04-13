@@ -18,7 +18,7 @@ describe('tokenize', () => {
     });
   });
 
-  describe('tokens', () => {
+  describe('simple tokens', () => {
     // Map of tokens to expected Token-Object
     const tokens = {
       '[': { type: tt.bracketL },
@@ -26,15 +26,14 @@ describe('tokenize', () => {
       ':': { type: tt.colon },
       ',': { type: tt.comma },
       ".": { type: tt.dot },
-      '#': { type: tt.hash },
+      '>': { type: tt.greater },
       '(': { type: tt.parenL },
       ')': { type: tt.parenR },
       '%': { type: tt.percentage },
       '|': { type: tt.pipe },
-      '*': { type: tt.star },
       '+': { type: tt.plus },
-      '>': { type: tt.combinator, value: '>' },
-      '~': { type: tt.combinator, value: '~' },
+      '*': { type: tt.star },
+      '~': { type: tt.tilde },
       '=': { type: tt.attrMatcher, value: '=' },
       '$=': { type: tt.attrMatcher, value: '$=' },
       '*=': { type: tt.attrMatcher, value: '*=' },
@@ -56,6 +55,22 @@ describe('tokenize', () => {
 
     it('throws on unknown tokens', () => {
       expect(() => tokenize('!').next()).toThrow();
+    });
+  });
+
+  describe('ids', () => {
+    it('parses IDs', () => {
+      expect(tokenize('#someid').next().value).toEqual({
+        type: tt.id,
+        value: 'someid',
+      });
+    });
+
+    it('parses IDs with escaped tokens', () => {
+      expect(tokenize('#\\41-').next().value).toEqual({
+        type: tt.id,
+        value: `${String.fromCodePoint(0x41)}-`,
+      });
     });
   });
 
@@ -115,37 +130,70 @@ describe('tokenize', () => {
     it('reads escaped hex-codes', () => {
       expect(tokenize(`"\\1"`).next().value).toEqual({
         type: tt.string,
-        value: String.fromCharCode(0x1),
+        value: String.fromCodePoint(0x1),
+      });
+
+      // Stops on first non hex-digit
+      expect(tokenize(`"\\1X"`).next().value).toEqual({
+        type: tt.string,
+        value: `${String.fromCodePoint(0x1)}X`,
       });
 
       expect(tokenize(`"\\01"`).next().value).toEqual({
         type: tt.string,
-        value: String.fromCharCode(0x01),
+        value: String.fromCodePoint(0x01),
       });
 
       expect(tokenize(`"\\001"`).next().value).toEqual({
         type: tt.string,
-        value: String.fromCharCode(0x001),
+        value: String.fromCodePoint(0x001),
       });
 
       expect(tokenize(`"\\0001"`).next().value).toEqual({
         type: tt.string,
-        value: String.fromCharCode(0x0001),
+        value: String.fromCodePoint(0x0001),
       });
 
       expect(tokenize(`"\\00001"`).next().value).toEqual({
         type: tt.string,
-        value: String.fromCharCode(0x00001),
+        value: String.fromCodePoint(0x00001),
       });
 
       expect(tokenize(`"\\000001"`).next().value).toEqual({
         type: tt.string,
-        value: String.fromCharCode(0x000001),
+        value: String.fromCodePoint(0x000001),
       });
 
+      // Max 6 Hex digits
       expect(tokenize(`"\\000001A"`).next().value).toEqual({
         type: tt.string,
-        value: `${String.fromCharCode(0x000001)}A`,
+        value: `${String.fromCodePoint(0x000001)}A`,
+      });
+    });
+
+    it('eats a single whitespace following a hex-escape sequence', () => {
+      let tokenizer = tokenize('"\\49 "');
+      expect(tokenizer.next().value).toEqual({ 
+        type: tt.string,
+        value: String.fromCodePoint(0x49),
+      });
+
+      tokenizer = tokenize('"\\49 X"');
+      expect(tokenizer.next().value).toEqual({ 
+        type: tt.string,
+        value: `${String.fromCodePoint(0x49)}X`,
+      });
+
+      tokenizer = tokenize('"\\49  "');
+      expect(tokenizer.next().value).toEqual({
+        type: tt.string,
+        value: `${String.fromCodePoint(0x49)} `,
+      });
+
+      tokenizer = tokenize('"\\49  X"');
+      expect(tokenizer.next().value).toEqual({
+        type: tt.string,
+        value: `${String.fromCodePoint(0x49)} X`,
       });
     });
 
