@@ -26,6 +26,7 @@ describe('tokenize', () => {
       ':': { type: tt.colon },
       ',': { type: tt.comma },
       ".": { type: tt.dot },
+      '#': { type: tt.hash },
       '(': { type: tt.parenL },
       ')': { type: tt.parenR },
       '%': { type: tt.percentage },
@@ -59,16 +60,16 @@ describe('tokenize', () => {
   });
 
   describe('ids', () => {
-    it('parses hashs', () => {
-      expect(tokenize('#someid').next().value).toEqual({
-        type: tt.hash,
+    it('parses idents', () => {
+      expect(tokenize('someid').next().value).toEqual({
+        type: tt.ident,
         value: 'someid',
       });
     });
 
-    it('parses hashs with escaped tokens', () => {
-      expect(tokenize('#\\41-').next().value).toEqual({
-        type: tt.hash,
+    it('parses idents with escaped tokens', () => {
+      expect(tokenize('\\41-').next().value).toEqual({
+        type: tt.ident,
         value: `${String.fromCodePoint(0x41)}-`,
       });
     });

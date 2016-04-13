@@ -5,7 +5,6 @@ import isHexDigit from './util/isHexDigit';
 import isNewLine from './util/isNewLine';
 import isWhitespace from './util/isWhitespace';
 import {
-  EmptyHashTokenError,
   InvalidNumberError,
   UnexpectedCharacterError,
   UnexpectedEofError,
@@ -45,7 +44,7 @@ export class Tokenizer {
   }
 
   _consumeDigits(): number {
-    const start = this.position;
+    const chunkStart = this.position;
     while (this.position < this.input.length) {
       if (isDigit(this.input.charCodeAt(this.position))) {
         ++this.position;
@@ -53,7 +52,7 @@ export class Tokenizer {
         break;
       }
     }
-    return this.position - start;
+    return this.position - chunkStart;
   }
 
   _getCharCodeOrThrowEof(): number {
@@ -73,6 +72,8 @@ export class Tokenizer {
         ++this.position; return { type: tt.colon };
       case 44: /* "," */
         ++this.position; return { type: tt.comma };
+      case 35: /* "#" */
+        ++this.position; return { type: tt.hash };
       case 40: /* "(" */
         ++this.position; return { type: tt.parenL };
       case 41: /* ")" */
@@ -87,34 +88,30 @@ export class Tokenizer {
         return this._readTokenOrAttrMatcher({ type: tt.star });
       case 124: /* "|" */
         return this._readTokenOrAttrMatcher({ type: tt.pipe });
+      case 126: /* "~" */
+        return this._readTilde();
+      case 46: /* "." */
+        return this._readDot();
       case 36: /* "$" */
       case 94: /* "^" */
         return this._readAttrMatcher();
-      case 126: /* "~" */
-        return this._readTilde();
-      case 35:
-        return this._readHash();
       case 43: /* "+" */
       case 45: /* "-" */
-      case 46: /* "." */
-        return this._readPlusMinusDot(charCode);
+        return this._readPlusMinus(charCode);
+      case 34: /* '"' */
+      case 39: /* "'" */
+        return this._readString(charCode);
       case 9: /* "\t" (Tab) */
       case 10: /* "\n" (Line break) */
       case 12: /* "\f" (Form feed) */
       case 13: /* "\r" (Carriage return) */
       case 32: /* " " (Space) */
         return this._readWhitespace();
-      case 34: /* '"' */
-      case 39: /* "'" */
-        return this._readString(charCode);
       case 48: case 49: case 50: case 51: case 52: /* 0 - 4 */
       case 53: case 54: case 55: case 56: case 57: /* 5 - 9  */
         return this._readNumber();
       default:
-        throw new UnexpectedCharacterError(
-          codePointToString(charCode),
-          this.position,
-        );
+        return this._readIdentifier();
     }
   }
 
@@ -132,9 +129,20 @@ export class Tokenizer {
     );
   }
 
-  _readHash(): Token {
+  _readDot(): Token {
+    const nextCharCode = this.input.charCodeAt(this.position + 1);
+    if (isDigit(nextCharCode)) {
+      return this._readNumber();
+    }
+    ++this.position;
+    return {
+      type: tt.dot,
+    };
+  }
+
+  _readIdentifier(): Token {
     let value = '';
-    let chunkStart = ++this.position;
+    let chunkStart = this.position;
     while (this.position < this.input.length) {
       const charCode = this.input.charCodeAt(this.position);
       /* See https://www.w3.org/TR/CSS21/syndata.html#value-def-identifier) */
@@ -155,15 +163,19 @@ export class Tokenizer {
         break;
       }
     }
-    value += this.input.slice(chunkStart, this.position++);
+    value += this.input.slice(chunkStart, this.position);
     if (value.length === 0) {
-      throw new EmptyHashTokenError(this.position);
+      throw new UnexpectedCharacterError(
+        codePointToString(this.input.charCodeAt(this.position)),
+        this.position,
+      );
     }
-    return { type: tt.hash, value };
+    ++this.position;
+    return { type: tt.ident, value };
   }
 
   _readNumber(): Token {
-    const start = this.position;
+    const chunkStart = this.position;
     let isFloat = false;
     let charCode = this.input.charCodeAt(this.position);
 
@@ -181,7 +193,7 @@ export class Tokenizer {
     if (charCode === 46) { /* "." */
       // If isFloat is true we already saw a "."
       if (isFloat) {
-        throw new InvalidNumberError(start);
+        throw new InvalidNumberError(chunkStart);
       }
 
       ++this.position;
@@ -196,19 +208,19 @@ export class Tokenizer {
         ++this.position;
       }
       if (this._consumeDigits() === 0) {
-        throw new InvalidNumberError(start);
+        throw new InvalidNumberError(chunkStart);
       }
       isFloat = true;
     }
 
-    const value = this.input.slice(start, this.position);
+    const value = this.input.slice(chunkStart, this.position);
     return {
       type: tt.num,
       value: isFloat ? parseFloat(value) : parseInt(value, 10),
     };
   }
 
-  _readPlusMinusDot(charCode: number): Token {
+  _readPlusMinus(charCode: number): Token {
     const nextCharCode = this.input.charCodeAt(this.position + 1);
     if (isDigit(nextCharCode) || nextCharCode === 46) { /* "." */
       return this._readNumber();
@@ -218,14 +230,8 @@ export class Tokenizer {
     }
 
     ++this.position;
-    if (charCode === 43) {
-      return {
-        type: tt.plus,
-      };
-    }
-
     return {
-      type: tt.dot,
+      type: tt.plus,
     };
   }
 
@@ -271,6 +277,11 @@ export class Tokenizer {
        * If they do it, it must be right, right?
        */
       case 118: ++this.position; return '\u000b';
+      case 10: case 12: case 13: /* "\n", "\f", "\r" */
+        throw new UnexpectedCharacterError(
+          codePointToString(charCode),
+          this.position,
+        );
       default: ++this.position; return String.fromCharCode(charCode);
     }
   }

@@ -13,6 +13,7 @@ export const types = {
   colon: new TokenType(':'),
   comma: new TokenType(','),
   dot: new TokenType('.'),
+  hash: new TokenType('#'),
   parenL: new TokenType('('),
   parenR: new TokenType(')'),
   percentage: new TokenType('%'),
@@ -22,7 +23,6 @@ export const types = {
 
   attrMatcher: new TokenType('_='),
   combinator: new TokenType('combinator'),
-  hash: new TokenType('#'),
   ident: new TokenType('ident'),
   num: new TokenType('num'),
   string: new TokenType('string'),
