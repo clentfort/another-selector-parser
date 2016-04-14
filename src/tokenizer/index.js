@@ -3,6 +3,7 @@ import codePointToString from './util/codePointToString';
 import isDigit from './util/isDigit';
 import isHexDigit from './util/isHexDigit';
 import isNewLine from './util/isNewLine';
+import isLetter from './util/isLetter';
 import isWhitespace from './util/isWhitespace';
 import {
   InvalidNumberError,
@@ -34,7 +35,7 @@ export class Tokenizer {
       // @TODO: Use something similar to [fullCharCodeAtPos]
       // (https://github.com/babel/babylon/blob/master/src/tokenizer/index.js#L149-L155)
       const charCode = this._input.charCodeAt(this._position);
-      if (charCode === 47) { // "/"
+      if (charCode === 47) { /* "\" */
         this._skipComment();
       } else {
         yield this._getTokenFromCode(charCode);
@@ -107,10 +108,10 @@ export class Tokenizer {
       case 13: /* "\r" (Carriage return) */
       case 32: /* " " (Space) */
         return this._readWhitespace();
-      case 48: case 49: case 50: case 51: case 52: /* 0 - 4 */
-      case 53: case 54: case 55: case 56: case 57: /* 5 - 9  */
-        return this._readNumber();
       default:
+        if (isDigit(charCode)) {
+          return this._readNumber();
+        }
         return this._readIdentifier();
     }
   }
@@ -149,9 +150,8 @@ export class Tokenizer {
       if (
         (charCode === 45) /* "-" */ ||
         (charCode === 95) /* "_" */ ||
-        (isDigit(charCode)) /* 0 - 9 */ ||
-        (charCode >= 65 && charCode <= 90) /* A - Z */ ||
-        (charCode >= 97 && charCode <= 122) /* a - z */ ||
+        (isDigit(charCode)) ||
+        (isLetter(charCode)) ||
         (charCode >= 0x00A0 && charCode <= 0x10FFFF)
       ) {
         ++this._position;
@@ -264,11 +264,6 @@ export class Tokenizer {
   _readEscapedChar(): string {
     const charCode = this._input.charCodeAt(++this._position);
     switch (charCode) {
-      case 48: case 49: case 50: case 51: case 52: // 0 - 4
-      case 53: case 54: case 55: case 56: case 57: // 5 - 9
-      case 65: case 66: case 67: case 68: case 69: case 70: // A - F
-      case 97: case 98: case 99: case 100: case 101: case 102: // a - f
-        return codePointToString(this._readHexChar());
       case 110: ++this._position; return '\n';
       case 114: ++this._position; return '\r';
       case 116: ++this._position; return '\t';
@@ -282,7 +277,12 @@ export class Tokenizer {
           codePointToString(charCode),
           this._position,
         );
-      default: ++this._position; return String.fromCharCode(charCode);
+      default:
+        if (isHexDigit(charCode)) {
+          return codePointToString(this._readHexChar());
+        }
+
+        ++this._position; return String.fromCharCode(charCode);
     }
   }
 

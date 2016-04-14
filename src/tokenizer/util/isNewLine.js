@@ -1,4 +1,4 @@
 /* @flow */
-export default function isNewLine(code: number): boolean {
-  return code === 10 || code === 12 || code === 13;
+export default function isNewLine(charCode: number): boolean {
+  return charCode === 10 || charCode === 12 || charCode === 13;
 }
