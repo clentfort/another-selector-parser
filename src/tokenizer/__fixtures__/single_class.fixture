@@ -1,0 +1,5 @@
+Input:
+.class
+
+Output:
+[{"type":{"label":"."},"start":0,"end":1},{"type":{"label":"ident"},"start":1,"end":6,"value":"class"},{"type":{"label":"EOF"},"start":6,"end":7}]

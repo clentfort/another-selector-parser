@@ -1,0 +1,5 @@
+Input:
+element
+
+Output:
+[{"type":{"label":"ident"},"start":0,"end":7,"value":"element"},{"type":{"label":"EOF"},"start":7,"end":8}]

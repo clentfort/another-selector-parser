@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/jest"
+    "test": "NODE_ENV=test ./node_modules/.bin/jest",
+    "regenerateFixtures:Tokenizer": "./scripts/regenerateFixtures ./src/tokenizer/__fixtures__/"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,6 @@
   "author": "Christian Lentfort @_chris_lent_",
   "license": "MIT",
   "devDependencies": {
-    "babel": "^6.5.2",
     "babel-eslint": "^6.0.2",
     "babel-jest": "^11.0.0",
     "babel-plugin-transform-flow-strip-types": "^6.7.0",

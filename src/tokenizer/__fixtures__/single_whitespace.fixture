@@ -1,0 +1,5 @@
+Input:
+/**/ /**/
+
+Output:
+[{"type":{"label":"whitespace"},"start":4,"end":9},{"type":{"label":"EOF"},"start":9,"end":10}]

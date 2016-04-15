@@ -1,0 +1,102 @@
+#!/usr/bin/env babel-node
+/**
+ * Copied and adjusted to ES6 from 
+ * https://github.com/facebook/relay/blob/b652e9/scripts/babel-relay-plugin/src/tools/readFixtures.js
+ *
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * BSD License
+ *
+ * For Relay software
+ *
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ *  * Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ *  * Neither the name Facebook nor the names of its contributors may be used to
+ *    endorse or promote products derived from this software without specific
+ *    prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * An additional grant of patent rights can be found at 
+ * https://github.com/facebook/relay/blob/b652e92/scripts/babel-relay-plugin/PATENTS
+ */
+
+'use strict';
+
+import fs from 'fs';
+import path from 'path';
+
+import readFixtures from '../src/tools/readFixtures';
+
+function writeFixture(fixturePath, text) {
+  fs.writeFileSync(fixturePath, text, 'utf8');
+}
+
+
+function genFixtures(fixturePath) {
+  let generate;
+  try {
+    generate = require(path.join(fixturePath, 'generator.js')).default;
+    var fixtures = readFixtures(fixturePath);
+    Object.keys(fixtures).forEach(filename => {
+      const fixture = fixtures[filename];
+      if (fixture.output !== undefined) {
+        // fixture for valid input, update the expected output
+        try {
+          const output = generate(fixture.input, filename);
+          writeFixture(
+            path.join(fixturePath, filename),
+            [
+              'Input:',
+              fixture.input,
+              '', // newline
+              'Output:',
+              output,
+              '', // newline
+            ].join('\n')
+          );
+          console.log('Updated fixture `%s`.', filename);
+        } catch (e) {
+          console.error(
+            'Failed to transform fixture `%s`: %s: %s',
+            filename,
+            e.message,
+            e.stack
+          );
+        }
+      } // else: fixture for invalid code, nothing to update
+    });
+  } catch (e) {
+    console.error(
+      'Failed to load fixture generator: %s: %s', 
+      e.message,
+      e.stack,
+    );
+  }
+}
+
+// genFixtures(process.argv[2]);
+genFixtures(path.resolve(path.dirname(process.argv[1]), '..', process.argv[2]));
+
+// vim: ft=javascript
