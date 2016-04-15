@@ -8,7 +8,7 @@ describe('tokenize', () => {
     it('returns EOF for empty input', () => {
       const { value, done } = tokenize('').next();
       expect(done).toBe(false);
-      expect(value).toEqual({ type: tt.eof });
+      expect(value).toEqual({ type: tt.eof, start: 0, end: 1 });
     });
 
     it('is down after returning EOF', () => {
@@ -21,25 +21,25 @@ describe('tokenize', () => {
   describe('simple tokens', () => {
     // Map of tokens to expected Token-Object
     const tokens = {
-      '[': { type: tt.bracketL },
-      ']': { type: tt.bracketR },
-      ':': { type: tt.colon },
-      ',': { type: tt.comma },
-      ".": { type: tt.dot },
-      '#': { type: tt.hash },
-      '(': { type: tt.parenL },
-      ')': { type: tt.parenR },
-      '%': { type: tt.percentage },
-      '|': { type: tt.pipe },
-      '+': { type: tt.plus },
-      '*': { type: tt.star },
-      '>': { type: tt.combinator, value: '>' },
-      '~': { type: tt.combinator, value: '~' },
-      '=': { type: tt.attrMatcher, value: '=' },
-      '$=': { type: tt.attrMatcher, value: '$=' },
-      '*=': { type: tt.attrMatcher, value: '*=' },
-      '^=': { type: tt.attrMatcher, value: '^=' },
-      '|=': { type: tt.attrMatcher, value: "|=" },
+      '[': { type: tt.bracketL, start: 0, end: 1 },
+      ']': { type: tt.bracketR, start: 0, end: 1 },
+      ':': { type: tt.colon, start: 0, end: 1 },
+      ',': { type: tt.comma, start: 0, end: 1 },
+      ".": { type: tt.dot, start: 0, end: 1 },
+      '#': { type: tt.hash, start: 0, end: 1 },
+      '(': { type: tt.parenL, start: 0, end: 1 },
+      ')': { type: tt.parenR, start: 0, end: 1 },
+      '%': { type: tt.percentage, start: 0, end: 1 },
+      '|': { type: tt.pipe, start: 0, end: 1 },
+      '+': { type: tt.plus, start: 0, end: 1 },
+      '*': { type: tt.star, start: 0, end: 1 },
+      '>': { type: tt.combinator, value: '>', start: 0, end: 1 },
+      '~': { type: tt.combinator, value: '~', start: 0, end: 1 },
+      '=': { type: tt.attrMatcher, value: '=', start: 0, end: 1 },
+      '$=': { type: tt.attrMatcher, value: '$=', start: 0, end: 2 },
+      '*=': { type: tt.attrMatcher, value: '*=', start: 0, end: 2 },
+      '^=': { type: tt.attrMatcher, value: '^=', start: 0, end: 2 },
+      '|=': { type: tt.attrMatcher, value: "|=", start: 0, end: 2 },
     };
 
     // Test valid tokens
@@ -61,25 +61,38 @@ describe('tokenize', () => {
 
   describe('ids', () => {
     it('parses idents', () => {
-      expect(tokenize('someid').next().value).toEqual({
+      const input = 'someid';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.ident,
         value: 'someid',
+        start: 0,
+        end: input.length,
       });
     });
 
     it('parses idents with escaped tokens', () => {
-      expect(tokenize('\\41-').next().value).toEqual({
+      const input = '\\41-';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.ident,
         value: `${String.fromCodePoint(0x41)}-`,
+        start: 0,
+        end: 4,
+        start: 0,
+        end: input.length,
       });
     });
   });
 
   describe('comments', () => {
     it('ignores any comments', () => {
-      let { value, done } = tokenize('/*abc*//*2*/').next();
+      const input = '/*abc*//*2*/';
+      let { value, done } = tokenize(input).next();
       expect(done).toBe(false);
-      expect(value).toEqual({ type: tt.eof });
+      expect(value).toEqual({ 
+        type: tt.eof, 
+        start: input.length, 
+        end: input.length + 1,
+      });
     });
 
     it('throws on unfinished comments', () => {
@@ -89,22 +102,29 @@ describe('tokenize', () => {
 
   describe('whitespace', () => {
     it('reads whitespace', () => {
-      let { value } = tokenize('     ').next();
-      expect(value).toEqual({ type: tt.whitespace });
+      const input = '      ';
+      let { value } = tokenize(input).next();
+      expect(value).toEqual({ type: tt.whitespace, start: 0, end: input.length });
     });
 
     it('reads whitespace with a trailing comment', () => {
-      let { value, done } = tokenize('  /* comment after whitespace */').next();
-      expect(value).toEqual({ type: tt.whitespace });
+      const input = '  /* comment */';
+      let { value, done } = tokenize(input).next();
+      expect(value).toEqual({ type: tt.whitespace, start: 0, end: input.length});
       expect(done).toBe(false);
     });
 
     it('read whitespace with a comment', () => {
-      const tokenizer = tokenize(' /* comment */ ');
+      const input = ' /* comment */ ';
+      const tokenizer = tokenize(input);
       let { value, done } = tokenizer.next();
-      expect(value).toEqual({ type: tt.whitespace });
+      expect(value).toEqual({ type: tt.whitespace, start: 0, end: input.length });
       expect(done).toBe(false);
-      expect(tokenizer.next().value).toEqual({ type: tt.eof });
+      expect(tokenizer.next().value).toEqual({ 
+        type: tt.eof, 
+        start: input.length, 
+        end: input.length + 1,
+      });
     });
   });
 
@@ -117,184 +137,280 @@ describe('tokenize', () => {
     });
 
     it('reads correctly quoted strings', () => {
-      expect(tokenize(`'a string'`).next().value).toEqual({
+      let input = `'a string'`;
+      expect(tokenize(input).next().value).toEqual({
         type: tt.string,
         value: 'a string',
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize(`"a string"`).next().value).toEqual({
+      input = `"a string"`;
+      expect(tokenize(input).next().value).toEqual({
         type: tt.string,
         value: 'a string',
+        start: 0,
+        end: input.length,
       });
     });
 
     it('reads escaped hex-codes', () => {
-      expect(tokenize(`"\\1"`).next().value).toEqual({
+      let input = `"\\1"`;
+      expect(tokenize(input).next().value).toEqual({
         type: tt.string,
         value: String.fromCodePoint(0x1),
+        start: 0,
+        end: input.length,
       });
 
       // Stops on first non hex-digit
-      expect(tokenize(`"\\1X"`).next().value).toEqual({
+      input = `"\\1X"`;
+      expect(tokenize(input).next().value).toEqual({
         type: tt.string,
         value: `${String.fromCodePoint(0x1)}X`,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize(`"\\01"`).next().value).toEqual({
+      input = `"\\01"`;
+      expect(tokenize(input).next().value).toEqual({
         type: tt.string,
         value: String.fromCodePoint(0x01),
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize(`"\\001"`).next().value).toEqual({
+      input = `"\\001"`;
+      expect(tokenize(input).next().value).toEqual({
         type: tt.string,
         value: String.fromCodePoint(0x001),
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize(`"\\0001"`).next().value).toEqual({
+      input = `"\\0001"`;
+      expect(tokenize(input).next().value).toEqual({
         type: tt.string,
         value: String.fromCodePoint(0x0001),
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize(`"\\00001"`).next().value).toEqual({
+      input = `"\\00001"`;
+      expect(tokenize(input).next().value).toEqual({
         type: tt.string,
         value: String.fromCodePoint(0x00001),
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize(`"\\000001"`).next().value).toEqual({
+      input = `"\\000001"`;
+      expect(tokenize(input).next().value).toEqual({
         type: tt.string,
         value: String.fromCodePoint(0x000001),
+        start: 0,
+        end: input.length,
       });
 
       // Max 6 Hex digits
-      expect(tokenize(`"\\000001A"`).next().value).toEqual({
+      input = `"\\000001A"`;
+      expect(tokenize(input).next().value).toEqual({
         type: tt.string,
         value: `${String.fromCodePoint(0x000001)}A`,
+        start: 0,
+        end: input.length,
       });
     });
 
     it('eats a single whitespace following a hex-escape sequence', () => {
-      let tokenizer = tokenize('"\\49 "');
+      let input = '"\\49 "';
+      let tokenizer = tokenize(input);
       expect(tokenizer.next().value).toEqual({ 
         type: tt.string,
         value: String.fromCodePoint(0x49),
+        start: 0,
+        end: input.length,
       });
 
-      tokenizer = tokenize('"\\49 X"');
+      input = '"\\49 X"';
+      tokenizer = tokenize(input);
       expect(tokenizer.next().value).toEqual({ 
         type: tt.string,
         value: `${String.fromCodePoint(0x49)}X`,
+        start: 0,
+        end: input.length,
       });
 
-      tokenizer = tokenize('"\\49  "');
+      input = '"\\49  "';
+      tokenizer = tokenize(input);
       expect(tokenizer.next().value).toEqual({
         type: tt.string,
         value: `${String.fromCodePoint(0x49)} `,
+        start: 0,
+        end: input.length,
       });
 
-      tokenizer = tokenize('"\\49  X"');
+      input = '"\\49  X"';
+      tokenizer = tokenize(input);
       expect(tokenizer.next().value).toEqual({
         type: tt.string,
         value: `${String.fromCodePoint(0x49)} X`,
+        start: 0,
+        end: input.length,
       });
     });
   });
 
   describe('numbers', () => {
     it('parses integers', () => {
-      expect(tokenize('123456789').next().value).toEqual({
+      const input = '123456789';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: 123456789,
+        start: 0,
+        end: input.length,
       });
     });
 
     it('parses negative integers', () => {
-      expect(tokenize('-10').next().value).toEqual({
+      const input = '-10';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: -10,
+        start: 0,
+        end: input.length,
       });
     });
 
     it('parses floats', () => {
-      expect(tokenize('1.0').next().value).toEqual({
+      let input = '1.0';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: 1.0,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('+1.0').next().value).toEqual({
+      input = '+1.0';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: 1.0,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('.1').next().value).toEqual({
+      input = '.1';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: .1,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('+.1').next().value).toEqual({
+      input = '+.1';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: .1,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('1e10').next().value).toEqual({
+      input = '1e10';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: 1e10,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('1e+10').next().value).toEqual({
+      input = '1e+10';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: 1e+10,
+        start: 0,
+        end: input.length,
       });
-      
-      expect(tokenize('1e-10').next().value).toEqual({
+
+      input = '1e-10';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: 1e-10,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('1E10').next().value).toEqual({
+      input = '1E10';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: 1E10,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('1.5e10').next().value).toEqual({
+      input = '1.5e10';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: 1.5e10,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('1.5e+10').next().value).toEqual({
+      input = '1.5e+10';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: 1.5e+10,
+        start: 0,
+        end: input.length,
       });
-      
-      expect(tokenize('1.5e-10').next().value).toEqual({
+
+      input = '1.5e-10';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: 1.5e-10,
+        start: 0,
+        end: input.length,
       });
     });
 
     it('parses negative floats', () => {
-      expect(tokenize('-1.0').next().value).toEqual({
+      let input = '-1.0';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: -1.0,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('-.1').next().value).toEqual({
+      input = '-.1';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: -.1,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('-.1e1').next().value).toEqual({
+      input = '-.1e1';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: -.1e1,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('-.1e+1').next().value).toEqual({
+      input = '-.1e+1';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: -.1e+1,
+        start: 0,
+        end: input.length,
       });
 
-      expect(tokenize('-.1e-1').next().value).toEqual({
+      input = '-.1e-1';
+      expect(tokenize(input).next().value).toEqual({
         type: tt.num,
         value: -.1e-1,
+        start: 0,
+        end: input.length,
       });
     });
   });

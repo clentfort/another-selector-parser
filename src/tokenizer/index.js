@@ -16,18 +16,21 @@ import {
 import { types as tt } from './types';
 import type { TokenType } from './types';
 
-type Token = {
+export type Token = {
   type: TokenType;
+  start: number;
+  end: number;
   value?: any;
 };
 
 export class Tokenizer {
   _input: string;
   _position: number;
+  _lastPosition: number;
 
   constructor(input: string, offset: number = 0) {
     this._input = input;
-    this._position = offset;
+    this._lastPosition = this._position = offset;
   }
 
   *nextToken(): Generator<Token, void, void> {
@@ -37,11 +40,24 @@ export class Tokenizer {
       const charCode = this._input.charCodeAt(this._position);
       if (charCode === 47) { /* "\" */
         this._skipComment();
+        this._lastPosition = this._position;
       } else {
         yield this._getTokenFromCode(charCode);
       }
     }
-    yield { type: tt.eof };
+    ++this._position;
+    yield this._createToken(tt.eof);
+  }
+
+  _createToken(type: TokenType, value:? any): Token {
+    const start = this._lastPosition;
+    const end = this._position;
+    this._lastPosition = this._position;
+    const token: Token = { type, start, end };
+    if (value) {
+      token.value = value;
+    }
+    return token;
   }
 
   _consumeDigits(): number {
@@ -66,29 +82,29 @@ export class Tokenizer {
   _getTokenFromCode(charCode: number): Token {
     switch (charCode) {
       case 91: /* "[" */
-        ++this._position; return { type: tt.bracketL };
+        ++this._position; return this._createToken(tt.bracketL);
       case 93: /* "]" */
-        ++this._position; return { type: tt.bracketR };
+        ++this._position; return this._createToken(tt.bracketR);
       case 58: /* ":" */
-        ++this._position; return { type: tt.colon };
+        ++this._position; return this._createToken(tt.colon);
       case 44: /* "," */
-        ++this._position; return { type: tt.comma };
+        ++this._position; return this._createToken(tt.comma);
       case 35: /* "#" */
-        ++this._position; return { type: tt.hash };
+        ++this._position; return this._createToken(tt.hash);
       case 40: /* "(" */
-        ++this._position; return { type: tt.parenL };
+        ++this._position; return this._createToken(tt.parenL);
       case 41: /* ")" */
-        ++this._position; return { type: tt.parenR };
+        ++this._position; return this._createToken(tt.parenR);
       case 37: /* "%" */
-        ++this._position; return { type: tt.percentage };
+        ++this._position; return this._createToken(tt.percentage);
       case 62: /* ">" */
-        ++this._position; return { type: tt.combinator, value: '>' };
+        ++this._position; return this._createToken(tt.combinator, '>');
       case 61: /* "=" */
-        ++this._position; return { type: tt.attrMatcher, value: '=' };
+        ++this._position; return this._createToken(tt.attrMatcher, '=');
       case 42: /* "*" */
-        return this._readTokenOrAttrMatcher({ type: tt.star });
+        return this._readTokenOrAttrMatcher(tt.star);
       case 124: /* "|" */
-        return this._readTokenOrAttrMatcher({ type: tt.pipe });
+        return this._readTokenOrAttrMatcher(tt.pipe);
       case 126: /* "~" */
         return this._readTilde();
       case 46: /* "." */
@@ -121,7 +137,7 @@ export class Tokenizer {
     const charCode = this._getCharCodeOrThrowEof();
     if (charCode === 61) { // "="
       ++this._position;
-      return { type: tt.attrMatcher, value: `${type}=` };
+      return this._createToken(tt.attrMatcher, `${type}=`);
     }
     throw new UnexpectedCharacterError(
       codePointToString(charCode),
@@ -136,9 +152,7 @@ export class Tokenizer {
       return this._readNumber();
     }
     ++this._position;
-    return {
-      type: tt.dot,
-    };
+    return this._createToken(tt.dot);
   }
 
   _readIdentifier(): Token {
@@ -170,8 +184,7 @@ export class Tokenizer {
         this._position,
       );
     }
-    ++this._position;
-    return { type: tt.ident, value };
+    return this._createToken(tt.ident, value);
   }
 
   _readNumber(): Token {
@@ -214,10 +227,7 @@ export class Tokenizer {
     }
 
     const value = this._input.slice(chunkStart, this._position);
-    return {
-      type: tt.num,
-      value: isFloat ? parseFloat(value) : parseInt(value, 10),
-    };
+    return this._createToken(tt.num, isFloat ? parseFloat(value) : parseInt(value, 10));
   }
 
   _readPlusMinus(charCode: number): Token {
@@ -230,9 +240,7 @@ export class Tokenizer {
     }
 
     ++this._position;
-    return {
-      type: tt.plus,
-    };
+    return this._createToken(tt.plus);
   }
 
   _readString(quote: number): Token {
@@ -258,7 +266,7 @@ export class Tokenizer {
       }
     }
     value += this._input.slice(chunkStart, this._position++);
-    return { type: tt.string, value };
+    return this._createToken(tt.string, value);
   }
 
   _readEscapedChar(): string {
@@ -282,7 +290,8 @@ export class Tokenizer {
           return codePointToString(this._readHexChar());
         }
 
-        ++this._position; return String.fromCharCode(charCode);
+        ++this._position;
+        return String.fromCharCode(charCode);
     }
   }
 
@@ -314,26 +323,27 @@ export class Tokenizer {
     const next = this._input.charCodeAt(++this._position);
     if (next === 61) { // "="
       ++this._position;
-      return { type: tt.attrMatcher, value: '~=' };
+      return this._createToken(tt.attrMatcher, '~=');
     }
-    return { type: tt.combinator, value: '~' };
+    return this._createToken(tt.combinator, '~');
   }
 
-  _readTokenOrAttrMatcher(token: Token): Token {
+  _readTokenOrAttrMatcher(tokenType: TokenType): Token {
     const currentChar = this._input[this._position];
     const charCode = this._input.charCodeAt(++this._position);
     if (charCode === 61) { // "="
       ++this._position;
-      return { type: tt.attrMatcher, value: `${currentChar}=` };
+      return this._createToken(tt.attrMatcher, `${currentChar}=`);
     }
-    return token;
+    return this._createToken(tokenType);
   }
 
   /**
    * Reads whitespace and returns a single token, any comment will be skipped
    */
   _readWhitespace(): Token {
-    while (++this._position < this._input.length) {
+    ++this._position;
+    while (this._position < this._input.length) {
       const charCode = this._input.charCodeAt(this._position);
       if (isWhitespace(charCode)) {
         ++this._position;
@@ -343,7 +353,7 @@ export class Tokenizer {
         break;
       }
     }
-    return { type: tt.whitespace };
+    return this._createToken(tt.whitespace);
   }
 
   _skipComment(): void {
