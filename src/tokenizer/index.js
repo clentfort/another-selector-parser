@@ -11,7 +11,7 @@ import {
   UnexpectedEofError,
   UnterminatedCommentError,
   UnterminatedStringError,
-} from './util/Errors';
+} from './Errors';
 
 import { types as tt } from './types';
 import type { TokenType } from './types';
@@ -33,7 +33,7 @@ export class Tokenizer {
     this._lastPosition = this._position = offset;
   }
 
-  *nextToken(): Generator<Token, void, void> {
+  *getTokens(): Generator<Token, Token, void> {
     while (this._position < this._input.length) {
       // @TODO: Use something similar to [fullCharCodeAtPos]
       // (https://github.com/babel/babylon/blob/master/src/tokenizer/index.js#L149-L155)
@@ -46,7 +46,8 @@ export class Tokenizer {
       }
     }
     ++this._position;
-    yield this._createToken(tt.eof);
+    const eof = yield this._createToken(tt.eof);
+    return eof;
   }
 
   _createToken(type: TokenType, value:? any): Token {
@@ -374,9 +375,8 @@ export class Tokenizer {
   }
 }
 
-export default function tokenize(
+export default function *tokenize(
   input: string,
-): Generator<Token, void, void> {
-  const tokenizer = new Tokenizer(input);
-  return tokenizer.nextToken();
+): Generator<Token, Token, void> {
+  yield* new Tokenizer(input).getTokens();
 }
