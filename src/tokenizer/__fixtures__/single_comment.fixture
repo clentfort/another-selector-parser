@@ -2,4 +2,12 @@ Input:
 /* comment */
 
 Output:
-[{"type":{"label":"EOF"},"start":13,"end":14}]
+[
+  {
+    "type": {
+      "label": "EOF"
+    },
+    "start": 13,
+    "end": 14
+  }
+]
