@@ -1,0 +1,27 @@
+Input:
+|*
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "nodes": [
+        {
+          "type": "SimpleSelectorSequence",
+          "nodes": [
+            {
+              "type": "UniversalSelector",
+              "value": "*",
+              "namespace": {
+                "type": "NamespacePrefix",
+                "namespace": ""
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

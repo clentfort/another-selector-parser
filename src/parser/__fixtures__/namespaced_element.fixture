@@ -1,0 +1,27 @@
+Input:
+myNamespace|element
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "nodes": [
+        {
+          "type": "SimpleSelectorSequence",
+          "nodes": [
+            {
+              "type": "ElementSelector",
+              "value": "element",
+              "namespace": {
+                "type": "NamespacePrefix",
+                "namespace": "myNamespace"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

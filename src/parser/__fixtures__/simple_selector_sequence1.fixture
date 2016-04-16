@@ -1,0 +1,27 @@
+Input:
+tagname.class
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "nodes": [
+        {
+          "type": "SimpleSelectorSequence",
+          "nodes": [
+            {
+              "type": "ElementSelector",
+              "value": "tagname"
+            },
+            {
+              "type": "ClassSelector",
+              "value": "class"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

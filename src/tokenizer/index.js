@@ -46,7 +46,8 @@ export class Tokenizer {
       }
     }
     ++this._position;
-    const eof = yield this._createToken(tt.eof);
+    const eof = this._createToken(tt.eof);
+    yield eof;
     return eof;
   }
 
@@ -375,8 +376,9 @@ export class Tokenizer {
   }
 }
 
-export default function *tokenize(
+export default function tokenize(
   input: string,
 ): Generator<Token, Token, void> {
-  yield* new Tokenizer(input).getTokens();
+  const tokenizer = new Tokenizer(input);
+  return tokenizer.getTokens();
 }

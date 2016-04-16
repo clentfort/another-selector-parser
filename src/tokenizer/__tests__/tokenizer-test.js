@@ -1,3 +1,5 @@
+'use strict';
+
 jest.disableAutomock();
 
 import tokenize from '../';

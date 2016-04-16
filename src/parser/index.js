@@ -86,15 +86,14 @@ export class Parser {
 
   _parseSelector(token: Token, lookahead: Token): boolean {
     switch (token.type) {
+      /* eslint-disable no-fallthrough */
       case tt.whitespace: {
         if (lookahead.type === tt.combinator || lookahead.type === tt.plus) {
           return false;
         }
-        /* eslint-disable no-fallthrough */
       }
       case tt.combinator:
       case tt.plus: {
-        /* eslint-enable no-fallthrough */
         const simpleSelectorSequence = this._popNode('SimpleSelectorSequence');
         const selector = this._topNode('Selector');
         selector.nodes.push(simpleSelectorSequence);
@@ -102,6 +101,7 @@ export class Parser {
         this._parse = this._parseCombinator;
         return false;
       }
+      /* eslint-enable no-fallthrough */
       case tt.comma:
       case tt.eof: {
         const simpleSelectorSequence = this._popNode('SimpleSelectorSequence');
@@ -146,6 +146,8 @@ export class Parser {
       case tt.star:
         this._parse = this._parseTypeOrUnivsersalSelector;
         return true;
+      case tt.comma:
+      case tt.eof:
       case tt.whitespace:
         this._parse = this._parseSelector;
         return true;
@@ -169,12 +171,12 @@ export class Parser {
         this._parse = this._parseClassSelector;
         return false;
       case tt.hash:
-        this._pushNode(this._startSimpleSelector('IdSelector'));
+        this._pushNode(this._startSimpleSelector('HashSelector'));
         this._parse = this._parseHashSelector;
         return false;
-      case tt.whitespace:
-      case tt.eof:
       case tt.comma:
+      case tt.eof:
+      case tt.whitespace:
         this._parse = this._parseSelector;
         return true;
       default:
@@ -191,18 +193,56 @@ export class Parser {
   }
 
   _parseClassSelector(token: Token): boolean {
-    return true;
+    if (token.type === tt.ident) {
+      const classSelector = this._popNode('ClassSelector');
+      classSelector.value = `${token.value}`;
+      const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+      simpleSelectorSequence.nodes.push(classSelector);
+      this._parse = this._parseSimpleSelectorSequence2;
+      return false;
+    }
+    throw new UnexpectedTokenError(token.type, tt.ident);
   }
 
   _parseHashSelector(token: Token): boolean {
-    return true;
+    if (token.type === tt.ident) {
+      const hashSelector = this._popNode('HashSelector');
+      hashSelector.value = `${token.value}`;
+      const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+      simpleSelectorSequence.nodes.push(hashSelector);
+      this._parse = this._parseSimpleSelectorSequence2;
+      return false;
+    }
+    throw new UnexpectedTokenError(token.type, tt.ident);
   }
 
   _parseTypeOrUnivsersalSelector(token: Token, lookahead: Token): boolean {
-    const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-    if (token.type === tt.pipe) {
-      simpleSelectorSequence.nodes.push(this._startNamespace(''));
+    if (token.type === tt.pipe || lookahead && lookahead.type === tt.pipe) {
+      this._parse = this._parseNamespacePrefix;
+      return true;
+    }
+    if (token.type === tt.ident || token.type === tt.star) {
+      const simpleSelector = (token.type === tt.ident) ?
+        this._startSimpleSelector('ElementSelector', token.value) :
+        this._startSimpleSelector('UniversalSelector', '*');
+
+      if (this._topNode().type === 'NamespacePrefix') {
+        const namespacePrefix = this._popNode('NamespacePrefix');
+        simpleSelector.namespace = namespacePrefix;
+      }
+      const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+      simpleSelectorSequence.nodes.push(simpleSelector);
+
       this._parse = this._parseSimpleSelectorSequence2;
+      return false;
+    }
+    throw new UnexpectedTokenError(token.type);
+  }
+
+  _parseNamespacePrefix(token: Token, lookahead: Token): boolean {
+    if (token.type === tt.pipe) {
+      this._pushNode(this._startNamespace());
+      this._parse = this._parseTypeOrUnivsersalSelector;
       return false;
     }
     if (lookahead.type === tt.pipe) {
@@ -217,18 +257,8 @@ export class Parser {
         default:
           throw new UnexpectedTokenError(token.type);
       }
-      simpleSelectorSequence.nodes.push(this._startNamespace(prefix));
-      this._parse = this._eatTokenAndThen(tt.pipe, this._parseSimpleSelectorSequence2);
-      return false;
-    }
-    if (token.type === tt.star) {
-      simpleSelectorSequence.nodes.push(this._startSimpleSelector('UniversalSelector', '*'));
-      this._parse = this._parseSimpleSelectorSequence2;
-      return false;
-    }
-    if (token.type === tt.ident) {
-      simpleSelectorSequence.nodes.push(this._startSimpleSelector('ElementSelector', token.value));
-      this._parse = this._parseSimpleSelectorSequence2;
+      this._pushNode(this._startNamespace(prefix));
+      this._parse = this._eatTokenAndThen(tt.pipe, this._parseTypeOrUnivsersalSelector);
       return false;
     }
     throw new UnexpectedTokenError(token.type);
@@ -264,13 +294,13 @@ export class Parser {
     return { type, value };
   }
 
-  _startNamespace(namespace: string): Node {
+  _startNamespace(namespace: string = ''): Node {
     return { type: 'NamespacePrefix', namespace };
   }
 
-  _topNode(type: string): Node {
+  _topNode(type: ?string): Node {
     const top = this._nodes[this._nodes.length - 1];
-    if (top.type !== type) {
+    if (!!type && top.type !== type) {
       throw new UnexpectedTopNodeError(top.type, type);
     }
     return top;
