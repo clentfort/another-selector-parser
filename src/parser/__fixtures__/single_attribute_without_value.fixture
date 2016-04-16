@@ -1,0 +1,26 @@
+Input:
+[class]
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "nodes": [
+        {
+          "type": "SimpleSelectorSequence",
+          "nodes": [
+            {
+              "type": "AttributeSelector",
+              "attribute": {
+                "type": "Attribute",
+                "name": "class"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

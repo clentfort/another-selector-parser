@@ -184,7 +184,101 @@ export class Parser {
     }
   }
 
-  _parseAttributeSelector(token: Token): boolean {
+  _parseTypeOrUnivsersalSelector(token: Token, lookahead: Token): boolean {
+    if (token.type === tt.pipe || lookahead && lookahead.type === tt.pipe) {
+      this._parse = this._createParseNamespacePrefix(this._parseTypeOrUnivsersalSelector);
+      return true;
+    }
+    if (token.type === tt.ident || token.type === tt.star) {
+      const simpleSelector = (token.type === tt.ident) ?
+        this._startSimpleSelector('ElementSelector', token.value) :
+        this._startSimpleSelector('UniversalSelector', '*');
+
+      if (this._topNode().type === 'NamespacePrefix') {
+        const namespacePrefix = this._popNode('NamespacePrefix');
+        simpleSelector.namespace = namespacePrefix;
+      }
+      const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+      simpleSelectorSequence.nodes.push(simpleSelector);
+
+      this._parse = this._parseSimpleSelectorSequence2;
+      return false;
+    }
+    throw new UnexpectedTokenError(token.type);
+  }
+
+  _createParseNamespacePrefix(then: ParseToken): ParseToken {
+    return (token: Token, lookahead: Token): boolean => {
+      if (token.type === tt.pipe) {
+        this._pushNode(this._startNamespace());
+        this._parse = this._parseTypeOrUnivsersalSelector;
+        return false;
+      }
+      if (lookahead.type === tt.pipe) {
+        if (token.type === tt.star || token.type === tt.ident) {
+          const prefix = token.type === tt.star ? '*' : token.value;
+          this._pushNode(this._startNamespace(prefix));
+          this._parse = this._eatTokenAndThen(tt.pipe, then);
+          return false;
+        }
+        throw new UnexpectedTokenError(token.type);
+      }
+      throw new UnexpectedTokenError(token.type);
+    };
+  }
+
+  _parseAttributeSelector(token: Token, lookahead: Token): boolean {
+    if (token.type === tt.whitespace) {
+      return false;
+    }
+    if (token.type === tt.pipe || lookahead && lookahead.type === tt.pipe) {
+      this._parse = this._createParseNamespacePrefix(this._parseAttributeSelector);
+      return true;
+    }
+    if (token.type === tt.ident) {
+      const attribute = this._startAttribute(`${token.value}`);
+      if (this._topNode().type === 'NamespacePrefix') {
+        const namespacePrefix = this._popNode('NamespacePrefix');
+        attribute.namespace = namespacePrefix;
+      }
+      const attributeSelector = this._topNode('AttributeSelector');
+      attributeSelector.attribute = attribute;
+      this._parse = this._parseAttributeMatcher;
+      return false;
+    }
+    throw new UnexpectedTokenError(token.type, tt.ident);
+  }
+
+  _parseAttributeMatcher(token: Token): boolean {
+    if (token.type === tt.whitespace) {
+      return false;
+    }
+    if (token.type === tt.attrMatcher) {
+      const attributeSelector = this._topNode('AttributeSelector');
+      attributeSelector.matcher = token.value;
+      this._parse = this._parseAttributeMatcherValue;
+      return false;
+    }
+    if (token.type === tt.bracketR) {
+      const attributeSelector = this._popNode('AttributeSelector');
+      const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+      simpleSelectorSequence.nodes.push(attributeSelector);
+      this._parse = this._parseSimpleSelectorSequence2;
+      return false;
+    }
+    return false;
+  }
+
+  _parseAttributeMatcherValue(token: Token): boolean {
+    if (token.type === tt.whitespace) {
+      return false;
+    }
+    if (token.type === tt.ident || token.type === tt.string) {
+      const attributeSelector = this._topNode('AttributeSelector');
+      attributeSelector.value = token.value;
+      return false;
+    }
+    this._parse = this._parseAttributeMatcher;
     return true;
   }
 
@@ -214,54 +308,6 @@ export class Parser {
       return false;
     }
     throw new UnexpectedTokenError(token.type, tt.ident);
-  }
-
-  _parseTypeOrUnivsersalSelector(token: Token, lookahead: Token): boolean {
-    if (token.type === tt.pipe || lookahead && lookahead.type === tt.pipe) {
-      this._parse = this._parseNamespacePrefix;
-      return true;
-    }
-    if (token.type === tt.ident || token.type === tt.star) {
-      const simpleSelector = (token.type === tt.ident) ?
-        this._startSimpleSelector('ElementSelector', token.value) :
-        this._startSimpleSelector('UniversalSelector', '*');
-
-      if (this._topNode().type === 'NamespacePrefix') {
-        const namespacePrefix = this._popNode('NamespacePrefix');
-        simpleSelector.namespace = namespacePrefix;
-      }
-      const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-      simpleSelectorSequence.nodes.push(simpleSelector);
-
-      this._parse = this._parseSimpleSelectorSequence2;
-      return false;
-    }
-    throw new UnexpectedTokenError(token.type);
-  }
-
-  _parseNamespacePrefix(token: Token, lookahead: Token): boolean {
-    if (token.type === tt.pipe) {
-      this._pushNode(this._startNamespace());
-      this._parse = this._parseTypeOrUnivsersalSelector;
-      return false;
-    }
-    if (lookahead.type === tt.pipe) {
-      let prefix = '';
-      switch (token.type) {
-        case tt.star:
-          prefix = '*';
-          break;
-        case tt.ident:
-          prefix = `${token.value}`;
-          break;
-        default:
-          throw new UnexpectedTokenError(token.type);
-      }
-      this._pushNode(this._startNamespace(prefix));
-      this._parse = this._eatTokenAndThen(tt.pipe, this._parseTypeOrUnivsersalSelector);
-      return false;
-    }
-    throw new UnexpectedTokenError(token.type);
   }
 
   _pushNode(node: Node): void {
@@ -296,6 +342,10 @@ export class Parser {
 
   _startNamespace(namespace: string = ''): Node {
     return { type: 'NamespacePrefix', namespace };
+  }
+
+  _startAttribute(name: string): Node {
+    return { type: 'Attribute', name };
   }
 
   _topNode(type: ?string): Node {
