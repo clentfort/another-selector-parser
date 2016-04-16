@@ -1,0 +1,23 @@
+Input:
+:pseudoClass
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "nodes": [
+        {
+          "type": "SimpleSelectorSequence",
+          "nodes": [
+            {
+              "type": "PseudoSelector",
+              "pseudoElement": "pseudoClass"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

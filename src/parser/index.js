@@ -18,14 +18,16 @@ export type NodeType = string;
 type ParseToken = (token: Token, lookahead: Token) => boolean;
 
 export class Parser {
-  _tokens: Generator<Token, Token, void>;
   _nodes: Array<Node>;
   _parse: ParseToken;
+  _parsingNegationArg: boolean;
+  _tokens: Generator<Token, Token, void>;
 
   constructor(tokens: Generator<Token, Token, void>) {
-    this._tokens = tokens;
     this._nodes = [];
     this._parse = (null: any);
+    this._parsingNegationArg = false;
+    this._tokens = tokens;
   }
 
   parse(): Node {
@@ -186,7 +188,7 @@ export class Parser {
 
   _parseTypeOrUnivsersalSelector(token: Token, lookahead: Token): boolean {
     if (token.type === tt.pipe || lookahead && lookahead.type === tt.pipe) {
-      this._parse = this._createParseNamespacePrefix(this._parseTypeOrUnivsersalSelector);
+      this._parse = this._parseNamespacePrefix;
       return true;
     }
     if (token.type === tt.ident || token.type === tt.star) {
@@ -198,33 +200,40 @@ export class Parser {
         const namespacePrefix = this._popNode('NamespacePrefix');
         simpleSelector.namespace = namespacePrefix;
       }
-      const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-      simpleSelectorSequence.nodes.push(simpleSelector);
 
-      this._parse = this._parseSimpleSelectorSequence2;
+      if (this._parsingNegationArg) {
+        const negationArg = this._topNode('NegationArg');
+        negationArg.value = simpleSelector;
+        this._parse = this._parseNegationArg;
+      } else {
+        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+        simpleSelectorSequence.nodes.push(simpleSelector);
+        this._parse = this._parseSimpleSelectorSequence2;
+      }
       return false;
     }
     throw new UnexpectedTokenError(token.type);
   }
 
-  _createParseNamespacePrefix(then: ParseToken): ParseToken {
-    return (token: Token, lookahead: Token): boolean => {
-      if (token.type === tt.pipe) {
-        this._pushNode(this._startNamespace());
-        this._parse = this._parseTypeOrUnivsersalSelector;
+  _parseNamespacePrefix(token: Token, lookahead: Token): boolean {
+    if (token.type === tt.pipe) {
+      this._pushNode(this._startNamespace());
+      this._parse = this._parseTypeOrUnivsersalSelector;
+      return false;
+    }
+    if (lookahead.type === tt.pipe) {
+      if (token.type === tt.star || token.type === tt.ident) {
+        const returnTo = (this._topNode().type === 'AttributeSelector') ?
+          this._parseAttributeSelector :
+          this._parseTypeOrUnivsersalSelector;
+        const prefix = (token.type === tt.star) ? '*' : token.value;
+        this._pushNode(this._startNamespace(prefix));
+        this._parse = this._eatTokenAndThen(tt.pipe, returnTo);
         return false;
       }
-      if (lookahead.type === tt.pipe) {
-        if (token.type === tt.star || token.type === tt.ident) {
-          const prefix = token.type === tt.star ? '*' : token.value;
-          this._pushNode(this._startNamespace(prefix));
-          this._parse = this._eatTokenAndThen(tt.pipe, then);
-          return false;
-        }
-        throw new UnexpectedTokenError(token.type);
-      }
       throw new UnexpectedTokenError(token.type);
-    };
+    }
+    throw new UnexpectedTokenError(token.type);
   }
 
   _parseAttributeSelector(token: Token, lookahead: Token): boolean {
@@ -232,7 +241,7 @@ export class Parser {
       return false;
     }
     if (token.type === tt.pipe || lookahead && lookahead.type === tt.pipe) {
-      this._parse = this._createParseNamespacePrefix(this._parseAttributeSelector);
+      this._parse = this._parseNamespacePrefix;
       return true;
     }
     if (token.type === tt.ident) {
@@ -261,9 +270,15 @@ export class Parser {
     }
     if (token.type === tt.bracketR) {
       const attributeSelector = this._popNode('AttributeSelector');
-      const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-      simpleSelectorSequence.nodes.push(attributeSelector);
-      this._parse = this._parseSimpleSelectorSequence2;
+      if (this._parsingNegationArg) {
+        const negationArg = this._topNode('NegationArg');
+        negationArg.value = attributeSelector;
+        this._parse = this._parseNegationArg;
+      } else {
+        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+        simpleSelectorSequence.nodes.push(attributeSelector);
+        this._parse = this._parseSimpleSelectorSequence2;
+      }
       return false;
     }
     return false;
@@ -282,17 +297,134 @@ export class Parser {
     return true;
   }
 
-  _parsePseudoSelector(token: Token): boolean {
-    return true;
+  _parsePseudoSelector(token: Token, lookahead: Token): boolean {
+    if (token.type === tt.colon) {
+      return false;
+    }
+    if (token.type === tt.ident) {
+      if (lookahead.type === tt.parenL) {
+        this._parse = this._parseFunction;
+        return true;
+      }
+
+      const pseudoSelector = this._popNode('PseudoSelector');
+      pseudoSelector.pseudoElement = (`${token.value}`);
+      if (this._parsingNegationArg) {
+        const negationArg = this._topNode('NegationArg');
+        negationArg.value = pseudoSelector;
+        this._parse = this._parseNegationArg;
+      } else {
+        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+        simpleSelectorSequence.nodes.push(pseudoSelector);
+        this._parse = this._parseSimpleSelectorSequence2;
+      }
+      return false;
+    }
+    throw new UnexpectedTokenError(token.type);
+  }
+
+  _parseFunction(token: Token): boolean {
+    if (token.type === tt.ident) {
+      const value = `${token.value}`;
+      const isNegationCall = (value.toLowerCase() === 'not');
+      if (this._parsingNegationArg && isNegationCall) {
+        throw new Error();
+      }
+      this._pushNode(this._startFunctionCall(value, isNegationCall));
+      this._parse = isNegationCall ? this._parseNegationCall : this._parseFunctionCall;
+      return false;
+    }
+    if (token.type === tt.parenR) {
+      const functionCall = this._popNode('FunctionCall');
+      const pseudoSelector = this._popNode('PseudoSelector');
+      pseudoSelector.body = functionCall;
+      if (this._parsingNegationArg) {
+        const negationArg = this._topNode('NegationArg');
+        negationArg.value = pseudoSelector;
+        this._parse = this._parseNegationArg;
+      } else {
+        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+        simpleSelectorSequence.nodes.push(pseudoSelector);
+        this._parse = this._parseSimpleSelectorSequence2;
+      }
+      return false;
+    }
+
+    throw new UnexpectedTokenError(token.type, tt.ident);
+  }
+
+  _parseNegationCall(token: Token): boolean {
+    if (token.type === tt.parenL) {
+      this._parsingNegationArg = true;
+      this._pushNode(this._startNegationArg());
+      this._parse = this._parseNegationArg;
+      return false;
+    }
+    if (token.type === tt.parenR) {
+      this._parsingNegationArg = false;
+      this._parse = this._parseFunction;
+      return true;
+    }
+    throw new UnexpectedTokenError(token.type, tt.parenL);
+  }
+
+  _parseFunctionCall(token: Token): boolean {
+    return false;
+  }
+
+  _parseNegationArg(token: Token): boolean {
+    switch (token.type) {
+      case tt.bracketL:
+        this._pushNode(this._startSimpleSelector('AttributeSelector'));
+        this._parse = this._parseAttributeSelector;
+        return false;
+      case tt.colon: {
+        const pseudoSelector = this._startSimpleSelector('PseudoSelector');
+        pseudoSelector.pseudoType = 'class';
+        this._pushNode(pseudoSelector);
+        this._parse = this._parsePseudoSelector;
+        return false;
+      }
+      case tt.dot:
+        this._pushNode(this._startSimpleSelector('ClassSelector'));
+        this._parse = this._parseClassSelector;
+        return false;
+      case tt.hash:
+        this._pushNode(this._startSimpleSelector('HashSelector'));
+        this._parse = this._parseHashSelector;
+        return false;
+      case tt.ident:
+      case tt.pipe:
+      case tt.star:
+        this._parse = this._parseTypeOrUnivsersalSelector;
+        return true;
+      case tt.parenR: {
+        const negationArg = this._popNode('NegationArg');
+        const functionCall = this._topNode('FunctionCall');
+        functionCall.args = [negationArg];
+        this._parse = this._parseNegationCall;
+        return true;
+      }
+      case tt.whitespace:
+        return false;
+      default:
+        throw new UnexpectedTokenError(token.type);
+    }
   }
 
   _parseClassSelector(token: Token): boolean {
     if (token.type === tt.ident) {
       const classSelector = this._popNode('ClassSelector');
       classSelector.value = `${token.value}`;
-      const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-      simpleSelectorSequence.nodes.push(classSelector);
-      this._parse = this._parseSimpleSelectorSequence2;
+      if (this._parsingNegationArg) {
+        const negationArg = this._topNode('NegationArg');
+        negationArg.value = classSelector;
+        this._parse = this._parseNegationArg;
+      } else {
+        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+        simpleSelectorSequence.nodes.push(classSelector);
+        this._parse = this._parseSimpleSelectorSequence2;
+      }
       return false;
     }
     throw new UnexpectedTokenError(token.type, tt.ident);
@@ -302,9 +434,15 @@ export class Parser {
     if (token.type === tt.ident) {
       const hashSelector = this._popNode('HashSelector');
       hashSelector.value = `${token.value}`;
-      const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-      simpleSelectorSequence.nodes.push(hashSelector);
-      this._parse = this._parseSimpleSelectorSequence2;
+      if (this._parsingNegationArg) {
+        const negationArg = this._topNode('NegationArg');
+        negationArg.value = hashSelector;
+        this._parse = this._parseNegationArg;
+      } else {
+        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
+        simpleSelectorSequence.nodes.push(hashSelector);
+        this._parse = this._parseSimpleSelectorSequence2;
+      }
       return false;
     }
     throw new UnexpectedTokenError(token.type, tt.ident);
@@ -314,7 +452,7 @@ export class Parser {
     this._nodes.push(node);
   }
 
-  _popNode(type: string): Node {
+  _popNode(type: ?string): Node {
     const node = this._topNode(type);
     this._nodes.pop();
     return node;
@@ -346,6 +484,14 @@ export class Parser {
 
   _startAttribute(name: string): Node {
     return { type: 'Attribute', name };
+  }
+
+  _startFunctionCall(name: string, isNegationCall: boolean = false): Node {
+    return { type: 'FunctionCall', name, isNegationCall };
+  }
+
+  _startNegationArg(): Node {
+    return { type: 'NegationArg' };
   }
 
   _topNode(type: ?string): Node {

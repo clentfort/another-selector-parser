@@ -1,0 +1,36 @@
+Input:
+:not(element)
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "nodes": [
+        {
+          "type": "SimpleSelectorSequence",
+          "nodes": [
+            {
+              "type": "PseudoSelector",
+              "body": {
+                "type": "FunctionCall",
+                "name": "not",
+                "isNegationCall": true,
+                "args": [
+                  {
+                    "type": "NegationArg",
+                    "value": {
+                      "type": "ElementSelector",
+                      "value": "element"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
