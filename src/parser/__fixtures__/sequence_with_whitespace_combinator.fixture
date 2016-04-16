@@ -1,0 +1,36 @@
+Input:
+span  span
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "nodes": [
+        {
+          "type": "SimpleSelectorSequence",
+          "nodes": [
+            {
+              "type": "ElementSelector",
+              "value": "span"
+            }
+          ]
+        },
+        {
+          "type": "Combinator",
+          "combinator": "whitespace"
+        },
+        {
+          "type": "SimpleSelectorSequence",
+          "nodes": [
+            {
+              "type": "ElementSelector",
+              "value": "span"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -96,7 +96,6 @@ function genFixtures(fixturePath) {
   }
 }
 
-// genFixtures(process.argv[2]);
 genFixtures(path.resolve(path.dirname(process.argv[1]), '..', process.argv[2]));
 
 // vim: ft=javascript

@@ -1,0 +1,23 @@
+Input:
+span
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "nodes": [
+        {
+          "type": "SimpleSelectorSequence",
+          "nodes": [
+            {
+              "type": "ElementSelector",
+              "value": "span"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
