@@ -1,5 +1,5 @@
 /**
- * Copied and adjusted to ES6 from 
+ * Copied and adjusted to ES6 from
  * https://github.com/facebook/relay/blob/b652e9/scripts/babel-relay-plugin/src/tools/regenerateFixtures.js
  *
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -37,10 +37,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * An additional grant of patent rights can be found at 
+ * An additional grant of patent rights can be found at
  * https://github.com/facebook/relay/blob/b652e92/scripts/babel-relay-plugin/PATENTS
  */
-'use strict';
 
 import fs from 'fs';
 import path from 'path';
