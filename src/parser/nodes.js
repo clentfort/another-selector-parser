@@ -84,7 +84,6 @@ export const createPseudoElementSelector =
 export const createFunctionCall = (
   argument: FunctionArgument | NegationArgument,
   isNegationCall: boolean
-// $FlowFixMe
 ): FunctionCall => ({ type: 'FunctionCall', argument, isNegationCall });
 export const createFunctionArgument =
   (body: string): FunctionArgument => ({ type: 'FunctionArgument', body });

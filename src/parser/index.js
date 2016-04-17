@@ -87,9 +87,13 @@ export class Parser {
     switch (token.type) {
       case 'EOF':
       case 'comma': {
-        const selector = this._popNode('Selector');
-        const selectorsGroup = this._topNode('SelectorsGroup');
-        selectorsGroup.selectors.push(selector);
+        if (this._topNode().type === 'Selector') {
+          const selector = this._popNode('Selector');
+          const selectorsGroup = this._topNode('SelectorsGroup');
+          selectorsGroup.selectors.push(selector);
+        } else {
+          this._topNode('SelectorsGroup');
+        }
         return false;
       }
       case 'whitespace':
