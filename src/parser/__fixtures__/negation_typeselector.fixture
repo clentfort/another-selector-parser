@@ -7,25 +7,22 @@ Output:
   "selectors": [
     {
       "type": "Selector",
-      "nodes": [
+      "body": [
         {
           "type": "SimpleSelectorSequence",
-          "nodes": [
+          "simpleSelectors": [
             {
               "type": "PseudoSelector",
               "body": {
                 "type": "FunctionCall",
-                "name": "not",
-                "isNegationCall": true,
-                "args": [
-                  {
-                    "type": "NegationArg",
-                    "value": {
-                      "type": "ElementSelector",
-                      "value": "element"
-                    }
+                "argument": {
+                  "type": "NegationArgument",
+                  "body": {
+                    "type": "TypeSelector",
+                    "body": "element"
                   }
-                ]
+                },
+                "isNegationCall": true
               }
             }
           ]

@@ -7,13 +7,13 @@ Output:
   "selectors": [
     {
       "type": "Selector",
-      "nodes": [
+      "body": [
         {
           "type": "SimpleSelectorSequence",
-          "nodes": [
+          "simpleSelectors": [
             {
               "type": "UniversalSelector",
-              "value": "*",
+              "body": "*",
               "namespace": {
                 "type": "NamespacePrefix",
                 "namespace": ""

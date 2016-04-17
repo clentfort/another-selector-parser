@@ -4,24 +4,18 @@ Input:
 Output:
 [
   {
-    "type": {
-      "label": "."
-    },
+    "type": "dot",
     "start": 0,
     "end": 1
   },
   {
-    "type": {
-      "label": "ident"
-    },
+    "type": "ident",
     "start": 1,
     "end": 6,
     "value": "class"
   },
   {
-    "type": {
-      "label": "EOF"
-    },
+    "type": "EOF",
     "start": 6,
     "end": 7
   }

@@ -4,9 +4,7 @@ Input:
 Output:
 [
   {
-    "type": {
-      "label": "EOF"
-    },
+    "type": "EOF",
     "start": 13,
     "end": 14
   }

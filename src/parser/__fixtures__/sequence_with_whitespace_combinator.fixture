@@ -7,26 +7,26 @@ Output:
   "selectors": [
     {
       "type": "Selector",
-      "nodes": [
+      "body": [
         {
           "type": "SimpleSelectorSequence",
-          "nodes": [
+          "simpleSelectors": [
             {
-              "type": "ElementSelector",
-              "value": "span"
+              "type": "TypeSelector",
+              "body": "span"
             }
           ]
         },
         {
           "type": "Combinator",
-          "combinator": "whitespace"
+          "operator": "whitespace"
         },
         {
           "type": "SimpleSelectorSequence",
-          "nodes": [
+          "simpleSelectors": [
             {
-              "type": "ElementSelector",
-              "value": "span"
+              "type": "TypeSelector",
+              "body": "span"
             }
           ]
         }

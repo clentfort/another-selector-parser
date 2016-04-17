@@ -4,16 +4,12 @@ Input:
 Output:
 [
   {
-    "type": {
-      "label": "whitespace"
-    },
+    "type": "whitespace",
     "start": 4,
     "end": 9
   },
   {
-    "type": {
-      "label": "EOF"
-    },
+    "type": "EOF",
     "start": 9,
     "end": 10
   }

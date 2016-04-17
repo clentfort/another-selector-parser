@@ -1,0 +1,30 @@
+Input:
+:nth-child(2n+1)
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "body": [
+        {
+          "type": "SimpleSelectorSequence",
+          "simpleSelectors": [
+            {
+              "type": "PseudoSelector",
+              "body": {
+                "type": "FunctionCall",
+                "argument": {
+                  "type": "FunctionArgument",
+                  "body": "2n+1"
+                },
+                "isNegationCall": false
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

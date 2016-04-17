@@ -7,13 +7,13 @@ Output:
   "selectors": [
     {
       "type": "Selector",
-      "nodes": [
+      "body": [
         {
           "type": "SimpleSelectorSequence",
-          "nodes": [
+          "simpleSelectors": [
             {
-              "type": "ElementSelector",
-              "value": "span"
+              "type": "TypeSelector",
+              "body": "span"
             }
           ]
         }
@@ -21,13 +21,13 @@ Output:
     },
     {
       "type": "Selector",
-      "nodes": [
+      "body": [
         {
           "type": "SimpleSelectorSequence",
-          "nodes": [
+          "simpleSelectors": [
             {
-              "type": "ElementSelector",
-              "value": "span"
+              "type": "TypeSelector",
+              "body": "span"
             }
           ]
         }

@@ -7,18 +7,18 @@ Output:
   "selectors": [
     {
       "type": "Selector",
-      "nodes": [
+      "body": [
         {
           "type": "SimpleSelectorSequence",
-          "nodes": [
+          "simpleSelectors": [
             {
               "type": "AttributeSelector",
-              "value": "classname",
               "attribute": {
-                "type": "Attribute",
-                "name": "class"
+                "type": "AttributeSelectorAttribute",
+                "attribute": "class"
               },
-              "matcher": "="
+              "operator": "=",
+              "value": "classname"
             }
           ]
         }

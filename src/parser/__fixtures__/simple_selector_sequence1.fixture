@@ -7,17 +7,17 @@ Output:
   "selectors": [
     {
       "type": "Selector",
-      "nodes": [
+      "body": [
         {
           "type": "SimpleSelectorSequence",
-          "nodes": [
+          "simpleSelectors": [
             {
-              "type": "ElementSelector",
-              "value": "tagname"
+              "type": "TypeSelector",
+              "body": "tagname"
             },
             {
               "type": "ClassSelector",
-              "value": "class"
+              "className": "class"
             }
           ]
         }

@@ -1,9 +1,8 @@
 /* @flow */
 import type { TokenType } from '../tokenizer/types';
-import type { NodeType } from './index';
 
 export class UnexpectedTopNodeError extends Error {
-  constructor(actual: NodeType, expected: ?NodeType) {
+  constructor(actual: string, expected: ?string) {
     if (expected) {
       super(`Unexpected node of type "${actual}" at the top of the stack, expected a node of type ${expected}.`);
     } else {
@@ -15,9 +14,9 @@ export class UnexpectedTopNodeError extends Error {
 export class UnexpectedTokenError extends Error {
   constructor(actual: TokenType, expected: ?TokenType) {
     if (expected) {
-      super(`Unexpected token of type "${actual.label}", expected "${expected.label}".`);
+      super(`Unexpected token of type "${actual}", expected "${expected}".`);
     } else {
-      super(`Unexpected token of type "${actual.label}".`);
+      super(`Unexpected token of type "${actual}".`);
     }
   }
 }

@@ -4,17 +4,13 @@ element
 Output:
 [
   {
-    "type": {
-      "label": "ident"
-    },
+    "type": "ident",
     "start": 0,
     "end": 7,
     "value": "element"
   },
   {
-    "type": {
-      "label": "EOF"
-    },
+    "type": "EOF",
     "start": 7,
     "end": 8
   }

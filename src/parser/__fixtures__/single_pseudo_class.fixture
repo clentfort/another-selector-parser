@@ -7,13 +7,16 @@ Output:
   "selectors": [
     {
       "type": "Selector",
-      "nodes": [
+      "body": [
         {
           "type": "SimpleSelectorSequence",
-          "nodes": [
+          "simpleSelectors": [
             {
               "type": "PseudoSelector",
-              "pseudoElement": "pseudoClass"
+              "body": {
+                "type": "PseudoClassSelector",
+                "body": "pseudoClass"
+              }
             }
           ]
         }
