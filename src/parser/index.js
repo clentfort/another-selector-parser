@@ -365,8 +365,13 @@ export class Parser {
       if (this._parsingNegationArgument && isNegationCall) {
         throw new Error();
       }
-      // $FlowFixMe
-      this._pushNode(helper.createFunctionCall(null, isNegationCall));
+      if (isNegationCall) {
+        // $FlowFixMe
+        this._pushNode(helper.createNegationCall());
+      } else {
+        // $FlowFixMe
+        this._pushNode(helper.createFunctionCall());
+      }
       this._parse = isNegationCall ? this._parseNegationCall : this._parseFunctionCall;
       return false;
     }
@@ -440,7 +445,11 @@ export class Parser {
       case 'parenR': {
         const negationArgument = this._popNode('NegationArgument');
         const functionCall = this._topNode('FunctionCall');
-        functionCall.argument = negationArgument;
+        if (functionCall.isNegationCall) {
+          functionCall.argument = negationArgument;
+        } else {
+          throw new Error();
+        }
         this._parse = this._parseNegationCall;
         return true;
       }
@@ -487,7 +496,11 @@ export class Parser {
       case 'parenR': {
         functionArg = this._popNode('FunctionArgument');
         const functionCall = this._topNode('FunctionCall');
-        functionCall.argument = functionArg;
+        if (!functionCall.isNegationCall) {
+          functionCall.argument = functionArg;
+        } else {
+          throw new Error();
+        }
         this._parse = this._parseFunctionCall;
         return true;
       }
