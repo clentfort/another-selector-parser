@@ -1,0 +1,30 @@
+Input:
+[|class]
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "body": [
+        {
+          "type": "SimpleSelectorSequence",
+          "simpleSelectors": [
+            {
+              "type": "AttributeSelector",
+              "attribute": {
+                "type": "AttributeSelectorAttribute",
+                "attribute": "class",
+                "namespace": {
+                  "type": "NamespacePrefix",
+                  "namespace": ""
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

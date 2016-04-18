@@ -1,0 +1,98 @@
+Input:
+tagname.class#id1#id2[attribute][attribute="test"]:not([class="class"]):first:not(:nth-child(2n+1))
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "selectors": [
+    {
+      "type": "Selector",
+      "body": [
+        {
+          "type": "SimpleSelectorSequence",
+          "simpleSelectors": [
+            {
+              "type": "TypeSelector",
+              "body": "tagname"
+            },
+            {
+              "type": "ClassSelector",
+              "className": "class"
+            },
+            {
+              "type": "HashSelector",
+              "id": "id1"
+            },
+            {
+              "type": "HashSelector",
+              "id": "id2"
+            },
+            {
+              "type": "AttributeSelector",
+              "attribute": {
+                "type": "AttributeSelectorAttribute",
+                "attribute": "attribute"
+              }
+            },
+            {
+              "type": "AttributeSelector",
+              "attribute": {
+                "type": "AttributeSelectorAttribute",
+                "attribute": "attribute"
+              },
+              "operator": "=",
+              "value": "test"
+            },
+            {
+              "type": "PseudoSelector",
+              "body": {
+                "type": "FunctionCall",
+                "argument": {
+                  "type": "NegationArgument",
+                  "body": {
+                    "type": "AttributeSelector",
+                    "attribute": {
+                      "type": "AttributeSelectorAttribute",
+                      "attribute": "class"
+                    },
+                    "operator": "=",
+                    "value": "class"
+                  }
+                },
+                "isNegationCall": true
+              }
+            },
+            {
+              "type": "PseudoSelector",
+              "body": {
+                "type": "PseudoClassSelector",
+                "body": "first"
+              }
+            },
+            {
+              "type": "PseudoSelector",
+              "body": {
+                "type": "FunctionCall",
+                "argument": {
+                  "type": "NegationArgument",
+                  "body": {
+                    "type": "PseudoSelector",
+                    "body": {
+                      "type": "FunctionCall",
+                      "argument": {
+                        "type": "FunctionArgument",
+                        "body": "2n+1"
+                      },
+                      "isNegationCall": false
+                    }
+                  }
+                },
+                "isNegationCall": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

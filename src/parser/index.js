@@ -240,16 +240,16 @@ export class Parser {
   }
 
   _parseNamespacePrefix(token: Token, lookahead: Token): boolean {
+    const returnTo = (this._topNode().type === 'AttributeSelector') ?
+      this._parseAttributeSelector :
+      this._parseTypeOrUnivsersalSelector;
     if (token.type === 'pipe') {
       this._pushNode(helper.createNamespacePrefix());
-      this._parse = this._parseTypeOrUnivsersalSelector;
+      this._parse = returnTo;
       return false;
     }
     if (lookahead.type === 'pipe') {
       if (token.type === 'star' || token.type === 'ident') {
-        const returnTo = (this._topNode().type === 'AttributeSelector') ?
-          this._parseAttributeSelector :
-          this._parseTypeOrUnivsersalSelector;
         const prefix = (token.type === 'star') ? '*' : token.value;
         this._pushNode(helper.createNamespacePrefix(prefix));
         this._parse = this._eatTokenAndThen('pipe', returnTo);
