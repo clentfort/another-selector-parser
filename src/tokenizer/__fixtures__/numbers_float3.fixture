@@ -1,0 +1,16 @@
+Input:
+.0
+
+Output:
+[
+  {
+    "type": "num",
+    "start": 0,
+    "end": 2
+  },
+  {
+    "type": "EOF",
+    "start": 2,
+    "end": 3
+  }
+]

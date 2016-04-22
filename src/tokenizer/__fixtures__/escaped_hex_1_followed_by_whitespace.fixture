@@ -1,0 +1,17 @@
+Input:
+\1 moreIdent
+
+Output:
+[
+  {
+    "type": "ident",
+    "start": 0,
+    "end": 12,
+    "value": "\u0001moreIdent"
+  },
+  {
+    "type": "EOF",
+    "start": 12,
+    "end": 13
+  }
+]

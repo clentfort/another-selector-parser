@@ -1,0 +1,17 @@
+Input:
+*=
+
+Output:
+[
+  {
+    "type": "matcher",
+    "start": 0,
+    "end": 2,
+    "value": "*="
+  },
+  {
+    "type": "EOF",
+    "start": 2,
+    "end": 3
+  }
+]

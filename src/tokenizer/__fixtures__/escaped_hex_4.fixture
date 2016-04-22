@@ -1,0 +1,17 @@
+Input:
+\0001
+
+Output:
+[
+  {
+    "type": "ident",
+    "start": 0,
+    "end": 5,
+    "value": "\u0001"
+  },
+  {
+    "type": "EOF",
+    "start": 5,
+    "end": 6
+  }
+]

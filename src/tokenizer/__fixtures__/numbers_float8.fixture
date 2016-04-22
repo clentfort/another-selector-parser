@@ -1,0 +1,17 @@
+Input:
+1.E1
+
+Output:
+[
+  {
+    "type": "num",
+    "start": 0,
+    "end": 4,
+    "value": 10
+  },
+  {
+    "type": "EOF",
+    "start": 4,
+    "end": 5
+  }
+]

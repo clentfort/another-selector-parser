@@ -1,0 +1,17 @@
+Input:
+"a string in double quotes and some escaped \"value\""
+
+Output:
+[
+  {
+    "type": "string",
+    "start": 0,
+    "end": 54,
+    "value": "a string in double quotes and some escaped \"value\""
+  },
+  {
+    "type": "EOF",
+    "start": 54,
+    "end": 55
+  }
+]

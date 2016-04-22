@@ -1,0 +1,17 @@
+Input:
+"a string in double quotes"
+
+Output:
+[
+  {
+    "type": "string",
+    "start": 0,
+    "end": 27,
+    "value": "a string in double quotes"
+  },
+  {
+    "type": "EOF",
+    "start": 27,
+    "end": 28
+  }
+]

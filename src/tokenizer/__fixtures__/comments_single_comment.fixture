@@ -1,0 +1,11 @@
+Input:
+/* a comment *//* another comment */
+
+Output:
+[
+  {
+    "type": "EOF",
+    "start": 36,
+    "end": 37
+  }
+]
