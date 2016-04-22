@@ -4,67 +4,96 @@ aNamespace|tagname.class#id1#id2[attribute][attribute="test"]:not([|class="class
 Output:
 {
   "type": "SelectorsGroup",
-  "selectors": [
+  "body": [
     {
       "type": "Selector",
       "body": [
         {
           "type": "SimpleSelectorSequence",
-          "simpleSelectors": [
+          "body": [
             {
               "type": "TypeSelector",
-              "body": "tagname",
+              "body": {
+                "type": "Identifier",
+                "value": "tagname"
+              },
               "namespace": {
                 "type": "NamespacePrefix",
-                "namespace": "aNamespace"
+                "namespace": {
+                  "type": "Identifier",
+                  "value": "aNamespace"
+                }
               }
             },
             {
               "type": "ClassSelector",
-              "className": "class"
+              "className": {
+                "type": "Identifier",
+                "value": "class"
+              }
             },
             {
               "type": "HashSelector",
-              "id": "id1"
+              "id": {
+                "type": "Identifier",
+                "value": "id1"
+              }
             },
             {
               "type": "HashSelector",
-              "id": "id2"
-            },
-            {
-              "type": "AttributeSelector",
-              "attribute": {
-                "type": "AttributeSelectorAttribute",
-                "attribute": "attribute"
+              "id": {
+                "type": "Identifier",
+                "value": "id2"
               }
             },
             {
               "type": "AttributeSelector",
               "attribute": {
                 "type": "AttributeSelectorAttribute",
-                "attribute": "attribute"
+                "attribute": {
+                  "type": "Identifier",
+                  "value": "attribute"
+                }
+              }
+            },
+            {
+              "type": "AttributeSelector",
+              "attribute": {
+                "type": "AttributeSelectorAttribute",
+                "attribute": {
+                  "type": "Identifier",
+                  "value": "attribute"
+                }
               },
               "operator": "=",
-              "value": "test"
+              "value": {
+                "type": "StringLiteral",
+                "value": "test"
+              }
             },
             {
               "type": "PseudoSelector",
               "body": {
-                "type": "FunctionCall",
+                "type": "CallExpression",
                 "argument": {
                   "type": "NegationArgument",
                   "body": {
                     "type": "AttributeSelector",
                     "attribute": {
                       "type": "AttributeSelectorAttribute",
-                      "attribute": "class",
+                      "attribute": {
+                        "type": "Identifier",
+                        "value": "class"
+                      },
                       "namespace": {
-                        "type": "NamespacePrefix",
-                        "namespace": ""
+                        "type": "NamespacePrefix"
                       }
                     },
                     "operator": "=",
-                    "value": "class"
+                    "value": {
+                      "type": "StringLiteral",
+                      "value": "class"
+                    }
                   }
                 },
                 "isNegationCall": true
@@ -74,22 +103,42 @@ Output:
               "type": "PseudoSelector",
               "body": {
                 "type": "PseudoClassSelector",
-                "body": "first"
+                "body": {
+                  "type": "Identifier",
+                  "value": "first"
+                }
               }
             },
             {
               "type": "PseudoSelector",
               "body": {
-                "type": "FunctionCall",
+                "type": "CallExpression",
                 "argument": {
                   "type": "NegationArgument",
                   "body": {
                     "type": "PseudoSelector",
                     "body": {
-                      "type": "FunctionCall",
+                      "type": "CallExpression",
                       "argument": {
                         "type": "FunctionArgument",
-                        "body": "2n+1"
+                        "body": [
+                          {
+                            "type": "Identifier",
+                            "value": 2
+                          },
+                          {
+                            "type": "Identifier",
+                            "value": "n"
+                          },
+                          {
+                            "type": "Identifier",
+                            "value": "+"
+                          },
+                          {
+                            "type": "Identifier",
+                            "value": 1
+                          }
+                        ]
                       },
                       "isNegationCall": false
                     }

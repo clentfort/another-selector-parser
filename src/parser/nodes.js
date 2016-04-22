@@ -1,16 +1,23 @@
 /* @flow */
-export type CombinatorOperator = '+' | '~' | '>' | 'whitespace';
-export type AttributeSelectorOperator = '=' | '~=' | '|=' | '^=' | '$=' | '*=';
+// Identifier
+export type Identifier =
+  { type: 'Identifier'; value: string; }
 
+// Literals
+export type StringLiteral =
+  { type: 'StringLiteral'; value: string; };
+
+// SelectorsGroup
 export type SelectorsGroup =
-  { type: 'SelectorsGroup'; selectors: Array<Selector>; }
+  { type: 'SelectorsGroup'; body: Array<Selector>; }
 
 export type Selector =
   { type: 'Selector'; body: Array<SimpleSelectorSequence|Combinator>; }
 
 export type SimpleSelectorSequence =
-  { type: 'SimpleSelectorSequence'; simpleSelectors: Array<SimpleSelector>; };
+  { type: 'SimpleSelectorSequence'; body: Array<SimpleSelector>; };
 
+export type CombinatorOperator = '+' | '~' | '>' | 'whitespace';
 export type Combinator =
   { type: 'Combinator'; operator: CombinatorOperator; };
 
@@ -23,14 +30,15 @@ export type SimpleSelector =
   PseudoSelector;
 
 export type NamespacePrefix =
-  { type: 'NamespacePrefix'; namespace: string; };
+  { type: 'NamespacePrefix'; namespace: Identifier; };
 
 export type TypeSelector =
-  { type: 'TypeSelector'; body: string; namespace: ?NamespacePrefix; };
+  { type: 'TypeSelector'; body: Identifier; namespace: ?NamespacePrefix; };
 
 export type UniversalSelector =
-  { type: 'UniversalSelector'; body: '*'; namespace: ?NamespacePrefix; };
+  { type: 'UniversalSelector'; namespace: ?NamespacePrefix; };
 
+export type AttributeSelectorOperator = '=' | '~=' | '|=' | '^=' | '$=' | '*=';
 export type AttributeSelector = {
   type: 'AttributeSelector';
   attribute: AttributeSelectorAttribute;
@@ -39,71 +47,73 @@ export type AttributeSelector = {
 };
 
 export type AttributeSelectorAttribute =
-  { type: 'AttributeSelectorAttribute'; attribute: string; namespace: ?NamespacePrefix; };
+  { type: 'AttributeSelectorAttribute'; attribute: Identifier; namespace: ?NamespacePrefix; };
 
-export type AttributeSelectorValue = string; // String or identToken
+export type AttributeSelectorValue = Identifier | StringLiteral;
 
 export type ClassSelector =
-  { type: 'ClassSelector'; className: string; };
+  { type: 'ClassSelector'; className: Identifier; };
 
 export type HashSelector =
-  { type: 'HashSelector'; id: string; };
+  { type: 'HashSelector'; id: Identifier; };
 
 export type PseudoSelector =
-  { type: 'PseudoSelector'; body: PseudoElementSelector | PseudoClassSelector | FunctionCall; };
+  { type: 'PseudoSelector'; body: PseudoElementSelector | PseudoClassSelector | CallExpression; };
 
 export type PseudoClassSelector =
-  { type: 'PseudoClassSelector'; body: string; }
+  { type: 'PseudoClassSelector'; body: Identifier; }
 
 export type PseudoElementSelector =
-  { type: 'PseudoElementSelector'; body: string; }
+  { type: 'PseudoElementSelector'; body: Identifier; }
 
-export type FunctionCall =
-  { type: 'FunctionCall'; argument: FunctionArgument; isNegationCall: false } |
-  { type: 'FunctionCall'; argument: NegationArgument; isNegationCall: true };
+export type CallExpression =
+  { type: 'CallExpression'; argument: FunctionArgument; isNegationCall: false } |
+  { type: 'CallExpression'; argument: NegationArgument; isNegationCall: true };
 
 export type FunctionArgument =
-  { type: 'FunctionArgument'; body: string; };
+  { type: 'FunctionArgument'; body: Array<Identifier>; };
 
 export type NegationArgument =
   { type: 'NegationArgument'; body: SimpleSelector };
 
 export type Node =
-  SelectorsGroup |
-  Selector |
-  SimpleSelectorSequence |
-  Combinator |
-  SimpleSelector |
-  NamespacePrefix |
-  TypeSelector |
-  UniversalSelector |
   AttributeSelector |
+  CallExpression |
   ClassSelector |
+  Combinator |
+  FunctionArgument |
   HashSelector |
-  PseudoSelector |
+  Identifier |
+  NamespacePrefix |
+  NegationArgument |
   PseudoClassSelector |
   PseudoElementSelector |
-  FunctionCall |
-  FunctionArgument |
-  NegationArgument;
+  PseudoSelector |
+  Selector |
+  SelectorsGroup |
+  SimpleSelector |
+  SimpleSelectorSequence |
+  StringLiteral |
+  TypeSelector |
+  UniversalSelector;
 
 export const createSelectorsGroup =
-  (): SelectorsGroup => ({ type: 'SelectorsGroup', selectors: [] });
+  (): SelectorsGroup => ({ type: 'SelectorsGroup', body: [] });
 
 export const createSelector =
   (): Selector => ({ type: 'Selector', body: [] });
 
 export const createSimpleSelectorSequence =
-  (): SimpleSelectorSequence => ({ type: 'SimpleSelectorSequence', simpleSelectors: [] });
+  (): SimpleSelectorSequence => ({ type: 'SimpleSelectorSequence', body: [] });
 
 export const createCombinator =
   (operator: CombinatorOperator): Combinator => ({ type: 'Combinator', operator });
 
 export const createNamespacePrefix =
-  (namespace: string = ''): NamespacePrefix => ({ type: 'NamespacePrefix', namespace });
+  (namespace: Identifier): NamespacePrefix => ({ type: 'NamespacePrefix', namespace });
 
 export const createTypeSelector = (
-  body: string,
+  body: Identifier,
   namespace: ?NamespacePrefix
 ): TypeSelector => ({ type: 'TypeSelector', body, namespace });
 
@@ -118,36 +128,42 @@ export const createAttributeSelector = (
 ): AttributeSelector => ({ type: 'AttributeSelector', attribute, operator, value });
 
 export const createAttributeSelectorAttribute = (
-  attribute: string,
+  attribute: Identifier,
   namespace: ?NamespacePrefix
 ): AttributeSelectorAttribute => ({ type: 'AttributeSelectorAttribute', attribute, namespace });
 
 export const createClassSelector =
-  (className: string): ClassSelector => ({ type: 'ClassSelector', className });
+  (className: Identifier): ClassSelector => ({ type: 'ClassSelector', className });
 
 export const createHashSelector =
-  (id: string): HashSelector => ({ type: 'HashSelector', id });
+  (id: Identifier): HashSelector => ({ type: 'HashSelector', id });
 
 export const createPseudoSelector = (
   body: PseudoElementSelector | PseudoClassSelector
 ): PseudoSelector => ({ type: 'PseudoSelector', body });
 
 export const createPseudoClassSelector =
-  (body: string): PseudoClassSelector => ({ type: 'PseudoClassSelector', body });
+  (body: Identifier): PseudoClassSelector => ({ type: 'PseudoClassSelector', body });
 
 export const createPseudoElementSelector =
-  (body: string): PseudoElementSelector => ({ type: 'PseudoElementSelector', body });
+  (body: Identifier): PseudoElementSelector => ({ type: 'PseudoElementSelector', body });
 
-export const createFunctionCall = (
+export const createCallExpression = (
   argument: FunctionArgument
-): FunctionCall => ({ type: 'FunctionCall', argument, isNegationCall: false });
+): CallExpression => ({ type: 'CallExpression', argument, isNegationCall: false });
 
 export const createNegationCall = (
   argument: NegationArgument
-): FunctionCall => ({ type: 'FunctionCall', argument, isNegationCall: true });
+): CallExpression => ({ type: 'CallExpression', argument, isNegationCall: true });
 
 export const createFunctionArgument =
-  (body: string): FunctionArgument => ({ type: 'FunctionArgument', body });
+  (): FunctionArgument => ({ type: 'FunctionArgument', body: [] });
 
 export const createNegationArgument =
   (body: SimpleSelector): NegationArgument => ({ type: 'NegationArgument', body });
+
+export const createIdentifier =
+  (value: string): Identifier => ({ type: 'Identifier', value });
+
+export const createStringLiteral =
+  (value: string): StringLiteral => ({ type: 'StringLiteral', value });

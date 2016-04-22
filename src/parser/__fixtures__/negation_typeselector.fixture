@@ -4,22 +4,25 @@ Input:
 Output:
 {
   "type": "SelectorsGroup",
-  "selectors": [
+  "body": [
     {
       "type": "Selector",
       "body": [
         {
           "type": "SimpleSelectorSequence",
-          "simpleSelectors": [
+          "body": [
             {
               "type": "PseudoSelector",
               "body": {
-                "type": "FunctionCall",
+                "type": "CallExpression",
                 "argument": {
                   "type": "NegationArgument",
                   "body": {
                     "type": "TypeSelector",
-                    "body": "element"
+                    "body": {
+                      "type": "Identifier",
+                      "value": "element"
+                    }
                   }
                 },
                 "isNegationCall": true

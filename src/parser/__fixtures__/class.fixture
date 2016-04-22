@@ -4,16 +4,19 @@ Input:
 Output:
 {
   "type": "SelectorsGroup",
-  "selectors": [
+  "body": [
     {
       "type": "Selector",
       "body": [
         {
           "type": "SimpleSelectorSequence",
-          "simpleSelectors": [
+          "body": [
             {
               "type": "ClassSelector",
-              "className": "class"
+              "className": {
+                "type": "Identifier",
+                "value": "class"
+              }
             }
           ]
         }

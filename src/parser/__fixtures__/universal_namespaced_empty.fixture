@@ -4,19 +4,18 @@ Input:
 Output:
 {
   "type": "SelectorsGroup",
-  "selectors": [
+  "body": [
     {
       "type": "Selector",
       "body": [
         {
           "type": "SimpleSelectorSequence",
-          "simpleSelectors": [
+          "body": [
             {
               "type": "UniversalSelector",
               "body": "*",
               "namespace": {
-                "type": "NamespacePrefix",
-                "namespace": ""
+                "type": "NamespacePrefix"
               }
             }
           ]

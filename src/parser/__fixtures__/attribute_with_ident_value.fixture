@@ -4,21 +4,27 @@ Input:
 Output:
 {
   "type": "SelectorsGroup",
-  "selectors": [
+  "body": [
     {
       "type": "Selector",
       "body": [
         {
           "type": "SimpleSelectorSequence",
-          "simpleSelectors": [
+          "body": [
             {
               "type": "AttributeSelector",
               "attribute": {
                 "type": "AttributeSelectorAttribute",
-                "attribute": "class"
+                "attribute": {
+                  "type": "Identifier",
+                  "value": "class"
+                }
               },
               "operator": "=",
-              "value": "classname"
+              "value": {
+                "type": "Identifier",
+                "value": "classname"
+              }
             }
           ]
         }

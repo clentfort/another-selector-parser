@@ -4,19 +4,25 @@ myNamespace|element
 Output:
 {
   "type": "SelectorsGroup",
-  "selectors": [
+  "body": [
     {
       "type": "Selector",
       "body": [
         {
           "type": "SimpleSelectorSequence",
-          "simpleSelectors": [
+          "body": [
             {
               "type": "TypeSelector",
-              "body": "element",
+              "body": {
+                "type": "Identifier",
+                "value": "element"
+              },
               "namespace": {
                 "type": "NamespacePrefix",
-                "namespace": "myNamespace"
+                "namespace": {
+                  "type": "Identifier",
+                  "value": "myNamespace"
+                }
               }
             }
           ]

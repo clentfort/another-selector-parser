@@ -4,16 +4,19 @@ span ~ span
 Output:
 {
   "type": "SelectorsGroup",
-  "selectors": [
+  "body": [
     {
       "type": "Selector",
       "body": [
         {
           "type": "SimpleSelectorSequence",
-          "simpleSelectors": [
+          "body": [
             {
               "type": "TypeSelector",
-              "body": "span"
+              "body": {
+                "type": "Identifier",
+                "value": "span"
+              }
             }
           ]
         },
@@ -23,10 +26,13 @@ Output:
         },
         {
           "type": "SimpleSelectorSequence",
-          "simpleSelectors": [
+          "body": [
             {
               "type": "TypeSelector",
-              "body": "span"
+              "body": {
+                "type": "Identifier",
+                "value": "span"
+              }
             }
           ]
         }

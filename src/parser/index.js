@@ -9,15 +9,14 @@ import tokenize from '../tokenizer';
 import type { Token, TokenType } from '../tokenizer/types';
 import type {
   AttributeSelector,
+  CallExpression,
   ClassSelector,
   Combinator,
-  CombinatorOperator,
   FunctionArgument,
-  FunctionCall,
   HashSelector,
+  Identifier,
   NamespacePrefix,
   NegationArgument,
-  Node,
   PseudoClassSelector,
   PseudoElementSelector,
   PseudoSelector,
@@ -25,11 +24,35 @@ import type {
   SelectorsGroup,
   SimpleSelector,
   SimpleSelectorSequence,
+  StringLiteral,
   TypeSelector,
   UniversalSelector,
+  Node,
+  CombinatorOperator,
 } from './nodes';
 
 type ParseToken = (token: Token, lookahead: Token) => boolean;
+type NodeTypeToNode =
+((type: 'AttributeSelector') => AttributeSelector) &
+((type: 'CallExpression') => CallExpression) &
+((type: 'ClassSelector') => ClassSelector) &
+((type: 'Combinator') => Combinator) &
+((type: 'FunctionArgument') => FunctionArgument) &
+((type: 'HashSelector') => HashSelector) &
+((type: 'Identifier') => Identifier) &
+((type: 'NamespacePrefix') => NamespacePrefix) &
+((type: 'NegationArgument') => NegationArgument) &
+((type: 'PseudoClassSelector') => PseudoClassSelector) &
+((type: 'PseudoElementSelector') => PseudoElementSelector) &
+((type: 'PseudoSelector') => PseudoSelector) &
+((type: 'Selector') => Selector) &
+((type: 'SelectorsGroup') => SelectorsGroup) &
+((type: 'SimpleSelector') => SimpleSelector) &
+((type: 'SimpleSelectorSequence') => SimpleSelectorSequence) &
+((type: 'StringLiteral') => StringLiteral) &
+((type: 'TypeSelector') => TypeSelector) &
+((type: 'UniversalSelector') => UniversalSelector) &
+((type: ?string) => Node);
 
 export class Parser {
   _nodes: Array<Node>;
@@ -89,7 +112,7 @@ export class Parser {
         if (this._topNode().type === 'Selector') {
           const selector = this._popNode('Selector');
           const selectorsGroup = this._topNode('SelectorsGroup');
-          selectorsGroup.selectors.push(selector);
+          selectorsGroup.body.push(selector);
         } else {
           this._topNode('SelectorsGroup');
         }
@@ -220,7 +243,7 @@ export class Parser {
       }
       let simpleSelector;
       if (token.type === 'ident') {
-        simpleSelector = helper.createTypeSelector(token.value, namespace);
+        simpleSelector = helper.createTypeSelector(helper.createIdentifier(token.value), namespace);
       } else {
         simpleSelector = helper.createUniversalSelector(namespace);
       }
@@ -231,7 +254,7 @@ export class Parser {
         this._parse = this._parseNegationArgument;
       } else {
         const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.simpleSelectors.push(simpleSelector);
+        simpleSelectorSequence.body.push(simpleSelector);
         this._parse = this._parseSimpleSelectorSequence2;
       }
       return false;
@@ -244,6 +267,7 @@ export class Parser {
       this._parseAttributeSelector :
       this._parseTypeOrUnivsersalSelector;
     if (token.type === 'pipe') {
+      // $FlowFixMe
       this._pushNode(helper.createNamespacePrefix());
       this._parse = returnTo;
       return false;
@@ -251,7 +275,7 @@ export class Parser {
     if (lookahead.type === 'pipe') {
       if (token.type === 'star' || token.type === 'ident') {
         const prefix = (token.type === 'star') ? '*' : token.value;
-        this._pushNode(helper.createNamespacePrefix(prefix));
+        this._pushNode(helper.createNamespacePrefix(helper.createIdentifier(prefix)));
         this._parse = this._eatTokenAndThen('pipe', returnTo);
         return false;
       }
@@ -273,7 +297,10 @@ export class Parser {
       if (this._topNode().type === 'NamespacePrefix') {
         namespace = this._popNode('NamespacePrefix');
       }
-      const attribute = helper.createAttributeSelectorAttribute(token.value, namespace);
+      const attribute = helper.createAttributeSelectorAttribute(
+        helper.createIdentifier(token.value),
+        namespace
+      );
       const attributeSelector = this._topNode('AttributeSelector');
       attributeSelector.attribute = attribute;
       this._parse = this._parseAttributeMatcher;
@@ -300,7 +327,7 @@ export class Parser {
         this._parse = this._parseNegationArgument;
       } else {
         const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.simpleSelectors.push(attributeSelector);
+        simpleSelectorSequence.body.push(attributeSelector);
         this._parse = this._parseSimpleSelectorSequence2;
       }
       return false;
@@ -312,9 +339,14 @@ export class Parser {
     if (token.type === 'whitespace') {
       return false;
     }
-    if (token.type === 'ident' || token.type === 'string') {
+    if (token.type === 'ident') {
       const attributeSelector = this._topNode('AttributeSelector');
-      attributeSelector.value = token.value;
+      attributeSelector.value = helper.createIdentifier(token.value);
+      return false;
+    }
+    if (token.type === 'string') {
+      const attributeSelector = this._topNode('AttributeSelector');
+      attributeSelector.value = helper.createStringLiteral(token.value);
       return false;
     }
     this._parse = this._parseAttributeMatcher;
@@ -334,11 +366,12 @@ export class Parser {
       }
 
       let pseudoSubSelector;
+      const body = helper.createIdentifier(token.value);
       if (this._topNode().type === 'PseudoElementSelector') {
         pseudoSubSelector = this._popNode('PseudoElementSelector');
-        pseudoSubSelector.body = token.value;
+        pseudoSubSelector.body = body;
       } else {
-        pseudoSubSelector = helper.createPseudoClassSelector(token.value);
+        pseudoSubSelector = helper.createPseudoClassSelector(body);
       }
 
       const pseudoSelector = this._popNode('PseudoSelector');
@@ -349,7 +382,7 @@ export class Parser {
         this._parse = this._parseNegationArgument;
       } else {
         const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.simpleSelectors.push(pseudoSelector);
+        simpleSelectorSequence.body.push(pseudoSelector);
         this._parse = this._parseSimpleSelectorSequence2;
       }
       return false;
@@ -369,13 +402,13 @@ export class Parser {
         this._pushNode(helper.createNegationCall());
       } else {
         // $FlowFixMe
-        this._pushNode(helper.createFunctionCall());
+        this._pushNode(helper.createCallExpression());
       }
-      this._parse = isNegationCall ? this._parseNegationCall : this._parseFunctionCall;
+      this._parse = isNegationCall ? this._parseNegationCall : this._parseCallExpression;
       return false;
     }
     if (token.type === 'parenR') {
-      const functionCall = this._popNode('FunctionCall');
+      const functionCall = this._popNode('CallExpression');
       const pseudoSelector = this._popNode('PseudoSelector');
       pseudoSelector.body = functionCall;
       if (this._parsingNegationArgument) {
@@ -384,7 +417,7 @@ export class Parser {
         this._parse = this._parseNegationArgument;
       } else {
         const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.simpleSelectors.push(pseudoSelector);
+        simpleSelectorSequence.body.push(pseudoSelector);
         this._parse = this._parseSimpleSelectorSequence2;
       }
       return false;
@@ -443,7 +476,7 @@ export class Parser {
         return true;
       case 'parenR': {
         const negationArgument = this._popNode('NegationArgument');
-        const functionCall = this._topNode('FunctionCall');
+        const functionCall = this._topNode('CallExpression');
         if (functionCall.isNegationCall) {
           functionCall.argument = negationArgument;
         } else {
@@ -459,10 +492,9 @@ export class Parser {
     }
   }
 
-  _parseFunctionCall(token: Token): boolean {
+  _parseCallExpression(token: Token): boolean {
     if (token.type === 'parenL') {
-      // $FlowFixMe
-      this._pushNode(helper.createFunctionArgument(null, false));
+      this._pushNode(helper.createFunctionArgument());
       this._parse = this._parseFunctionArgument;
       return false;
     }
@@ -480,27 +512,27 @@ export class Parser {
         return false;
       case 'plus':
         functionArg = this._topNode('FunctionArgument');
-        functionArg.body += '+';
+        functionArg.body.push(helper.createIdentifier('+'));
         return false;
       case 'minus':
         functionArg = this._topNode('FunctionArgument');
-        functionArg.body += '-';
+        functionArg.body.push(helper.createIdentifier('-'));
         return false;
       case 'ident':
       case 'num':
       case 'string':
         functionArg = this._topNode('FunctionArgument');
-        functionArg.body += token.value;
+        functionArg.body.push(helper.createIdentifier(token.value));
         return false;
       case 'parenR': {
         functionArg = this._popNode('FunctionArgument');
-        const functionCall = this._topNode('FunctionCall');
+        const functionCall = this._topNode('CallExpression');
         if (!functionCall.isNegationCall) {
           functionCall.argument = functionArg;
         } else {
           throw new Error();
         }
-        this._parse = this._parseFunctionCall;
+        this._parse = this._parseCallExpression;
         return true;
       }
       default:
@@ -511,14 +543,14 @@ export class Parser {
   _parseClassSelector(token: Token): boolean {
     if (token.type === 'ident') {
       const classSelector = this._popNode('ClassSelector');
-      classSelector.className = token.value;
+      classSelector.className = helper.createIdentifier(token.value);
       if (this._parsingNegationArgument) {
         const negationArgument = this._topNode('NegationArgument');
         negationArgument.body = classSelector;
         this._parse = this._parseNegationArgument;
       } else {
         const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.simpleSelectors.push(classSelector);
+        simpleSelectorSequence.body.push(classSelector);
         this._parse = this._parseSimpleSelectorSequence2;
       }
       return false;
@@ -529,14 +561,14 @@ export class Parser {
   _parseHashSelector(token: Token): boolean {
     if (token.type === 'ident') {
       const hashSelector = this._popNode('HashSelector');
-      hashSelector.id = token.value;
+      hashSelector.id = helper.createIdentifier(token.value);
       if (this._parsingNegationArgument) {
         const negationArgument = this._topNode('NegationArgument');
         negationArgument.body = hashSelector;
         this._parse = this._parseNegationArgument;
       } else {
         const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.simpleSelectors.push(hashSelector);
+        simpleSelectorSequence.body.push(hashSelector);
         this._parse = this._parseSimpleSelectorSequence2;
       }
       return false;
@@ -548,25 +580,7 @@ export class Parser {
     this._nodes.push(node);
   }
 
-  _popNode:
-    ((type: 'SelectorsGroup') => SelectorsGroup) &
-    ((type: 'Selector') => Selector) &
-    ((type: 'SimpleSelectorSequence') => SimpleSelectorSequence) &
-    ((type: 'Combinator') => Combinator) &
-    ((type: 'SimpleSelector') => SimpleSelector) &
-    ((type: 'NamespacePrefix') => NamespacePrefix) &
-    ((type: 'TypeSelector') => TypeSelector) &
-    ((type: 'UniversalSelector') => UniversalSelector) &
-    ((type: 'AttributeSelector') => AttributeSelector) &
-    ((type: 'ClassSelector') => ClassSelector) &
-    ((type: 'HashSelector') => HashSelector) &
-    ((type: 'PseudoSelector') => PseudoSelector) &
-    ((type: 'PseudoClassSelector') => PseudoClassSelector) &
-    ((type: 'PseudoElementSelector') => PseudoElementSelector) &
-    ((type: 'FunctionCall') => FunctionCall) &
-    ((type: 'FunctionArgument') => FunctionArgument) &
-    ((type: 'NegationArgument') => NegationArgument) &
-    ((type: ?string) => Node);
+  _popNode: NodeTypeToNode;
   // $FlowFixMe
   _popNode(type) {
     const node = this._topNode(type);
@@ -574,25 +588,7 @@ export class Parser {
     return node;
   }
 
-  _topNode:
-    ((type: 'SelectorsGroup') => SelectorsGroup) &
-    ((type: 'Selector') => Selector) &
-    ((type: 'SimpleSelectorSequence') => SimpleSelectorSequence) &
-    ((type: 'Combinator') => Combinator) &
-    ((type: 'SimpleSelector') => SimpleSelector) &
-    ((type: 'NamespacePrefix') => NamespacePrefix) &
-    ((type: 'TypeSelector') => TypeSelector) &
-    ((type: 'UniversalSelector') => UniversalSelector) &
-    ((type: 'AttributeSelector') => AttributeSelector) &
-    ((type: 'ClassSelector') => ClassSelector) &
-    ((type: 'HashSelector') => HashSelector) &
-    ((type: 'PseudoSelector') => PseudoSelector) &
-    ((type: 'PseudoClassSelector') => PseudoClassSelector) &
-    ((type: 'PseudoElementSelector') => PseudoElementSelector) &
-    ((type: 'FunctionCall') => FunctionCall) &
-    ((type: 'FunctionArgument') => FunctionArgument) &
-    ((type: 'NegationArgument') => NegationArgument) &
-    ((type: ?string) => Node);
+  _topNode: NodeTypeToNode;
   // $FlowFixMe
   _topNode(type) {
     const top = this._nodes[this._nodes.length - 1];

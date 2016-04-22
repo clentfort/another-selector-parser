@@ -4,18 +4,21 @@ Input:
 Output:
 {
   "type": "SelectorsGroup",
-  "selectors": [
+  "body": [
     {
       "type": "Selector",
       "body": [
         {
           "type": "SimpleSelectorSequence",
-          "simpleSelectors": [
+          "body": [
             {
               "type": "PseudoSelector",
               "body": {
                 "type": "PseudoElementSelector",
-                "body": "pseudoElement"
+                "body": {
+                  "type": "Identifier",
+                  "value": "pseudoElement"
+                }
               }
             }
           ]
