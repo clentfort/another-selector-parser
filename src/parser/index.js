@@ -6,7 +6,7 @@ import {
 import * as helper from './nodes';
 import tokenize from '../tokenizer';
 
-import type { Token, TokenType } from '../tokenizer/types';
+import type { Token, TokenType } from '../tokenizer/tokens';
 import type {
   AttributeSelector,
   CallExpression,

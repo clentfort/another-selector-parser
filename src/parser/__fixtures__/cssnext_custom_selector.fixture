@@ -1,0 +1,29 @@
+Input:
+:--customSelector
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "body": [
+    {
+      "type": "Selector",
+      "body": [
+        {
+          "type": "SimpleSelectorSequence",
+          "body": [
+            {
+              "type": "PseudoSelector",
+              "body": {
+                "type": "PseudoClassSelector",
+                "body": {
+                  "type": "Identifier",
+                  "value": "--customSelector"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

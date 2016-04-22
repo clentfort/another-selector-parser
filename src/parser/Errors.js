@@ -1,5 +1,5 @@
 /* @flow */
-import type { TokenType } from '../tokenizer/types';
+import type { TokenType } from '../tokenizer/tokens';
 
 export class UnexpectedTopNodeError extends Error {
   constructor(actual: string, expected: ?string) {

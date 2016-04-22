@@ -1,0 +1,60 @@
+Input:
+EndsAt7 EndsAt16
+
+Output:
+[
+  {
+    "type": "ident",
+    "loc": {
+      "start": {
+        "colum": 0,
+        "line": 1
+      },
+      "end": {
+        "column": 7,
+        "line": 1
+      }
+    },
+    "value": "EndsAt7"
+  },
+  {
+    "type": "whitespace",
+    "loc": {
+      "start": {
+        "colum": 7,
+        "line": 1
+      },
+      "end": {
+        "column": 8,
+        "line": 1
+      }
+    }
+  },
+  {
+    "type": "ident",
+    "loc": {
+      "start": {
+        "colum": 8,
+        "line": 1
+      },
+      "end": {
+        "column": 16,
+        "line": 1
+      }
+    },
+    "value": "EndsAt16"
+  },
+  {
+    "type": "EOF",
+    "loc": {
+      "start": {
+        "colum": 16,
+        "line": 1
+      },
+      "end": {
+        "column": 17,
+        "line": 1
+      }
+    }
+  }
+]

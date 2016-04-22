@@ -5,13 +5,29 @@ Output:
 [
   {
     "type": "ident",
-    "start": 0,
-    "end": 6,
+    "loc": {
+      "start": {
+        "colum": 0,
+        "line": 1
+      },
+      "end": {
+        "column": 6,
+        "line": 1
+      }
+    },
     "value": "\u0001"
   },
   {
     "type": "EOF",
-    "start": 6,
-    "end": 7
+    "loc": {
+      "start": {
+        "colum": 6,
+        "line": 1
+      },
+      "end": {
+        "column": 7,
+        "line": 1
+      }
+    }
   }
 ]

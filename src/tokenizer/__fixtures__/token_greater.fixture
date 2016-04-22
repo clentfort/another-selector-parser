@@ -5,13 +5,29 @@ Output:
 [
   {
     "type": "combinator",
-    "start": 0,
-    "end": 1,
+    "loc": {
+      "start": {
+        "colum": 0,
+        "line": 1
+      },
+      "end": {
+        "column": 1,
+        "line": 1
+      }
+    },
     "value": ">"
   },
   {
     "type": "EOF",
-    "start": 1,
-    "end": 2
+    "loc": {
+      "start": {
+        "colum": 1,
+        "line": 1
+      },
+      "end": {
+        "column": 2,
+        "line": 1
+      }
+    }
   }
 ]

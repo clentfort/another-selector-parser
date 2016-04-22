@@ -4,6 +4,7 @@
   "plugins": [
   ],
   "rules": {
+    "no-cond-assign": "off",
     "no-param-reassign": ["error", { "props": false }],
     "no-use-before-define": "off"
   }

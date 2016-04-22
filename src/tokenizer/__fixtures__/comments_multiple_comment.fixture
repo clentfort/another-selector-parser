@@ -5,7 +5,15 @@ Output:
 [
   {
     "type": "EOF",
-    "start": 15,
-    "end": 16
+    "loc": {
+      "start": {
+        "colum": 15,
+        "line": 1
+      },
+      "end": {
+        "column": 16,
+        "line": 1
+      }
+    }
   }
 ]

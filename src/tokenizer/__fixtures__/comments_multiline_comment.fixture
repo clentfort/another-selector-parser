@@ -1,0 +1,23 @@
+Input:
+/**
+ * This is a multiline comment
+ * that spans some more
+ * lines
+ */
+
+Output:
+[
+  {
+    "type": "EOF",
+    "loc": {
+      "start": {
+        "colum": 3,
+        "line": 5
+      },
+      "end": {
+        "column": 4,
+        "line": 5
+      }
+    }
+  }
+]

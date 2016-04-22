@@ -5,13 +5,29 @@ Output:
 [
   {
     "type": "string",
-    "start": 0,
-    "end": 54,
+    "loc": {
+      "start": {
+        "colum": 0,
+        "line": 1
+      },
+      "end": {
+        "column": 54,
+        "line": 1
+      }
+    },
     "value": "a string in double quotes and some escaped \"value\""
   },
   {
     "type": "EOF",
-    "start": 54,
-    "end": 55
+    "loc": {
+      "start": {
+        "colum": 54,
+        "line": 1
+      },
+      "end": {
+        "column": 55,
+        "line": 1
+      }
+    }
   }
 ]

@@ -5,13 +5,29 @@ Output:
 [
   {
     "type": "num",
-    "start": 0,
-    "end": 3,
+    "loc": {
+      "start": {
+        "colum": 0,
+        "line": 1
+      },
+      "end": {
+        "column": 3,
+        "line": 1
+      }
+    },
     "value": 1
   },
   {
     "type": "EOF",
-    "start": 3,
-    "end": 4
+    "loc": {
+      "start": {
+        "colum": 3,
+        "line": 1
+      },
+      "end": {
+        "column": 4,
+        "line": 1
+      }
+    }
   }
 ]

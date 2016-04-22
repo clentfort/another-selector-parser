@@ -1,0 +1,89 @@
+Input:
+OnLine1
+OnLine2
+OnLine3
+
+Output:
+[
+  {
+    "type": "ident",
+    "loc": {
+      "start": {
+        "colum": 0,
+        "line": 1
+      },
+      "end": {
+        "column": 7,
+        "line": 1
+      }
+    },
+    "value": "OnLine1"
+  },
+  {
+    "type": "whitespace",
+    "loc": {
+      "start": {
+        "colum": 7,
+        "line": 1
+      },
+      "end": {
+        "column": 0,
+        "line": 1
+      }
+    }
+  },
+  {
+    "type": "ident",
+    "loc": {
+      "start": {
+        "colum": 0,
+        "line": 2
+      },
+      "end": {
+        "column": 7,
+        "line": 2
+      }
+    },
+    "value": "OnLine2"
+  },
+  {
+    "type": "whitespace",
+    "loc": {
+      "start": {
+        "colum": 7,
+        "line": 2
+      },
+      "end": {
+        "column": 0,
+        "line": 2
+      }
+    }
+  },
+  {
+    "type": "ident",
+    "loc": {
+      "start": {
+        "colum": 0,
+        "line": 3
+      },
+      "end": {
+        "column": 7,
+        "line": 3
+      }
+    },
+    "value": "OnLine3"
+  },
+  {
+    "type": "EOF",
+    "loc": {
+      "start": {
+        "colum": 7,
+        "line": 3
+      },
+      "end": {
+        "column": 8,
+        "line": 3
+      }
+    }
+  }
+]

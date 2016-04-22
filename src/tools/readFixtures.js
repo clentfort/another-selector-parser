@@ -60,6 +60,8 @@ export default function readFixtures(fixturePath) {
     );
     let parts;
 
+    console.log(data);
+
     // Matches a file of form:
     //   Input:
     //   <code>
