@@ -14,6 +14,7 @@ import {
 } from './Errors';
 
 import type { Token, TokenType } from './tokens';
+import type { Position } from '../util/location';
 
 export class Tokenizer {
   _input: string;
@@ -52,11 +53,11 @@ export class Tokenizer {
   }
 
   _createToken(type: TokenType, value:? any): Token {
-    const start = {
-      colum: this._previousPosition - this._previousLineStart,
+    const start: Position = {
+      column: this._previousPosition - this._previousLineStart,
       line: this._previousLine,
     };
-    const end = {
+    const end: Position = {
       column: this._currentPosition - this._currentLineStart,
       line: this._previousLine,
     };

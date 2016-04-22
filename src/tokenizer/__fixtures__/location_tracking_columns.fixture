@@ -7,7 +7,7 @@ Output:
     "type": "ident",
     "loc": {
       "start": {
-        "colum": 0,
+        "column": 0,
         "line": 1
       },
       "end": {
@@ -21,7 +21,7 @@ Output:
     "type": "whitespace",
     "loc": {
       "start": {
-        "colum": 7,
+        "column": 7,
         "line": 1
       },
       "end": {
@@ -34,7 +34,7 @@ Output:
     "type": "ident",
     "loc": {
       "start": {
-        "colum": 8,
+        "column": 8,
         "line": 1
       },
       "end": {
@@ -48,7 +48,7 @@ Output:
     "type": "EOF",
     "loc": {
       "start": {
-        "colum": 16,
+        "column": 16,
         "line": 1
       },
       "end": {

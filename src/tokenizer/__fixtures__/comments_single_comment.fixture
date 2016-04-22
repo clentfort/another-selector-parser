@@ -7,7 +7,7 @@ Output:
     "type": "EOF",
     "loc": {
       "start": {
-        "colum": 36,
+        "column": 36,
         "line": 1
       },
       "end": {

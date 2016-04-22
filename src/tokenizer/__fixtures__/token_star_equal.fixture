@@ -7,7 +7,7 @@ Output:
     "type": "matcher",
     "loc": {
       "start": {
-        "colum": 0,
+        "column": 0,
         "line": 1
       },
       "end": {
@@ -21,7 +21,7 @@ Output:
     "type": "EOF",
     "loc": {
       "start": {
-        "colum": 2,
+        "column": 2,
         "line": 1
       },
       "end": {

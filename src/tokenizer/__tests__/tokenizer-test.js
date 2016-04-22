@@ -3,14 +3,37 @@
 jest.disableAutomock();
 
 import tokenize from '../';
-import { types as tt } from '../types';
+import { types as tt } from '../tokens';
+
+function createToken(
+  type,
+  input,
+  value,
+  endLine = 1,
+  endCol = input && input.length || 1,
+  startLine = 1,
+  startCol = 0
+  ) {
+  const result = {
+    type,
+    loc: {
+      start: { line: startLine, column: startCol, },
+      end: { line: endLine, column: endCol }
+    }
+  }
+  if (value) {
+    result.value = value;
+  }
+
+  return result;
+}
 
 describe('tokenize', () => {
   describe('EOF', () => {
     it('returns EOF for empty input', () => {
       const { value, done } = tokenize('').next();
       expect(done).toBe(false);
-      expect(value).toEqual({ type: 'EOF', start: 0, end: 1 });
+      expect(value).toEqual(createToken('EOF'));
     });
 
     it('is down after returning EOF', () => {
@@ -43,13 +66,13 @@ describe('tokenize', () => {
     it('reads whitespace', () => {
       const input = '      ';
       let { value } = tokenize(input).next();
-      expect(value).toEqual({ type: 'whitespace', start: 0, end: input.length });
+      expect(value).toEqual(createToken('whitespace', input));
     });
 
     it('reads whitespace with a trailing comment', () => {
       const input = '  /* comment */';
       let { value, done } = tokenize(input).next();
-      expect(value).toEqual({ type: 'whitespace', start: 0, end: input.length});
+      expect(value).toEqual(createToken('whitespace', input));
       expect(done).toBe(false);
     });
 
@@ -57,13 +80,11 @@ describe('tokenize', () => {
       const input = ' /* comment */ ';
       const tokenizer = tokenize(input);
       let { value, done } = tokenizer.next();
-      expect(value).toEqual({ type: 'whitespace', start: 0, end: input.length });
+      expect(value).toEqual(createToken('whitespace', input));
       expect(done).toBe(false);
-      expect(tokenizer.next().value).toEqual({ 
-        type: 'EOF', 
-        start: input.length, 
-        end: input.length + 1,
-      });
+      const eof = tokenizer.next().value;
+      expect(eof.type).toEqual('EOF'); 
+      expect(eof.loc.end.column).toEqual(input.length + 1); 
     });
   });
 });

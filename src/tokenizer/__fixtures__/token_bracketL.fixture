@@ -7,7 +7,7 @@ Output:
     "type": "bracketL",
     "loc": {
       "start": {
-        "colum": 0,
+        "column": 0,
         "line": 1
       },
       "end": {
@@ -20,7 +20,7 @@ Output:
     "type": "EOF",
     "loc": {
       "start": {
-        "colum": 1,
+        "column": 1,
         "line": 1
       },
       "end": {
