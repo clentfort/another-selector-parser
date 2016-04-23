@@ -1,10 +1,10 @@
 Input:
-:
+,
 
 Output:
 [
   {
-    "type": "colon",
+    "type": "comma",
     "loc": {
       "start": {
         "column": 0,

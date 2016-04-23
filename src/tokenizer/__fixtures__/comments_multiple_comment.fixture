@@ -1,5 +1,5 @@
 Input:
-/* a comment */
+/* a comment *//* another comment */
 
 Output:
 [
@@ -7,11 +7,11 @@ Output:
     "type": "EOF",
     "loc": {
       "start": {
-        "column": 15,
+        "column": 36,
         "line": 1
       },
       "end": {
-        "column": 16,
+        "column": 37,
         "line": 1
       }
     }

@@ -1,5 +1,5 @@
 Input:
-*=
+^=
 
 Output:
 [
@@ -15,7 +15,7 @@ Output:
         "line": 1
       }
     },
-    "value": "*="
+    "value": "^="
   },
   {
     "type": "EOF",
