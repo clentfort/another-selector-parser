@@ -3,56 +3,31 @@ import {
   UnexpectedTokenError,
   UnexpectedTopNodeError,
 } from './Errors';
-import * as helper from './nodes';
+import nodes from './nodes/';
 import tokenize from '../tokenizer';
 
 import type { Token, TokenType } from '../tokenizer/tokens';
-import type {
-  AttributeSelector,
-  CallExpression,
-  ClassSelector,
-  Combinator,
-  FunctionArgument,
-  HashSelector,
-  Identifier,
-  NamespacePrefix,
-  NegationArgument,
-  PseudoClassSelector,
-  PseudoElementSelector,
-  PseudoSelector,
-  Selector,
-  SelectorsGroup,
-  SimpleSelector,
-  SimpleSelectorSequence,
-  StringLiteral,
-  TypeSelector,
-  UniversalSelector,
-  Node,
-  CombinatorOperator,
-} from './nodes';
 
 type ParseToken = (token: Token, lookahead: Token) => boolean;
 type NodeTypeToNode =
-((type: 'AttributeSelector') => AttributeSelector) &
-((type: 'CallExpression') => CallExpression) &
-((type: 'ClassSelector') => ClassSelector) &
-((type: 'Combinator') => Combinator) &
-((type: 'FunctionArgument') => FunctionArgument) &
-((type: 'HashSelector') => HashSelector) &
-((type: 'Identifier') => Identifier) &
-((type: 'NamespacePrefix') => NamespacePrefix) &
-((type: 'NegationArgument') => NegationArgument) &
-((type: 'PseudoClassSelector') => PseudoClassSelector) &
-((type: 'PseudoElementSelector') => PseudoElementSelector) &
-((type: 'PseudoSelector') => PseudoSelector) &
-((type: 'Selector') => Selector) &
-((type: 'SelectorsGroup') => SelectorsGroup) &
-((type: 'SimpleSelector') => SimpleSelector) &
-((type: 'SimpleSelectorSequence') => SimpleSelectorSequence) &
-((type: 'StringLiteral') => StringLiteral) &
-((type: 'TypeSelector') => TypeSelector) &
-((type: 'UniversalSelector') => UniversalSelector) &
-((type: ?string) => Node);
+((type: 'AttributeSelector') => nodes.AttributeSelector) &
+((type: 'CallExpression') => nodes.CallExpression) &
+((type: 'ClassSelector') => nodes.ClassSelector) &
+((type: 'Combinator') => nodes.Combinator) &
+((type: 'HashSelector') => nodes.HashSelector) &
+((type: 'Identifier') => nodes.Identifier) &
+((type: 'NamespacePrefix') => nodes.NamespacePrefix) &
+((type: 'PseudoClassSelector') => nodes.PseudoClassSelector) &
+((type: 'PseudoElementSelector') => nodes.PseudoElementSelector) &
+((type: 'PseudoSelector') => nodes.PseudoSelector) &
+((type: 'Selector') => nodes.Selector) &
+((type: 'SelectorsGroup') => nodes.SelectorsGroup) &
+((type: 'SimpleSelector') => nodes.SimpleSelector) &
+((type: 'SimpleSelectorSequence') => nodes.SimpleSelectorSequence) &
+((type: 'StringLiteral') => nodes.StringLiteral) &
+((type: 'TypeSelector') => nodes.TypeSelector) &
+((type: 'UniversalSelector') => nodes.UniversalSelector) &
+((type: ?string) => nodes.Node);
 
 export class Parser {
   _nodes: Array<Node>;
