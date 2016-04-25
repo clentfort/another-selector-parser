@@ -1,51 +1,30 @@
 /* @flow */
-import AttributeSelector,
-{
+export {
+  default as AttributeSelector,
   AttributeSelectorAttribute,
   AttributeSelectorMatcher,
   AttributeSelectorValue,
   AttributeSelectorWithMatcher,
 } from './AttributeSelector';
-import ClassSelector from './ClassSelector';
-import Combinator, { CombinatorOperator } from './Combinator';
-import HashSelector from './HashSelector';
-import Identifier from './Identifier';
-import NamespacePrefix from './NamespacePrefix';
-import Node from './Node';
-import PseudoSelector,
-{
+export { default as ClassSelector } from './ClassSelector';
+export {
+  default as Combinator,
+  CombinatorOperator,
+} from './Combinator';
+export { default as HashSelector } from './HashSelector';
+export { default as Identifier } from './Identifier';
+export { default as NamespacePrefix } from './NamespacePrefix';
+export { default as Node } from './Node';
+export {
+  default as PseudoSelector,
   PseudoClassSelector,
   PseudoElementSelector,
   CallExpression,
 } from './PseudoSelector';
-import Selector from './Selector';
-import SimpleSelectorSequence from './SimpleSelectorSequence';
-import SelectorsGroup from './SelectorsGroup';
-import StringLiteral from './StringLiteral';
-import TypeSelector from './TypeSelector';
-import UniversalSelector from './UniversalSelector';
+export { default as Selector } from './Selector';
+export { default as SimpleSelectorSequence } from './SimpleSelectorSequence';
+export { default as SelectorsGroup } from './SelectorsGroup';
+export { default as StringLiteral } from './StringLiteral';
+export { default as TypeSelector } from './TypeSelector';
+export { default as UniversalSelector } from './UniversalSelector';
 
-export default {
-  AttributeSelector,
-  AttributeSelectorAttribute,
-  AttributeSelectorMatcher,
-  AttributeSelectorValue,
-  AttributeSelectorWithMatcher,
-  CallExpression,
-  ClassSelector,
-  Combinator,
-  CombinatorOperator,
-  HashSelector,
-  Identifier,
-  NamespacePrefix,
-  Node,
-  PseudoClassSelector,
-  PseudoElementSelector,
-  PseudoSelector,
-  Selector,
-  SelectorsGroup,
-  SimpleSelectorSequence,
-  StringLiteral,
-  TypeSelector,
-  UniversalSelector,
-};
