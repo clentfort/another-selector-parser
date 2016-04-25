@@ -12,23 +12,42 @@ Output:
           "type": "SimpleSelectorSequence",
           "body": [
             {
-              "type": "PseudoSelector",
+              "type": "PseudoClassSelector",
               "body": {
                 "type": "CallExpression",
-                "argument": {
-                  "type": "NegationArgument",
-                  "body": {
-                    "type": "PseudoSelector",
-                    "body": {
-                      "type": "PseudoClassSelector",
-                      "body": {
-                        "type": "Identifier",
-                        "value": "hover"
+                "callee": {
+                  "type": "Identifier",
+                  "value": "not"
+                },
+                "params": [
+                  {
+                    "type": "colon",
+                    "loc": {
+                      "start": {
+                        "column": 5,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 6,
+                        "line": 1
                       }
                     }
+                  },
+                  {
+                    "type": "ident",
+                    "loc": {
+                      "start": {
+                        "column": 6,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 11,
+                        "line": 1
+                      }
+                    },
+                    "value": "hover"
                   }
-                },
-                "isNegationCall": true
+                ]
               }
             }
           ]

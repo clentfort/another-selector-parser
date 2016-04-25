@@ -48,7 +48,8 @@ jest.disableAutomock();
 import path from 'path';
 import readFixtures from '../../tools/readFixtures';
 
-import parse from '../index';
+import Tokenizer from '../../tokenizer';
+import Parser from '../';
 
 const FIXTURE_PATTERN = process.env.FIXTURE;
 const FIXTURE_PATH = path.resolve(__dirname, '..', '__fixtures__');
@@ -113,6 +114,10 @@ describe('parser', () => {
     }
   });
 });
+
+function parse(input) {
+  return new Parse(new Tokenizer(input)).parse();
+}
 
 function stringify(input) {
   return JSON.stringify(input);

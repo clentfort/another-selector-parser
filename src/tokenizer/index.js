@@ -60,6 +60,10 @@ export default class Tokenizer {
     this._state = this._state.clone();
   }
 
+  skip(): void {
+    this._originalState = null;
+  }
+
   backup(): void {
     if (!this._originalState) {
       // Not peeking

@@ -13,7 +13,7 @@ Output:
           "body": [
             {
               "type": "ClassSelector",
-              "className": {
+              "value": {
                 "type": "Identifier",
                 "value": "class"
               }

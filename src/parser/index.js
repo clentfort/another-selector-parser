@@ -1,592 +1,277 @@
 /* @flow */
-import {
-  UnexpectedTokenError,
-  UnexpectedTopNodeError,
-} from './Errors';
-import nodes from './nodes/';
-import tokenize from '../tokenizer';
+import * as nodes from './nodes/';
+import Tokenizer from '../tokenizer';
 
-import type { Token, TokenType } from '../tokenizer/tokens';
+import getCombinatorFromToken from './util/getCombinatorFromToken';
 
-type ParseToken = (token: Token, lookahead: Token) => boolean;
-type NodeTypeToNode =
-((type: 'AttributeSelector') => nodes.AttributeSelector) &
-((type: 'CallExpression') => nodes.CallExpression) &
-((type: 'ClassSelector') => nodes.ClassSelector) &
-((type: 'Combinator') => nodes.Combinator) &
-((type: 'HashSelector') => nodes.HashSelector) &
-((type: 'Identifier') => nodes.Identifier) &
-((type: 'NamespacePrefix') => nodes.NamespacePrefix) &
-((type: 'PseudoClassSelector') => nodes.PseudoClassSelector) &
-((type: 'PseudoElementSelector') => nodes.PseudoElementSelector) &
-((type: 'PseudoSelector') => nodes.PseudoSelector) &
-((type: 'Selector') => nodes.Selector) &
-((type: 'SelectorsGroup') => nodes.SelectorsGroup) &
-((type: 'SimpleSelector') => nodes.SimpleSelector) &
-((type: 'SimpleSelectorSequence') => nodes.SimpleSelectorSequence) &
-((type: 'StringLiteral') => nodes.StringLiteral) &
-((type: 'TypeSelector') => nodes.TypeSelector) &
-((type: 'UniversalSelector') => nodes.UniversalSelector) &
-((type: ?string) => nodes.Node);
+import type { SimpleSelector } from './nodes/SimpleSelectorSequence';
+import type { Token } from '../tokenizer/tokens';
 
-export class Parser {
-  _nodes: Array<Node>;
-  _parse: ParseToken;
-  _parsingNegationArgument: boolean;
-  _tokens: Generator<Token, Token, void>;
+export default class Parser {
+  _tokenizer: Tokenizer;
+  _currentToken: Token;
 
-  constructor(tokens: Generator<Token, Token, void>) {
-    this._nodes = [];
-    this._parse = (null: any);
-    this._parsingNegationArgument = false;
-    this._tokens = tokens;
+  constructor(tokenizer: Tokenizer) {
+    this._tokenizer = tokenizer;
+    this._nextToken();
   }
 
-  parse(): Node {
-    // }
-    this._pushNode(helper.createSelectorsGroup());
-    this._parse = this._parseSelectorsGroup;
-    let reconsumeToken = false;
-    let token: Token = (null: any);
-    let done = false;
-    let next = this._tokens.next();
-    do {
-      if (reconsumeToken) {
-        // $FlowFixMe
-        reconsumeToken = this._parse(token, next.value);
+  parse(): nodes.SelectorsGroup {
+    console.log("");
+    const selectorsGroup = new nodes.SelectorsGroup();
+    while (this._currentToken.type !== 'EOF') {
+      selectorsGroup.body.push(this._parseSelector());
+    }
+    return selectorsGroup;
+  }
+
+  _parseSelector(): nodes.Selector {
+    const selector = new nodes.Selector();
+    let parseSelector = true;
+    while (
+      this._currentToken.type !== 'EOF' &&
+      this._currentToken.type !== 'comma'
+    ) {
+      if (parseSelector) {
+        if (this._currentToken.type === 'whitespace') {
+          this._nextToken();
+          continue;
+        }
+        selector.body.push(this._parseSimpleSelectorSequence());
+        if (
+          this._currentToken.type === 'EOF' ||
+          this._currentToken.type === 'comma'
+        ) {
+          this._nextToken();
+          break;
+        }
       } else {
-        const current = next;
-        next = this._tokens.next();
-        if (!current.done) {
-          token = current.value;
-          ({ value: token, done } = current);
-          // $FlowFixMe
-          reconsumeToken = this._parse(token, next.value);
-        } else {
-          done = true;
-        }
+        selector.body.push(this._parseCombinator());
+        this._nextToken();
       }
-    } while (!done);
-    return this._popNode('SelectorsGroup');
-  }
-
-  _eatTokenAndThen(tokenType: TokenType, then: ParseToken): ParseToken {
-    return token => {
-      if (token.type === tokenType) {
-        this._parse = then;
-        return false;
-      }
-      throw new UnexpectedTokenError(token.type, tokenType);
-    };
-  }
-
-  _parseSelectorsGroup(token: Token): boolean {
-    switch (token.type) {
-      case 'EOF':
-      case 'comma': {
-        if (this._topNode().type === 'Selector') {
-          const selector = this._popNode('Selector');
-          const selectorsGroup = this._topNode('SelectorsGroup');
-          selectorsGroup.body.push(selector);
-        } else {
-          this._topNode('SelectorsGroup');
-        }
-        return false;
-      }
-      case 'whitespace':
-        return false;
-      default:
-        this._pushNode(helper.createSelector());
-        this._parse = this._parseSelector;
-        return true;
+      parseSelector = !parseSelector;
     }
+    return selector;
   }
 
-  _parseSelector(token: Token, lookahead: Token): boolean {
-    switch (token.type) {
-      /* eslint-disable no-fallthrough */
-      case 'whitespace': {
-        if (lookahead.type === 'combinator' || lookahead.type === 'plus') {
-          return false;
-        }
+  _parseCombinator(): nodes.Combinator {
+    if (this._currentToken.type === 'whitespace') {
+      this._tokenizer.peek();
+      const lookahead = this._tokenizer.nextToken();
+      if (lookahead.type === 'combinator' || lookahead.type === 'plus') {
+        this._tokenizer.skip();
+        return getCombinatorFromToken(lookahead);
       }
-      case 'combinator':
-      case 'plus': {
-        const simpleSelectorSequence = this._popNode('SimpleSelectorSequence');
-        const selector = this._topNode('Selector');
-        selector.body.push(simpleSelectorSequence);
-        selector.body.push(helper.createCombinator(getCombinatorTypeFromToken(token)));
-        this._parse = this._parseCombinator;
-        return false;
-      }
-      /* eslint-enable no-fallthrough */
-      case 'comma':
-      case 'EOF': {
-        const simpleSelectorSequence = this._popNode('SimpleSelectorSequence');
-        const selector = this._topNode('Selector');
-        selector.body.push(simpleSelectorSequence);
-        this._parse = this._parseSelectorsGroup;
-        return true;
-      }
-      default:
-        this._pushNode(helper.createSimpleSelectorSequence());
-        this._parse = this._parseSimpleSelectorSequence;
-        return true;
+
+      this._tokenizer.backup();
     }
+
+    return getCombinatorFromToken(this._currentToken);
   }
 
-  _parseCombinator(token: Token): boolean {
-    switch (token.type) {
-      case 'comma':
-      case 'combinator':
-      case 'EOF':
-      case 'plus':
-        throw new UnexpectedTokenError(token.type);
-      case 'whitespace':
-        return false;
-      default:
-        this._pushNode(helper.createSimpleSelectorSequence());
-        this._parse = this._parseSimpleSelectorSequence;
-        return true;
+  _parseSimpleSelectorSequence(): nodes.SimpleSelectorSequence {
+    const simpleSelectorSequence = new nodes.SimpleSelectorSequence();
+
+    simpleSelectorSequence.body.push(this._parseSimpleSelector1());
+    this._nextToken();
+
+    while (
+      this._currentToken.type !== 'EOF' &&
+      this._currentToken.type !== 'combinator' &&
+      this._currentToken.type !== 'comma' &&
+      this._currentToken.type !== 'plus' &&
+      this._currentToken.type !== 'whitespace'
+    ) {
+      console.log("Token type is", this._currentToken.type);
+      simpleSelectorSequence.body.push(this._parseSimpleSelector2());
+      this._nextToken();
     }
+    return simpleSelectorSequence;
   }
 
-  _parseSimpleSelectorSequence(token: Token): boolean {
-    switch (token.type) {
+  _parseSimpleSelector1(): SimpleSelector {
+    const namespacePrefix = this._parseNamespacePrefix();
+    if (this._currentToken.type === 'ident') {
+      return new nodes.TypeSelector(new nodes.Identifier(
+        this._currentToken.value,
+        namespacePrefix
+      ));
+    } else if (this._currentToken.type === 'star') {
+      return new nodes.UniversalSelector(namespacePrefix);
+    }
+    return this._parseSimpleSelector2();
+  }
+
+  _parseSimpleSelector2(): SimpleSelector {
+    let selector;
+    switch (this._currentToken.type) {
       case 'bracketL':
+        selector = this._parseAttributeSelector();
+        break;
       case 'colon':
+        selector = this._parsePseudoSelector();
+        break;
       case 'dot':
+        selector = this._parseClassSelector();
+        break;
       case 'hash':
-        this._parse = this._parseSimpleSelectorSequence2;
-        return true;
-      case 'ident':
-      case 'pipe':
-      case 'star':
-        this._parse = this._parseTypeOrUnivsersalSelector;
-        return true;
-      case 'comma':
-      case 'EOF':
-      case 'whitespace':
-        this._parse = this._parseSelector;
-        return true;
+        selector = this._parseHashSelector();
+        break;
       default:
-        throw new UnexpectedTokenError(token.type);
+        console.error('Unexpected token', this._currentToken);
+        throw new Error();
     }
+    // $FlowFixMe
+    return selector;
   }
 
-  _parseSimpleSelectorSequence2(token: Token): boolean {
-    switch (token.type) {
-      case 'bracketL':
-        // $FlowFixMe
-        this._pushNode(helper.createAttributeSelector());
-        this._parse = this._parseAttributeSelector;
-        return false;
-      case 'colon':
-        // $FlowFixMe
-        this._pushNode(helper.createPseudoSelector());
-        this._parse = this._parsePseudoSelector;
-        return false;
-      case 'dot':
-        // $FlowFixMe
-        this._pushNode(helper.createClassSelector());
-        this._parse = this._parseClassSelector;
-        return false;
-      case 'hash':
-        // $FlowFixMe
-        this._pushNode(helper.createHashSelector());
-        this._parse = this._parseHashSelector;
-        return false;
-      case 'comma':
-      case 'EOF':
-      case 'whitespace':
-        this._parse = this._parseSelector;
-        return true;
-      default:
-        throw new UnexpectedTokenError(token.type);
+  _parseNamespacePrefix(): ?nodes.NamespacePrefix {
+    if (this._currentToken.type === 'pipe') {
+      this._nextToken();
+      return new nodes.NamespacePrefix();
     }
-  }
 
-  _parseTypeOrUnivsersalSelector(token: Token, lookahead: Token): boolean {
-    if (token.type === 'pipe' || lookahead && lookahead.type === 'pipe') {
-      this._parse = this._parseNamespacePrefix;
-      return true;
-    }
-    if (token.type === 'ident' || token.type === 'star') {
-      let namespace;
-      if (this._topNode().type === 'NamespacePrefix') {
-        namespace = this._popNode('NamespacePrefix');
-      }
-      let simpleSelector;
-      if (token.type === 'ident') {
-        simpleSelector = helper.createTypeSelector(helper.createIdentifier(token.value), namespace);
+    let namespacePrefix;
+    if (
+      this._currentToken.type === 'ident' ||
+      this._currentToken.type === 'star'
+    ) {
+      this._tokenizer.peek();
+      const lookahead = this._tokenizer.nextToken();
+      if (lookahead.type === 'pipe') {
+        namespacePrefix = new nodes.NamespacePrefix(new nodes.Identifier(
+          this._currentToken.type === 'ident' ? this._currentToken.value : '*'
+        ));
+        this._tokenizer.skip();
+        this._nextToken();
       } else {
-        simpleSelector = helper.createUniversalSelector(namespace);
+        this._tokenizer.backup();
       }
-
-      if (this._parsingNegationArgument) {
-        const negationArgument = this._topNode('NegationArgument');
-        negationArgument.body = simpleSelector;
-        this._parse = this._parseNegationArgument;
-      } else {
-        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.body.push(simpleSelector);
-        this._parse = this._parseSimpleSelectorSequence2;
-      }
-      return false;
     }
-    throw new UnexpectedTokenError(token.type);
+    return namespacePrefix;
   }
 
-  _parseNamespacePrefix(token: Token, lookahead: Token): boolean {
-    const returnTo = (this._topNode().type === 'AttributeSelector') ?
-      this._parseAttributeSelector :
-      this._parseTypeOrUnivsersalSelector;
-    if (token.type === 'pipe') {
-      // $FlowFixMe
-      this._pushNode(helper.createNamespacePrefix());
-      this._parse = returnTo;
-      return false;
+  _parseAttributeSelector(): nodes.AttributeSelector {
+    if (this._currentToken.type !== 'bracketL') {
+      throw new Error();
     }
-    if (lookahead.type === 'pipe') {
-      if (token.type === 'star' || token.type === 'ident') {
-        const prefix = (token.type === 'star') ? '*' : token.value;
-        this._pushNode(helper.createNamespacePrefix(helper.createIdentifier(prefix)));
-        this._parse = this._eatTokenAndThen('pipe', returnTo);
-        return false;
-      }
-      throw new UnexpectedTokenError(token.type);
+    this._nextToken();
+
+    const namespacePrefix = this._parseNamespacePrefix();
+    if (this._currentToken.type !== 'ident') {
+      throw new Error();
     }
-    throw new UnexpectedTokenError(token.type);
+    const attribute = new nodes.AttributeSelectorAttribute(
+      new nodes.Identifier(this._currentToken.value),
+      namespacePrefix
+    );
+    this._nextToken();
+
+    if (this._currentToken.type === 'bracketR') {
+      return new nodes.AttributeSelector(attribute);
+    } else if (this._currentToken.type !== 'matcher') {
+      throw new Error();
+    }
+    const matcher = new nodes.AttributeSelectorMatcher(
+      this._currentToken.value
+    );
+    this._nextToken();
+
+    let value;
+    if (this._currentToken.type === 'ident') {
+      value = new nodes.AttributeSelectorValue(new nodes.Identifier(
+        this._currentToken.value
+      ));
+    } else if (this._currentToken.type === 'string') {
+      value = new nodes.AttributeSelectorValue(new nodes.StringLiteral(
+        this._currentToken.value
+      ));
+    } else {
+      throw new Error();
+    }
+    this._nextToken();
+
+    if (this._currentToken.type !== 'bracketR') {
+      throw new Error();
+    }
+
+    return new nodes.AttributeSelectorWithMatcher(
+      attribute,
+      matcher,
+      value
+    );
   }
 
-  _parseAttributeSelector(token: Token, lookahead: Token): boolean {
-    if (token.type === 'whitespace') {
-      return false;
+  _parsePseudoSelector(): nodes.PseudoSelector {
+    if (this._currentToken.type !== 'colon') {
+      throw new Error();
     }
-    if (token.type === 'pipe' || lookahead && lookahead.type === 'pipe') {
-      this._parse = this._parseNamespacePrefix;
-      return true;
+    this._nextToken();
+
+    let pseudoSelectorType = 'PseudoClassSelector';
+    if (this._currentToken.type === 'colon') {
+      pseudoSelectorType = 'PseudoElementSelector';
+      this._nextToken();
     }
-    if (token.type === 'ident') {
-      let namespace;
-      if (this._topNode().type === 'NamespacePrefix') {
-        namespace = this._popNode('NamespacePrefix');
+
+    if (this._currentToken.type !== 'ident') {
+      throw new Error();
+    }
+
+    let body = new nodes.Identifier(this._currentToken.value);
+    this._tokenizer.peek();
+    const lookahead = this._tokenizer.nextToken();
+    if (lookahead.type === 'parenL') {
+      this._tokenizer.skip();
+      body = new nodes.CallExpression(body);
+
+      this._nextToken();
+      while (this._currentToken.type !== 'parenR') {
+        if (this._currentToken.type === 'EOF') {
+          throw new Error('Unexpected EOF');
+        }
+        body.params.push(this._currentToken);
+        this._nextToken();
       }
-      const attribute = helper.createAttributeSelectorAttribute(
-        helper.createIdentifier(token.value),
-        namespace
-      );
-      const attributeSelector = this._topNode('AttributeSelector');
-      attributeSelector.attribute = attribute;
-      this._parse = this._parseAttributeMatcher;
-      return false;
-    }
-    throw new UnexpectedTokenError(token.type, 'ident');
-  }
-
-  _parseAttributeMatcher(token: Token): boolean {
-    if (token.type === 'whitespace') {
-      return false;
-    }
-    if (token.type === 'matcher') {
-      const attributeSelector = this._topNode('AttributeSelector');
-      attributeSelector.operator = token.value;
-      this._parse = this._parseAttributeMatcherValue;
-      return false;
-    }
-    if (token.type === 'bracketR') {
-      const attributeSelector = this._popNode('AttributeSelector');
-      if (this._parsingNegationArgument) {
-        const negationArgument = this._topNode('NegationArgument');
-        negationArgument.body = attributeSelector;
-        this._parse = this._parseNegationArgument;
-      } else {
-        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.body.push(attributeSelector);
-        this._parse = this._parseSimpleSelectorSequence2;
-      }
-      return false;
-    }
-    return false;
-  }
-
-  _parseAttributeMatcherValue(token: Token): boolean {
-    if (token.type === 'whitespace') {
-      return false;
-    }
-    if (token.type === 'ident') {
-      const attributeSelector = this._topNode('AttributeSelector');
-      attributeSelector.value = helper.createIdentifier(token.value);
-      return false;
-    }
-    if (token.type === 'string') {
-      const attributeSelector = this._topNode('AttributeSelector');
-      attributeSelector.value = helper.createStringLiteral(token.value);
-      return false;
-    }
-    this._parse = this._parseAttributeMatcher;
-    return true;
-  }
-
-  _parsePseudoSelector(token: Token, lookahead: Token): boolean {
-    if (token.type === 'colon') {
-      // $FlowFixMe
-      this._pushNode(helper.createPseudoElementSelector());
-      return false;
-    }
-    if (token.type === 'ident') {
-      if (lookahead.type === 'parenL') {
-        this._parse = this._parseFunction;
-        return true;
-      }
-
-      let pseudoSubSelector;
-      const body = helper.createIdentifier(token.value);
-      if (this._topNode().type === 'PseudoElementSelector') {
-        pseudoSubSelector = this._popNode('PseudoElementSelector');
-        pseudoSubSelector.body = body;
-      } else {
-        pseudoSubSelector = helper.createPseudoClassSelector(body);
-      }
-
-      const pseudoSelector = this._popNode('PseudoSelector');
-      pseudoSelector.body = pseudoSubSelector;
-      if (this._parsingNegationArgument) {
-        const negationArgument = this._topNode('NegationArgument');
-        negationArgument.body = pseudoSelector;
-        this._parse = this._parseNegationArgument;
-      } else {
-        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.body.push(pseudoSelector);
-        this._parse = this._parseSimpleSelectorSequence2;
-      }
-      return false;
-    }
-    throw new UnexpectedTokenError(token.type);
-  }
-
-  _parseFunction(token: Token): boolean {
-    if (token.type === 'ident') {
-      const value = token.value;
-      const isNegationCall = (value.toLowerCase() === 'not');
-      if (this._parsingNegationArgument && isNegationCall) {
+      if (this._currentToken.type !== 'parenR') {
         throw new Error();
       }
-      if (isNegationCall) {
-        // $FlowFixMe
-        this._pushNode(helper.createNegationCall());
-      } else {
-        // $FlowFixMe
-        this._pushNode(helper.createCallExpression());
-      }
-      this._parse = isNegationCall ? this._parseNegationCall : this._parseCallExpression;
-      return false;
+    } else {
+      this._tokenizer.backup();
     }
-    if (token.type === 'parenR') {
-      const functionCall = this._popNode('CallExpression');
-      const pseudoSelector = this._popNode('PseudoSelector');
-      pseudoSelector.body = functionCall;
-      if (this._parsingNegationArgument) {
-        const negationArgument = this._topNode('NegationArgument');
-        negationArgument.body = pseudoSelector;
-        this._parse = this._parseNegationArgument;
-      } else {
-        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.body.push(pseudoSelector);
-        this._parse = this._parseSimpleSelectorSequence2;
-      }
-      return false;
-    }
-    throw new UnexpectedTokenError(token.type, 'ident');
+
+    return new nodes.PseudoSelector(pseudoSelectorType, body);
   }
 
-  _parseNegationCall(token: Token): boolean {
-    if (token.type === 'parenL') {
-      this._parsingNegationArgument = true;
-      // $FlowFixMe
-      this._pushNode(helper.createNegationArgument());
-      this._parse = this._parseNegationArgument;
-      return false;
-    }
-    if (token.type === 'parenR') {
-      this._parsingNegationArgument = false;
-      this._parse = this._parseFunction;
-      return true;
-    }
-    throw new UnexpectedTokenError(token.type, 'parenL');
-  }
-
-  _parseNegationArgument(token: Token): boolean {
-    switch (token.type) {
-      case 'bracketL':
-        this._topNode('NegationArgument');
-        // $FlowFixMe
-        this._pushNode(helper.createAttributeSelector());
-        this._parse = this._parseAttributeSelector;
-        return false;
-      case 'colon': {
-        this._topNode('NegationArgument');
-        // $FlowFixMe
-        this._pushNode(helper.createPseudoSelector());
-        this._parse = this._parsePseudoSelector;
-        return false;
-      }
-      case 'dot':
-        this._topNode('NegationArgument');
-        // $FlowFixMe
-        this._pushNode(helper.createClassSelector());
-        this._parse = this._parseClassSelector;
-        return false;
-      case 'hash':
-        this._topNode('NegationArgument');
-        // $FlowFixMe
-        this._pushNode(helper.createHashSelector());
-        this._parse = this._parseHashSelector;
-        return false;
-      case 'ident':
-      case 'pipe':
-      case 'star':
-        this._topNode('NegationArgument');
-        this._parse = this._parseTypeOrUnivsersalSelector;
-        return true;
-      case 'parenR': {
-        const negationArgument = this._popNode('NegationArgument');
-        const functionCall = this._topNode('CallExpression');
-        if (functionCall.isNegationCall) {
-          functionCall.argument = negationArgument;
-        } else {
-          throw new Error();
-        }
-        this._parse = this._parseNegationCall;
-        return true;
-      }
-      case 'whitespace':
-        return false;
-      default:
-        throw new UnexpectedTokenError(token.type);
-    }
-  }
-
-  _parseCallExpression(token: Token): boolean {
-    if (token.type === 'parenL') {
-      this._pushNode(helper.createFunctionArgument());
-      this._parse = this._parseFunctionArgument;
-      return false;
-    }
-    if (token.type === 'parenR') {
-      this._parse = this._parseFunction;
-      return true;
-    }
-    throw new UnexpectedTokenError(token.type, 'parenL');
-  }
-
-  _parseFunctionArgument(token: Token): boolean {
-    let functionArg: Node;
-    switch (token.type) {
-      case 'whitespace':
-        return false;
-      case 'plus':
-        functionArg = this._topNode('FunctionArgument');
-        functionArg.body.push(helper.createIdentifier('+'));
-        return false;
-      case 'minus':
-        functionArg = this._topNode('FunctionArgument');
-        functionArg.body.push(helper.createIdentifier('-'));
-        return false;
-      case 'ident':
-      case 'num':
-      case 'string':
-        functionArg = this._topNode('FunctionArgument');
-        functionArg.body.push(helper.createIdentifier(token.value));
-        return false;
-      case 'parenR': {
-        functionArg = this._popNode('FunctionArgument');
-        const functionCall = this._topNode('CallExpression');
-        if (!functionCall.isNegationCall) {
-          functionCall.argument = functionArg;
-        } else {
-          throw new Error();
-        }
-        this._parse = this._parseCallExpression;
-        return true;
-      }
-      default:
-        throw new UnexpectedTokenError(token.type);
-    }
-  }
-
-  _parseClassSelector(token: Token): boolean {
-    if (token.type === 'ident') {
-      const classSelector = this._popNode('ClassSelector');
-      classSelector.className = helper.createIdentifier(token.value);
-      if (this._parsingNegationArgument) {
-        const negationArgument = this._topNode('NegationArgument');
-        negationArgument.body = classSelector;
-        this._parse = this._parseNegationArgument;
-      } else {
-        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.body.push(classSelector);
-        this._parse = this._parseSimpleSelectorSequence2;
-      }
-      return false;
-    }
-    throw new UnexpectedTokenError(token.type, 'ident');
-  }
-
-  _parseHashSelector(token: Token): boolean {
-    if (token.type === 'ident') {
-      const hashSelector = this._popNode('HashSelector');
-      hashSelector.id = helper.createIdentifier(token.value);
-      if (this._parsingNegationArgument) {
-        const negationArgument = this._topNode('NegationArgument');
-        negationArgument.body = hashSelector;
-        this._parse = this._parseNegationArgument;
-      } else {
-        const simpleSelectorSequence = this._topNode('SimpleSelectorSequence');
-        simpleSelectorSequence.body.push(hashSelector);
-        this._parse = this._parseSimpleSelectorSequence2;
-      }
-      return false;
-    }
-    throw new UnexpectedTokenError(token.type, 'ident');
-  }
-
-  _pushNode(node: Node): void {
-    this._nodes.push(node);
-  }
-
-  _popNode: NodeTypeToNode;
-  // $FlowFixMe
-  _popNode(type) {
-    const node = this._topNode(type);
-    this._nodes.pop();
-    return node;
-  }
-
-  _topNode: NodeTypeToNode;
-  // $FlowFixMe
-  _topNode(type) {
-    const top = this._nodes[this._nodes.length - 1];
-    if (!!type && top.type !== type) {
-      throw new UnexpectedTopNodeError(top.type, type);
-    }
-    return top;
-  }
-}
-
-export default function parse(input: string): Node {
-  return new Parser(tokenize(input)).parse();
-}
-
-function getCombinatorTypeFromToken(token: Token): CombinatorOperator {
-  switch (token.type) {
-    case 'whitespace':
-      return 'whitespace';
-    case 'plus':
-      return '+';
-    case 'combinator':
-      return token.value;
-    default:
+  _parseClassSelector(): nodes.ClassSelector {
+    if (this._currentToken.type !== 'dot') {
       throw new Error();
+    }
+    this._nextToken();
+
+    if (this._currentToken.type !== 'ident') {
+      throw new Error();
+    }
+    return new nodes.ClassSelector(new nodes.Identifier(
+      this._currentToken.value
+    ));
+  }
+
+  _parseHashSelector(): nodes.HashSelector {
+    if (this._currentToken.type !== 'hash') {
+      throw new Error();
+    }
+    this._nextToken();
+
+    if (this._currentToken.type !== 'ident') {
+      throw new Error();
+    }
+    return new nodes.HashSelector(new nodes.Identifier(
+      this._currentToken.value
+    ));
+  }
+
+  _nextToken(): void {
+    this._currentToken = this._tokenizer.nextToken();
   }
 }

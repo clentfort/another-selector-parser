@@ -27,12 +27,12 @@ export class PseudoElementSelector extends PseudoSelector {
 }
 
 export class CallExpression extends Node {
-  callee: string;
+  callee: Identifier;
   params: Array<any>;
 
-  constructor(callee: string, params: Array<any>) {
+  constructor(callee: Identifier) {
     super('CallExpression');
     this.callee = callee;
-    this.params = params;
+    this.params = [];
   }
 }

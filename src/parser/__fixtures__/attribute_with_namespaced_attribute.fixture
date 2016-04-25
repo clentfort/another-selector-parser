@@ -15,16 +15,16 @@ Output:
               "type": "AttributeSelector",
               "attribute": {
                 "type": "AttributeSelectorAttribute",
-                "attribute": {
-                  "type": "Identifier",
-                  "value": "class"
-                },
                 "namespace": {
                   "type": "NamespacePrefix",
                   "namespace": {
                     "type": "Identifier",
                     "value": "myNamespace"
                   }
+                },
+                "value": {
+                  "type": "Identifier",
+                  "value": "class"
                 }
               }
             }

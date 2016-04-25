@@ -12,20 +12,29 @@ Output:
           "type": "SimpleSelectorSequence",
           "body": [
             {
-              "type": "PseudoSelector",
+              "type": "PseudoClassSelector",
               "body": {
                 "type": "CallExpression",
-                "argument": {
-                  "type": "NegationArgument",
-                  "body": {
-                    "type": "TypeSelector",
-                    "body": {
-                      "type": "Identifier",
-                      "value": "element"
-                    }
-                  }
+                "callee": {
+                  "type": "Identifier",
+                  "value": "not"
                 },
-                "isNegationCall": true
+                "params": [
+                  {
+                    "type": "ident",
+                    "loc": {
+                      "start": {
+                        "column": 5,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 12,
+                        "line": 1
+                      }
+                    },
+                    "value": "element"
+                  }
+                ]
               }
             }
           ]

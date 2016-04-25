@@ -2,12 +2,15 @@
 import Identifier from './Identifier';
 import NamespacePrefix from './NamespacePrefix';
 import Node from './Node';
+import StringLiteral from './StringLiteral';
 
 // @TODO Generalize with tokenizer
 export type AttributeSelectorMatcherValue = '=' | '~=' | '|=' | '^=' | '$=' | '*=';
 
 export default class AttributeSelector extends Node {
   attribute: AttributeSelectorAttribute;
+  matcher: ?AttributeSelectorMatcher;
+  value: ?AttributeSelectorValue;
 
   constructor(attribute: AttributeSelectorAttribute) {
     super('AttributeSelector');
@@ -16,9 +19,6 @@ export default class AttributeSelector extends Node {
 }
 
 export class AttributeSelectorWithMatcher extends AttributeSelector {
-  matcher: AttributeSelectorMatcher;
-  value: AttributeSelectorValue;
-
   constructor(
     attribute: AttributeSelectorAttribute,
     matcher: AttributeSelectorMatcher,
@@ -51,9 +51,9 @@ export class AttributeSelectorMatcher extends Node {
 }
 
 export class AttributeSelectorValue extends Node {
-  value: Identifier;
+  value: Identifier|StringLiteral;
 
-  constructor(value: Identifier) {
+  constructor(value: Identifier|StringLiteral) {
     super('AttributeSelectorValue');
     this.value = value;
   }

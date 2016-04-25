@@ -13,7 +13,7 @@ Output:
           "body": [
             {
               "type": "TypeSelector",
-              "body": {
+              "value": {
                 "type": "Identifier",
                 "value": "span"
               }
@@ -22,14 +22,17 @@ Output:
         },
         {
           "type": "Combinator",
-          "operator": "~"
+          "operator": {
+            "type": "CombinatorOperator",
+            "value": "~"
+          }
         },
         {
           "type": "SimpleSelectorSequence",
           "body": [
             {
               "type": "TypeSelector",
-              "body": {
+              "value": {
                 "type": "Identifier",
                 "value": "span"
               }

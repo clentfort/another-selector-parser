@@ -13,16 +13,9 @@ Output:
           "body": [
             {
               "type": "TypeSelector",
-              "body": {
+              "value": {
                 "type": "Identifier",
                 "value": "element"
-              },
-              "namespace": {
-                "type": "NamespacePrefix",
-                "namespace": {
-                  "type": "Identifier",
-                  "value": "myNamespace"
-                }
               }
             }
           ]
