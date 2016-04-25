@@ -2,7 +2,7 @@
 
 jest.disableAutomock();
 
-import tokenize from '../';
+import Tokenizer from '../';
 import { types as tt } from '../tokens';
 
 function createToken(
@@ -21,68 +21,88 @@ function createToken(
       end: { line: endLine, column: endCol }
     }
   }
-  if (value) {
+  if (value != undefined) {
     result.value = value;
   }
 
   return result;
 }
 
-describe('tokenize', () => {
+describe('Tokenizer', () => {
   describe('EOF', () => {
     it('returns EOF for empty input', () => {
-      const { value, done } = tokenize('').next();
-      expect(done).toBe(false);
-      expect(value).toEqual(createToken('EOF'));
-    });
-
-    it('is down after returning EOF', () => {
-      const tokenizer = tokenize('');
-      tokenizer.next();
-      expect(tokenizer.next().done).toBe(true);
+      const token = (new Tokenizer('')).nextToken();
+      expect(token).toEqual(createToken('EOF'));
     });
   });
 
   it('throws on incomplete attribute matchers', () => {
-    expect(() => tokenize('$').next()).toThrow();
+    expect(() => (new Tokenizer('$')).nextToken()).toThrow();
   });
 
   it('throws on unknown tokens', () => {
-    expect(() => tokenize('!').next()).toThrow();
+    expect(() => (new Tokenizer('!')).nextToken()).toThrow();
   });
 
   it('throws on unfinished comments', () => {
-    expect(() => tokenize('/* unfinished comment').next()).toThrow();
+    expect(() => (new Tokenizer('/* unfinished comment')).nextToken()).toThrow();
   });
 
   it('throws on unclosed strings', () => {
-    expect(() => tokenize(`"unclosed string`).next()).toThrow();
-    expect(() => tokenize(`'unclosed string`).next()).toThrow();
-    expect(() => tokenize(`"unclosed multiline string\n`).next()).toThrow();
-    expect(() => tokenize(`'unclosed multiline string\n`).next()).toThrow();
+    expect(() => (new Tokenizer(`"unclosed string`)).nextToken()).toThrow();
+    expect(() => (new Tokenizer(`'unclosed string`)).nextToken()).toThrow();
+    expect(() => (new Tokenizer(`"unclosed multiline string\n`)).nextToken()).toThrow();
+    expect(() => (new Tokenizer(`'unclosed multiline string\n`)).nextToken()).toThrow();
+  });
+
+  describe('peek and backup', () => {
+    it('throws when trying to peek twice', () => {
+      const tokenizer = new Tokenizer('Some Input');
+      tokenizer.peek();
+      expect(() => tokenizer.peek()).toThrow();
+    });
+
+    it('throws when trying to backup when not peeking', () => {
+      const tokenizer = new Tokenizer('Some Input');
+      expect(() => tokenizer.backup()).toThrow();
+
+      tokenizer.peek();
+      expect(() => tokenizer.backup()).not.toThrow();
+      expect(() => tokenizer.backup()).toThrow();
+    });
+
+    it('returns to the original state when done peeking', () => {
+      const tokenizer = new Tokenizer('Some Input');
+      tokenizer.peek();
+      expect(tokenizer.nextToken()).toEqual(createToken(
+        'ident', null, 'Some', 1, 4
+      ));
+      tokenizer.backup();
+      expect(tokenizer.nextToken()).toEqual(createToken(
+        'ident', null, 'Some', 1, 4
+      ));
+    });
   });
 
   describe('whitespace', () => {
     it('reads whitespace', () => {
       const input = '      ';
-      let { value } = tokenize(input).next();
+      let value = (new Tokenizer(input)).nextToken();
       expect(value).toEqual(createToken('whitespace', input));
     });
 
     it('reads whitespace with a trailing comment', () => {
       const input = '  /* comment */';
-      let { value, done } = tokenize(input).next();
-      expect(value).toEqual(createToken('whitespace', input));
-      expect(done).toBe(false);
+      let token = (new Tokenizer(input)).nextToken();
+      expect(token).toEqual(createToken('whitespace', input));
     });
 
     it('read whitespace with a comment', () => {
       const input = ' /* comment */ ';
-      const tokenizer = tokenize(input);
-      let { value, done } = tokenizer.next();
-      expect(value).toEqual(createToken('whitespace', input));
-      expect(done).toBe(false);
-      const eof = tokenizer.next().value;
+      const tokenizer = new Tokenizer(input);
+      let token = tokenizer.nextToken();
+      expect(token).toEqual(createToken('whitespace', input));
+      const eof = tokenizer.nextToken()
       expect(eof.type).toEqual('EOF'); 
       expect(eof.loc.end.column).toEqual(input.length + 1); 
     });

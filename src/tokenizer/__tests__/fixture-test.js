@@ -48,7 +48,7 @@ jest.disableAutomock();
 import path from 'path';
 import readFixtures from '../../tools/readFixtures';
 
-import tokenize from '../index';
+import Tokenizer from '../index';
 
 const FIXTURE_PATTERN = process.env.FIXTURE;
 const FIXTURE_PATH = path.resolve(__dirname, '..', '__fixtures__');
@@ -120,9 +120,16 @@ function stringify(input) {
 
 
 function transform(input: string): string {
+  const tokenizer = new Tokenizer(input);
   const tokens = [];
-  for (const token of tokenize(input)) {
+  let token;
+  for (
+    token = tokenizer.nextToken();
+    token.type !== 'EOF';
+    token = tokenizer.nextToken()
+  ) {
     tokens.push(token);
   }
+  tokens.push(token);
   return tokens;
 }
