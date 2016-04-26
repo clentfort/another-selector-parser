@@ -1,30 +1,54 @@
 /* @flow */
 import * as nodes from './nodes/';
 import Tokenizer from '../tokenizer';
+import NotExpressionParser from './plugins/NotExpressionParser';
+import NthChildExpressionParser from './plugins/NthChildExpressionParser';
+import Plugin from './plugins/Plugin';
 
 import getCombinatorFromToken from './util/getCombinatorFromToken';
 
 import type { SimpleSelector } from './nodes/SimpleSelectorSequence';
 import type { Token } from '../tokenizer/tokens';
 
+type PluginMap = {
+  CallExpression: {
+    [key: string]: Plugin;
+  };
+};
+
 export default class Parser {
   _tokenizer: Tokenizer;
   _currentToken: Token;
+  _plugins: PluginMap;
 
   constructor(tokenizer: Tokenizer) {
     this._tokenizer = tokenizer;
-    this._nextToken();
+    this.nextToken();
+    this._plugins = {
+      CallExpression: {
+        not: new NotExpressionParser(this),
+        'nth-child': new NthChildExpressionParser(this),
+      },
+    };
+  }
+
+  getCurrentToken(): Token {
+    return Object.freeze(this._currentToken);
+  }
+
+  nextToken(): void {
+    this._currentToken = this._tokenizer.nextToken();
   }
 
   parse(): nodes.SelectorsGroup {
     const selectorsGroup = new nodes.SelectorsGroup();
     while (this._currentToken.type !== 'EOF') {
-      selectorsGroup.body.push(this._parseSelector());
+      selectorsGroup.body.push(this.parseSelector());
     }
     return selectorsGroup;
   }
 
-  _parseSelector(): nodes.Selector {
+  parseSelector(): nodes.Selector {
     const selector = new nodes.Selector();
     let parseSelector = true;
     while (
@@ -33,27 +57,27 @@ export default class Parser {
     ) {
       if (parseSelector) {
         if (this._currentToken.type === 'whitespace') {
-          this._nextToken();
+          this.nextToken();
           continue;
         }
-        selector.body.push(this._parseSimpleSelectorSequence());
+        selector.body.push(this.parseSimpleSelectorSequence());
         if (
           this._currentToken.type === 'EOF' ||
           this._currentToken.type === 'comma'
         ) {
-          this._nextToken();
+          this.nextToken();
           break;
         }
       } else {
-        selector.body.push(this._parseCombinator());
-        this._nextToken();
+        selector.body.push(this.parseCombinator());
+        this.nextToken();
       }
       parseSelector = !parseSelector;
     }
     return selector;
   }
 
-  _parseCombinator(): nodes.Combinator {
+  parseCombinator(): nodes.Combinator {
     if (this._currentToken.type === 'whitespace') {
       this._tokenizer.peek();
       const lookahead = this._tokenizer.nextToken();
@@ -68,11 +92,11 @@ export default class Parser {
     return getCombinatorFromToken(this._currentToken);
   }
 
-  _parseSimpleSelectorSequence(): nodes.SimpleSelectorSequence {
+  parseSimpleSelectorSequence(): nodes.SimpleSelectorSequence {
     const simpleSelectorSequence = new nodes.SimpleSelectorSequence();
 
-    simpleSelectorSequence.body.push(this._parseSimpleSelector1());
-    this._nextToken();
+    simpleSelectorSequence.body.push(this.parseSimpleSelector1());
+    this.nextToken();
 
     while (
       this._currentToken.type !== 'EOF' &&
@@ -81,14 +105,14 @@ export default class Parser {
       this._currentToken.type !== 'plus' &&
       this._currentToken.type !== 'whitespace'
     ) {
-      simpleSelectorSequence.body.push(this._parseSimpleSelector2());
-      this._nextToken();
+      simpleSelectorSequence.body.push(this.parseSimpleSelector2());
+      this.nextToken();
     }
     return simpleSelectorSequence;
   }
 
-  _parseSimpleSelector1(): SimpleSelector {
-    const namespacePrefix = this._parseNamespacePrefix();
+  parseSimpleSelector1(): SimpleSelector {
+    const namespacePrefix = this.parseNamespacePrefix();
     if (this._currentToken.type === 'ident') {
       return new nodes.TypeSelector(new nodes.Identifier(
         this._currentToken.value,
@@ -97,23 +121,23 @@ export default class Parser {
     } else if (this._currentToken.type === 'star') {
       return new nodes.UniversalSelector(namespacePrefix);
     }
-    return this._parseSimpleSelector2();
+    return this.parseSimpleSelector2();
   }
 
-  _parseSimpleSelector2(): SimpleSelector {
+  parseSimpleSelector2(): SimpleSelector {
     let selector;
     switch (this._currentToken.type) {
       case 'bracketL':
-        selector = this._parseAttributeSelector();
+        selector = this.parseAttributeSelector();
         break;
       case 'colon':
-        selector = this._parsePseudoSelector();
+        selector = this.parsePseudoSelector();
         break;
       case 'dot':
-        selector = this._parseClassSelector();
+        selector = this.parseClassSelector();
         break;
       case 'hash':
-        selector = this._parseHashSelector();
+        selector = this.parseHashSelector();
         break;
       default:
         throw new Error();
@@ -121,9 +145,9 @@ export default class Parser {
     return selector;
   }
 
-  _parseNamespacePrefix(): ?nodes.NamespacePrefix {
+  parseNamespacePrefix(): ?nodes.NamespacePrefix {
     if (this._currentToken.type === 'pipe') {
-      this._nextToken();
+      this.nextToken();
       return new nodes.NamespacePrefix();
     }
 
@@ -139,7 +163,7 @@ export default class Parser {
           this._currentToken.type === 'ident' ? this._currentToken.value : '*'
         ));
         this._tokenizer.skip();
-        this._nextToken();
+        this.nextToken();
       } else {
         this._tokenizer.backup();
       }
@@ -147,13 +171,13 @@ export default class Parser {
     return namespacePrefix;
   }
 
-  _parseAttributeSelector(): nodes.AttributeSelector {
+  parseAttributeSelector(): nodes.AttributeSelector {
     if (this._currentToken.type !== 'bracketL') {
       throw new Error();
     }
-    this._nextToken();
+    this.nextToken();
 
-    const namespacePrefix = this._parseNamespacePrefix();
+    const namespacePrefix = this.parseNamespacePrefix();
     if (this._currentToken.type !== 'ident') {
       throw new Error();
     }
@@ -161,7 +185,7 @@ export default class Parser {
       new nodes.Identifier(this._currentToken.value),
       namespacePrefix
     );
-    this._nextToken();
+    this.nextToken();
 
     if (this._currentToken.type === 'bracketR') {
       return new nodes.AttributeSelector(attribute);
@@ -171,7 +195,7 @@ export default class Parser {
     const matcher = new nodes.AttributeSelectorMatcher(
       this._currentToken.value
     );
-    this._nextToken();
+    this.nextToken();
 
     let value;
     if (this._currentToken.type === 'ident') {
@@ -185,7 +209,7 @@ export default class Parser {
     } else {
       throw new Error();
     }
-    this._nextToken();
+    this.nextToken();
 
     if (this._currentToken.type !== 'bracketR') {
       throw new Error();
@@ -198,44 +222,49 @@ export default class Parser {
     );
   }
 
-  _parsePseudoSelector(): nodes.PseudoSelector {
+  parsePseudoSelector(): nodes.PseudoSelector {
     if (this._currentToken.type !== 'colon') {
       throw new Error();
     }
-    this._nextToken();
+    this.nextToken();
 
     let pseudoSelectorType = 'PseudoClassSelector';
     if (this._currentToken.type === 'colon') {
       pseudoSelectorType = 'PseudoElementSelector';
-      this._nextToken();
+      this.nextToken();
     }
 
     if (this._currentToken.type !== 'ident') {
       throw new Error();
     }
 
-    let { value: name } = this._currentToken;
+    const { value: name } = this._currentToken;
     let body = new nodes.Identifier(name);
     this._tokenizer.peek();
     const lookahead = this._tokenizer.nextToken();
     if (lookahead.type === 'parenL') {
       this._tokenizer.skip();
       body = new nodes.CallExpression(body);
+      this.nextToken();
 
-      this._nextToken();
-      let depth = 1;
-      while (depth > 0) {
-        if (this._currentToken.type === 'parenL') {
-          ++depth;
-        } else if (this._currentToken.type === 'parenR') {
-          --depth;
-        } else if (this._currentToken.type === 'EOF') {
-          throw new Error('Unexpected EOF');
+      const plugin = this._plugins.CallExpression[name];
+      if (plugin) {
+        plugin.parseInto(body);
+      } else {
+        let depth = 1;
+        while (depth > 0) {
+          if (this._currentToken.type === 'parenL') {
+            ++depth;
+          } else if (this._currentToken.type === 'parenR') {
+            --depth;
+          } else if (this._currentToken.type === 'EOF') {
+            // @TODO: Unexpected EOF Error
+            throw new Error();
+          }
+          body.params.push(this._currentToken);
+          this.nextToken();
         }
-        body.params.push(this._currentToken);
-        this._nextToken();
       }
-      this._nextToken();
     } else {
       this._tokenizer.backup();
     }
@@ -243,11 +272,11 @@ export default class Parser {
     return new nodes.PseudoSelector(pseudoSelectorType, body);
   }
 
-  _parseClassSelector(): nodes.ClassSelector {
+  parseClassSelector(): nodes.ClassSelector {
     if (this._currentToken.type !== 'dot') {
       throw new Error();
     }
-    this._nextToken();
+    this.nextToken();
 
     if (this._currentToken.type !== 'ident') {
       throw new Error();
@@ -257,11 +286,11 @@ export default class Parser {
     ));
   }
 
-  _parseHashSelector(): nodes.HashSelector {
+  parseHashSelector(): nodes.HashSelector {
     if (this._currentToken.type !== 'hash') {
       throw new Error();
     }
-    this._nextToken();
+    this.nextToken();
 
     if (this._currentToken.type !== 'ident') {
       throw new Error();
@@ -269,9 +298,5 @@ export default class Parser {
     return new nodes.HashSelector(new nodes.Identifier(
       this._currentToken.value
     ));
-  }
-
-  _nextToken(): void {
-    this._currentToken = this._tokenizer.nextToken();
   }
 }

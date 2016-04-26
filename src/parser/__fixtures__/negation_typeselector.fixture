@@ -21,30 +21,10 @@ Output:
                 },
                 "params": [
                   {
-                    "type": "ident",
-                    "loc": {
-                      "start": {
-                        "column": 5,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 12,
-                        "line": 1
-                      }
-                    },
-                    "value": "element"
-                  },
-                  {
-                    "type": "parenR",
-                    "loc": {
-                      "start": {
-                        "column": 12,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 13,
-                        "line": 1
-                      }
+                    "type": "TypeSelector",
+                    "value": {
+                      "type": "Identifier",
+                      "value": "element"
                     }
                   }
                 ]

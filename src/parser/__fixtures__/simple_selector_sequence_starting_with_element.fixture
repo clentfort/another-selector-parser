@@ -80,87 +80,34 @@ Output:
                 },
                 "params": [
                   {
-                    "type": "bracketL",
-                    "loc": {
-                      "start": {
-                        "column": 55,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 56,
-                        "line": 1
-                      }
-                    }
-                  },
-                  {
-                    "type": "ident",
-                    "loc": {
-                      "start": {
-                        "column": 56,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 61,
-                        "line": 1
+                    "type": "AttributeSelector",
+                    "attribute": {
+                      "type": "AttributeSelectorAttribute",
+                      "value": {
+                        "type": "Identifier",
+                        "value": "class"
                       }
                     },
-                    "value": "class"
-                  },
-                  {
-                    "type": "matcher",
-                    "loc": {
-                      "start": {
-                        "column": 61,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 62,
-                        "line": 1
-                      }
+                    "matcher": {
+                      "type": "AttributeSelectorMatcher",
+                      "value": "="
                     },
-                    "value": "="
-                  },
-                  {
-                    "type": "string",
-                    "loc": {
-                      "start": {
-                        "column": 62,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 69,
-                        "line": 1
-                      }
-                    },
-                    "value": "class"
-                  },
-                  {
-                    "type": "bracketR",
-                    "loc": {
-                      "start": {
-                        "column": 69,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 70,
-                        "line": 1
-                      }
-                    }
-                  },
-                  {
-                    "type": "parenR",
-                    "loc": {
-                      "start": {
-                        "column": 70,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 71,
-                        "line": 1
+                    "value": {
+                      "type": "AttributeSelectorValue",
+                      "value": {
+                        "type": "StringLiteral",
+                        "value": "class"
                       }
                     }
                   }
                 ]
+              }
+            },
+            {
+              "type": "PseudoClassSelector",
+              "body": {
+                "type": "Identifier",
+                "value": "first"
               }
             },
             {
@@ -173,124 +120,16 @@ Output:
                 },
                 "params": [
                   {
-                    "type": "colon",
-                    "loc": {
-                      "start": {
-                        "column": 82,
-                        "line": 1
+                    "type": "PseudoClassSelector",
+                    "body": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "value": "nth-child"
                       },
-                      "end": {
-                        "column": 83,
-                        "line": 1
-                      }
-                    }
-                  },
-                  {
-                    "type": "ident",
-                    "loc": {
-                      "start": {
-                        "column": 83,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 92,
-                        "line": 1
-                      }
-                    },
-                    "value": "nth-child"
-                  },
-                  {
-                    "type": "parenL",
-                    "loc": {
-                      "start": {
-                        "column": 92,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 93,
-                        "line": 1
-                      }
-                    }
-                  },
-                  {
-                    "type": "num",
-                    "loc": {
-                      "start": {
-                        "column": 93,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 94,
-                        "line": 1
-                      }
-                    },
-                    "value": 2
-                  },
-                  {
-                    "type": "ident",
-                    "loc": {
-                      "start": {
-                        "column": 94,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 95,
-                        "line": 1
-                      }
-                    },
-                    "value": "n"
-                  },
-                  {
-                    "type": "plus",
-                    "loc": {
-                      "start": {
-                        "column": 95,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 96,
-                        "line": 1
-                      }
-                    }
-                  },
-                  {
-                    "type": "num",
-                    "loc": {
-                      "start": {
-                        "column": 96,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 97,
-                        "line": 1
-                      }
-                    },
-                    "value": 1
-                  },
-                  {
-                    "type": "parenR",
-                    "loc": {
-                      "start": {
-                        "column": 97,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 98,
-                        "line": 1
-                      }
-                    }
-                  },
-                  {
-                    "type": "parenR",
-                    "loc": {
-                      "start": {
-                        "column": 98,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 99,
-                        "line": 1
-                      }
+                      "params": [
+                        "2n+1"
+                      ]
                     }
                   }
                 ]
