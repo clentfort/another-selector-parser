@@ -13,7 +13,6 @@ Output:
           "body": [
             {
               "type": "UniversalSelector",
-              "body": "*",
               "namespace": {
                 "type": "NamespacePrefix"
               }

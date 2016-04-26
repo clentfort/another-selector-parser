@@ -12,13 +12,10 @@ Output:
           "type": "SimpleSelectorSequence",
           "body": [
             {
-              "type": "PseudoSelector",
+              "type": "PseudoElementSelector",
               "body": {
-                "type": "PseudoElementSelector",
-                "body": {
-                  "type": "Identifier",
-                  "value": "pseudoElement"
-                }
+                "type": "Identifier",
+                "value": "pseudoElement"
               }
             }
           ]

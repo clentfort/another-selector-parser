@@ -15,15 +15,21 @@ Output:
               "type": "AttributeSelector",
               "attribute": {
                 "type": "AttributeSelectorAttribute",
-                "attribute": {
+                "value": {
                   "type": "Identifier",
                   "value": "class"
                 }
               },
-              "operator": "=",
+              "matcher": {
+                "type": "AttributeSelectorMatcher",
+                "value": "="
+              },
               "value": {
-                "type": "Identifier",
-                "value": "classname"
+                "type": "AttributeSelectorValue",
+                "value": {
+                  "type": "Identifier",
+                  "value": "classname"
+                }
               }
             }
           ]

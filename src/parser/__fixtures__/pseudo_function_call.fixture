@@ -12,31 +12,83 @@ Output:
           "type": "SimpleSelectorSequence",
           "body": [
             {
-              "type": "PseudoSelector",
+              "type": "PseudoClassSelector",
               "body": {
                 "type": "CallExpression",
-                "argument": {
-                  "type": "FunctionArgument",
-                  "body": [
-                    {
-                      "type": "Identifier",
-                      "value": 2
-                    },
-                    {
-                      "type": "Identifier",
-                      "value": "n"
-                    },
-                    {
-                      "type": "Identifier",
-                      "value": "+"
-                    },
-                    {
-                      "type": "Identifier",
-                      "value": 1
-                    }
-                  ]
+                "callee": {
+                  "type": "Identifier",
+                  "value": "nth-child"
                 },
-                "isNegationCall": false
+                "params": [
+                  {
+                    "type": "num",
+                    "loc": {
+                      "start": {
+                        "column": 11,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 12,
+                        "line": 1
+                      }
+                    },
+                    "value": 2
+                  },
+                  {
+                    "type": "ident",
+                    "loc": {
+                      "start": {
+                        "column": 12,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 13,
+                        "line": 1
+                      }
+                    },
+                    "value": "n"
+                  },
+                  {
+                    "type": "plus",
+                    "loc": {
+                      "start": {
+                        "column": 13,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 14,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "num",
+                    "loc": {
+                      "start": {
+                        "column": 14,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 15,
+                        "line": 1
+                      }
+                    },
+                    "value": 1
+                  },
+                  {
+                    "type": "parenR",
+                    "loc": {
+                      "start": {
+                        "column": 15,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 16,
+                        "line": 1
+                      }
+                    }
+                  }
+                ]
               }
             }
           ]
