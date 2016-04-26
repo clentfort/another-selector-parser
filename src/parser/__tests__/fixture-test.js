@@ -116,7 +116,7 @@ describe('parser', () => {
 });
 
 function parse(input) {
-  return new Parse(new Tokenizer(input)).parse();
+  return new Parser(new Tokenizer(input)).parse();
 }
 
 function stringify(input) {
