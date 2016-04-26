@@ -46,6 +46,19 @@ Output:
                       }
                     },
                     "value": "hover"
+                  },
+                  {
+                    "type": "parenR",
+                    "loc": {
+                      "start": {
+                        "column": 11,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 12,
+                        "line": 1
+                      }
+                    }
                   }
                 ]
               }

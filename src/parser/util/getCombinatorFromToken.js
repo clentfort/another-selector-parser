@@ -19,6 +19,5 @@ export default function getCombinatorTypeFromToken(
     default:
       throw new Error();
   }
-  // $FlowFixMe
   return new Combinator(value);
 }

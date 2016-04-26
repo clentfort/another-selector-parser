@@ -13,35 +13,28 @@ Output:
           "body": [
             {
               "type": "TypeSelector",
-              "body": {
+              "value": {
                 "type": "Identifier",
                 "value": "tagname"
-              },
-              "namespace": {
-                "type": "NamespacePrefix",
-                "namespace": {
-                  "type": "Identifier",
-                  "value": "aNamespace"
-                }
               }
             },
             {
               "type": "ClassSelector",
-              "className": {
+              "value": {
                 "type": "Identifier",
                 "value": "class"
               }
             },
             {
               "type": "HashSelector",
-              "id": {
+              "value": {
                 "type": "Identifier",
                 "value": "id1"
               }
             },
             {
               "type": "HashSelector",
-              "id": {
+              "value": {
                 "type": "Identifier",
                 "value": "id2"
               }
@@ -50,7 +43,7 @@ Output:
               "type": "AttributeSelector",
               "attribute": {
                 "type": "AttributeSelectorAttribute",
-                "attribute": {
+                "value": {
                   "type": "Identifier",
                   "value": "attribute"
                 }
@@ -60,91 +53,260 @@ Output:
               "type": "AttributeSelector",
               "attribute": {
                 "type": "AttributeSelectorAttribute",
-                "attribute": {
+                "value": {
                   "type": "Identifier",
                   "value": "attribute"
                 }
               },
-              "operator": "=",
+              "matcher": {
+                "type": "AttributeSelectorMatcher",
+                "value": "="
+              },
               "value": {
-                "type": "StringLiteral",
-                "value": "test"
-              }
-            },
-            {
-              "type": "PseudoSelector",
-              "body": {
-                "type": "CallExpression",
-                "argument": {
-                  "type": "NegationArgument",
-                  "body": {
-                    "type": "AttributeSelector",
-                    "attribute": {
-                      "type": "AttributeSelectorAttribute",
-                      "attribute": {
-                        "type": "Identifier",
-                        "value": "class"
-                      },
-                      "namespace": {
-                        "type": "NamespacePrefix"
-                      }
-                    },
-                    "operator": "=",
-                    "value": {
-                      "type": "StringLiteral",
-                      "value": "class"
-                    }
-                  }
-                },
-                "isNegationCall": true
-              }
-            },
-            {
-              "type": "PseudoSelector",
-              "body": {
-                "type": "PseudoClassSelector",
-                "body": {
-                  "type": "Identifier",
-                  "value": "first"
+                "type": "AttributeSelectorValue",
+                "value": {
+                  "type": "StringLiteral",
+                  "value": "test"
                 }
               }
             },
             {
-              "type": "PseudoSelector",
+              "type": "PseudoClassSelector",
               "body": {
                 "type": "CallExpression",
-                "argument": {
-                  "type": "NegationArgument",
-                  "body": {
-                    "type": "PseudoSelector",
-                    "body": {
-                      "type": "CallExpression",
-                      "argument": {
-                        "type": "FunctionArgument",
-                        "body": [
-                          {
-                            "type": "Identifier",
-                            "value": 2
-                          },
-                          {
-                            "type": "Identifier",
-                            "value": "n"
-                          },
-                          {
-                            "type": "Identifier",
-                            "value": "+"
-                          },
-                          {
-                            "type": "Identifier",
-                            "value": 1
-                          }
-                        ]
+                "callee": {
+                  "type": "Identifier",
+                  "value": "not"
+                },
+                "params": [
+                  {
+                    "type": "bracketL",
+                    "loc": {
+                      "start": {
+                        "column": 66,
+                        "line": 1
                       },
-                      "isNegationCall": false
+                      "end": {
+                        "column": 67,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "pipe",
+                    "loc": {
+                      "start": {
+                        "column": 67,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 68,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "ident",
+                    "loc": {
+                      "start": {
+                        "column": 68,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 73,
+                        "line": 1
+                      }
+                    },
+                    "value": "class"
+                  },
+                  {
+                    "type": "matcher",
+                    "loc": {
+                      "start": {
+                        "column": 73,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 74,
+                        "line": 1
+                      }
+                    },
+                    "value": "="
+                  },
+                  {
+                    "type": "string",
+                    "loc": {
+                      "start": {
+                        "column": 74,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 81,
+                        "line": 1
+                      }
+                    },
+                    "value": "class"
+                  },
+                  {
+                    "type": "bracketR",
+                    "loc": {
+                      "start": {
+                        "column": 81,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 82,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "parenR",
+                    "loc": {
+                      "start": {
+                        "column": 82,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 83,
+                        "line": 1
+                      }
                     }
                   }
+                ]
+              }
+            },
+            {
+              "type": "PseudoClassSelector",
+              "body": {
+                "type": "CallExpression",
+                "callee": {
+                  "type": "Identifier",
+                  "value": "not"
                 },
-                "isNegationCall": true
+                "params": [
+                  {
+                    "type": "colon",
+                    "loc": {
+                      "start": {
+                        "column": 94,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 95,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "ident",
+                    "loc": {
+                      "start": {
+                        "column": 95,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 104,
+                        "line": 1
+                      }
+                    },
+                    "value": "nth-child"
+                  },
+                  {
+                    "type": "parenL",
+                    "loc": {
+                      "start": {
+                        "column": 104,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 105,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "num",
+                    "loc": {
+                      "start": {
+                        "column": 105,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 106,
+                        "line": 1
+                      }
+                    },
+                    "value": 2
+                  },
+                  {
+                    "type": "ident",
+                    "loc": {
+                      "start": {
+                        "column": 106,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 107,
+                        "line": 1
+                      }
+                    },
+                    "value": "n"
+                  },
+                  {
+                    "type": "plus",
+                    "loc": {
+                      "start": {
+                        "column": 107,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 108,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "num",
+                    "loc": {
+                      "start": {
+                        "column": 108,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 109,
+                        "line": 1
+                      }
+                    },
+                    "value": 1
+                  },
+                  {
+                    "type": "parenR",
+                    "loc": {
+                      "start": {
+                        "column": 109,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 110,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "parenR",
+                    "loc": {
+                      "start": {
+                        "column": 110,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 111,
+                        "line": 1
+                      }
+                    }
+                  }
+                ]
               }
             }
           ]

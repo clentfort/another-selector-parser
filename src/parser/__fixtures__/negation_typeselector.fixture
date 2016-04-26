@@ -33,6 +33,19 @@ Output:
                       }
                     },
                     "value": "element"
+                  },
+                  {
+                    "type": "parenR",
+                    "loc": {
+                      "start": {
+                        "column": 12,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 13,
+                        "line": 1
+                      }
+                    }
                   }
                 ]
               }

@@ -35,10 +35,12 @@ class State {
   clone(): State {
     // $FlowFixMe
     const state = (new State: any);
+    /* eslint-disable guard-for-in */
     for (const key in this) {
       const value = (this: any)[key];
       state[key] = value;
     }
+    /* eslint-enable guard-for-in */
     return state;
   }
 }

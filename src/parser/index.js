@@ -17,7 +17,6 @@ export default class Parser {
   }
 
   parse(): nodes.SelectorsGroup {
-    console.log("");
     const selectorsGroup = new nodes.SelectorsGroup();
     while (this._currentToken.type !== 'EOF') {
       selectorsGroup.body.push(this._parseSelector());
@@ -82,7 +81,6 @@ export default class Parser {
       this._currentToken.type !== 'plus' &&
       this._currentToken.type !== 'whitespace'
     ) {
-      console.log("Token type is", this._currentToken.type);
       simpleSelectorSequence.body.push(this._parseSimpleSelector2());
       this._nextToken();
     }
@@ -118,10 +116,8 @@ export default class Parser {
         selector = this._parseHashSelector();
         break;
       default:
-        console.error('Unexpected token', this._currentToken);
         throw new Error();
     }
-    // $FlowFixMe
     return selector;
   }
 
@@ -218,7 +214,8 @@ export default class Parser {
       throw new Error();
     }
 
-    let body = new nodes.Identifier(this._currentToken.value);
+    let { value: name } = this._currentToken;
+    let body = new nodes.Identifier(name);
     this._tokenizer.peek();
     const lookahead = this._tokenizer.nextToken();
     if (lookahead.type === 'parenL') {
@@ -226,16 +223,19 @@ export default class Parser {
       body = new nodes.CallExpression(body);
 
       this._nextToken();
-      while (this._currentToken.type !== 'parenR') {
-        if (this._currentToken.type === 'EOF') {
+      let depth = 1;
+      while (depth > 0) {
+        if (this._currentToken.type === 'parenL') {
+          ++depth;
+        } else if (this._currentToken.type === 'parenR') {
+          --depth;
+        } else if (this._currentToken.type === 'EOF') {
           throw new Error('Unexpected EOF');
         }
         body.params.push(this._currentToken);
         this._nextToken();
       }
-      if (this._currentToken.type !== 'parenR') {
-        throw new Error();
-      }
+      this._nextToken();
     } else {
       this._tokenizer.backup();
     }

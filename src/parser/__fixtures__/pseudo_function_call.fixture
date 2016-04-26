@@ -74,6 +74,19 @@ Output:
                       }
                     },
                     "value": 1
+                  },
+                  {
+                    "type": "parenR",
+                    "loc": {
+                      "start": {
+                        "column": 15,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 16,
+                        "line": 1
+                      }
+                    }
                   }
                 ]
               }

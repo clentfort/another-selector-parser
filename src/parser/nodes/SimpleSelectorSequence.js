@@ -1,7 +1,6 @@
 /* @flow */
 import AttributeSelector from './AttributeSelector';
 import ClassSelector from './ClassSelector';
-import Combinator from './Combinator';
 import HashSelector from './HashSelector';
 import Node from './Node';
 import PseudoSelector from './PseudoSelector';
