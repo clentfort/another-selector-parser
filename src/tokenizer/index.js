@@ -146,8 +146,6 @@ export default class Tokenizer {
         ++this._state.currentPosition; return this._createToken('comma');
       case 35: /* "#" */
         ++this._state.currentPosition; return this._createToken('hash');
-      // case 45: /* "-" */
-      //   ++this._state.currentPosition; return this._createToken('minus');
       case 40: /* "(" */
         ++this._state.currentPosition; return this._createToken('parenL');
       case 41: /* ")" */
@@ -168,6 +166,8 @@ export default class Tokenizer {
         return this._readTilde();
       case 46: /* "." */
         return this._readDot();
+      case 45: /* "-" */
+        return this._readMinus();
       case 36: /* "$" */
       case 94: /* "^" */
         return this._readAttrMatcher();
@@ -238,6 +238,15 @@ export default class Tokenizer {
       );
     }
     return this._createToken('ident', value);
+  }
+
+  _readMinus(): Token {
+    const nextCharCode = this._state.input.charCodeAt(this._state.currentPosition + 1);
+    if (nextCharCode && !isWhitespace(nextCharCode)) {
+      return this._readIdentifier();
+    }
+    ++this._state.currentPosition;
+    return this._createToken('minus');
   }
 
   _readNumber(): Token {

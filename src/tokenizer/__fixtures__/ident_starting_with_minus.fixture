@@ -1,0 +1,33 @@
+Input:
+-someIdent
+
+Output:
+[
+  {
+    "type": "ident",
+    "loc": {
+      "start": {
+        "column": 0,
+        "line": 1
+      },
+      "end": {
+        "column": 10,
+        "line": 1
+      }
+    },
+    "value": "-someIdent"
+  },
+  {
+    "type": "EOF",
+    "loc": {
+      "start": {
+        "column": 10,
+        "line": 1
+      },
+      "end": {
+        "column": 11,
+        "line": 1
+      }
+    }
+  }
+]

@@ -1,0 +1,32 @@
+Input:
+-
+
+Output:
+[
+  {
+    "type": "minus",
+    "loc": {
+      "start": {
+        "column": 0,
+        "line": 1
+      },
+      "end": {
+        "column": 1,
+        "line": 1
+      }
+    }
+  },
+  {
+    "type": "EOF",
+    "loc": {
+      "start": {
+        "column": 1,
+        "line": 1
+      },
+      "end": {
+        "column": 2,
+        "line": 1
+      }
+    }
+  }
+]
