@@ -6,6 +6,8 @@
   "rules": {
     "no-cond-assign": "off",
     "no-param-reassign": ["error", { "props": false }],
+    "no-restricted-syntax": "off",
+    "no-underscore-dangle": "off",
     "no-use-before-define": "off"
   }
 }
