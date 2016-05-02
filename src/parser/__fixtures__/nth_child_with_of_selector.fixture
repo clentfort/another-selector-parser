@@ -1,0 +1,91 @@
+Input:
+:nth-child(2n+1 of .someSelector, anotherSelector)[someAttribute]
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "body": [
+    {
+      "type": "Selector",
+      "body": [
+        {
+          "type": "SimpleSelectorSequence",
+          "body": [
+            {
+              "type": "PseudoClassSelector",
+              "body": {
+                "type": "CallExpression",
+                "callee": {
+                  "type": "Identifier",
+                  "value": "nth-child"
+                },
+                "params": [
+                  {
+                    "type": "NthChildExpressionArgument",
+                    "step": {
+                      "type": "NumberLiteral",
+                      "value": 1
+                    },
+                    "offset": {
+                      "type": "NumberLiteral",
+                      "value": 2
+                    },
+                    "of": {
+                      "type": "SelectorsGroup",
+                      "body": [
+                        {
+                          "type": "Selector",
+                          "body": [
+                            {
+                              "type": "SimpleSelectorSequence",
+                              "body": [
+                                {
+                                  "type": "ClassSelector",
+                                  "value": {
+                                    "type": "Identifier",
+                                    "value": "someSelector"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Selector",
+                          "body": [
+                            {
+                              "type": "SimpleSelectorSequence",
+                              "body": [
+                                {
+                                  "type": "TypeSelector",
+                                  "value": {
+                                    "type": "Identifier",
+                                    "value": "anotherSelector"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "AttributeSelector",
+              "attribute": {
+                "type": "AttributeSelectorAttribute",
+                "value": {
+                  "type": "Identifier",
+                  "value": "someAttribute"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,12 @@
 /* @flow */
 import Identifier from './Identifier';
 import Node from './Node';
+import SimpleSelector from './SimpleSelector';
 
 type PseudoSelectorType = 'PseudoClassSelector' | 'PseudoElementSelector';
 type PseudoSelectorBody = CallExpression | Identifier;
 
-export default class PseudoSelector extends Node {
+export default class PseudoSelector extends SimpleSelector {
   body: PseudoSelectorBody;
 
   constructor(type: PseudoSelectorType, body: PseudoSelectorBody) {

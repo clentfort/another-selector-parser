@@ -21,10 +21,13 @@ Output:
                 },
                 "params": [
                   {
-                    "type": "PseudoClassSelector",
+                    "type": "NotExpressionArgument",
                     "body": {
-                      "type": "Identifier",
-                      "value": "hover"
+                      "type": "PseudoClassSelector",
+                      "body": {
+                        "type": "Identifier",
+                        "value": "hover"
+                      }
                     }
                   }
                 ]

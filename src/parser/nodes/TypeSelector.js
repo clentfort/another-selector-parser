@@ -1,9 +1,9 @@
 /* @flow */
 import Identifier from './Identifier';
 import NamespacePrefix from './NamespacePrefix';
-import Node from './Node';
+import SimpleSelector from './SimpleSelector';
 
-export default class TypeSelector extends Node {
+export default class TypeSelector extends SimpleSelector {
   namespace: ?NamespacePrefix;
   value: Identifier;
 

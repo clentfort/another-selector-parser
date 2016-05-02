@@ -24,12 +24,14 @@ class State {
   previousLine: number;
   previousLineStart: number;
   previousPosition: number;
+  emitWhitespace: boolean;
 
   constructor(input: string) {
     this.input = input;
     this.previousLine = this.currentLine = 1;
     this.previousLineStart = this.currentLineStart = 0;
     this.previousPosition = this.currentPosition = 0;
+    this.emitWhitespace = true;
   }
 
   clone(): State {
@@ -75,6 +77,10 @@ export default class Tokenizer {
     this._originalState = null;
   }
 
+  emitWhitespace(emitWhitespace: boolean): void {
+    this._state.emitWhitespace = emitWhitespace;
+  }
+
   nextToken(): Token {
     while (this._state.currentPosition < this._state.input.length) {
       // @TODO: Use something similar to [fullCharCodeAtPos]
@@ -86,7 +92,11 @@ export default class Tokenizer {
         this._state.previousLineStart = this._state.currentLineStart;
         this._state.previousPosition = this._state.currentPosition;
       } else {
-        return this._getTokenFromCode(charCode);
+        const token = this._getTokenFromCode(charCode);
+        if (!this._state.emitWhitespace && token.type === 'whitespace') {
+          continue;
+        }
+        return token;
       }
     }
     if (this._state.currentPosition === this._state.input.length) {

@@ -1,8 +1,8 @@
 /* @flow */
 import Identifier from './Identifier';
-import Node from './Node';
+import SimpleSelector from './SimpleSelector';
 
-export default class ClassSelector extends Node {
+export default class ClassSelector extends SimpleSelector {
   value: Identifier;
 
   constructor(value: Identifier) {

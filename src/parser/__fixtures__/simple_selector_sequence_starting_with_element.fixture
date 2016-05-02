@@ -80,23 +80,26 @@ Output:
                 },
                 "params": [
                   {
-                    "type": "AttributeSelector",
-                    "attribute": {
-                      "type": "AttributeSelectorAttribute",
+                    "type": "NotExpressionArgument",
+                    "body": {
+                      "type": "AttributeSelector",
+                      "attribute": {
+                        "type": "AttributeSelectorAttribute",
+                        "value": {
+                          "type": "Identifier",
+                          "value": "class"
+                        }
+                      },
+                      "matcher": {
+                        "type": "AttributeSelectorMatcher",
+                        "value": "="
+                      },
                       "value": {
-                        "type": "Identifier",
-                        "value": "class"
-                      }
-                    },
-                    "matcher": {
-                      "type": "AttributeSelectorMatcher",
-                      "value": "="
-                    },
-                    "value": {
-                      "type": "AttributeSelectorValue",
-                      "value": {
-                        "type": "StringLiteral",
-                        "value": "class"
+                        "type": "AttributeSelectorValue",
+                        "value": {
+                          "type": "StringLiteral",
+                          "value": "class"
+                        }
                       }
                     }
                   }
@@ -120,16 +123,29 @@ Output:
                 },
                 "params": [
                   {
-                    "type": "PseudoClassSelector",
+                    "type": "NotExpressionArgument",
                     "body": {
-                      "type": "CallExpression",
-                      "callee": {
-                        "type": "Identifier",
-                        "value": "nth-child"
-                      },
-                      "params": [
-                        "2n+1"
-                      ]
+                      "type": "PseudoClassSelector",
+                      "body": {
+                        "type": "CallExpression",
+                        "callee": {
+                          "type": "Identifier",
+                          "value": "nth-child"
+                        },
+                        "params": [
+                          {
+                            "type": "NthChildExpressionArgument",
+                            "step": {
+                              "type": "NumberLiteral",
+                              "value": 2
+                            },
+                            "offset": {
+                              "type": "NumberLiteral",
+                              "value": 1
+                            }
+                          }
+                        ]
+                      }
                     }
                   }
                 ]

@@ -10,7 +10,7 @@ export default class Plugin {
     this._parser = parser;
   }
 
-  parseInto(node: Node): void {
+  parse(): Array<Node> {
     throw new Error(
       'You called `parse` on the Plugin-Prototype, not on an actual Plugin'
     );

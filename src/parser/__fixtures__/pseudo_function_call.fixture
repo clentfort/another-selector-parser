@@ -1,5 +1,5 @@
 Input:
-:nth-child(2n+1)
+:someCall(2n - 1)
 
 Output:
 {
@@ -17,10 +17,103 @@ Output:
                 "type": "CallExpression",
                 "callee": {
                   "type": "Identifier",
-                  "value": "nth-child"
+                  "value": "someCall"
                 },
                 "params": [
-                  "2n+1"
+                  {
+                    "type": "num",
+                    "loc": {
+                      "start": {
+                        "column": 10,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 11,
+                        "line": 1
+                      }
+                    },
+                    "value": 2
+                  },
+                  {
+                    "type": "ident",
+                    "loc": {
+                      "start": {
+                        "column": 11,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 12,
+                        "line": 1
+                      }
+                    },
+                    "value": "n"
+                  },
+                  {
+                    "type": "whitespace",
+                    "loc": {
+                      "start": {
+                        "column": 12,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 13,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "minus",
+                    "loc": {
+                      "start": {
+                        "column": 13,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 14,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "whitespace",
+                    "loc": {
+                      "start": {
+                        "column": 14,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 15,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "num",
+                    "loc": {
+                      "start": {
+                        "column": 15,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 16,
+                        "line": 1
+                      }
+                    },
+                    "value": 1
+                  },
+                  {
+                    "type": "parenR",
+                    "loc": {
+                      "start": {
+                        "column": 16,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 17,
+                        "line": 1
+                      }
+                    }
+                  }
                 ]
               }
             }

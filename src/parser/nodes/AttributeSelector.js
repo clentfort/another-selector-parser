@@ -2,12 +2,13 @@
 import Identifier from './Identifier';
 import NamespacePrefix from './NamespacePrefix';
 import Node from './Node';
+import SimpleSelector from './SimpleSelector';
 import StringLiteral from './StringLiteral';
 
 // @TODO Generalize with tokenizer
 export type AttributeSelectorMatcherValue = '=' | '~=' | '|=' | '^=' | '$=' | '*=';
 
-export default class AttributeSelector extends Node {
+export default class AttributeSelector extends SimpleSelector {
   attribute: AttributeSelectorAttribute;
   matcher: ?AttributeSelectorMatcher;
   value: ?AttributeSelectorValue;

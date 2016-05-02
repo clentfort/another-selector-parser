@@ -1,0 +1,42 @@
+Input:
+:nth-child(2n+1)
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "body": [
+    {
+      "type": "Selector",
+      "body": [
+        {
+          "type": "SimpleSelectorSequence",
+          "body": [
+            {
+              "type": "PseudoClassSelector",
+              "body": {
+                "type": "CallExpression",
+                "callee": {
+                  "type": "Identifier",
+                  "value": "nth-child"
+                },
+                "params": [
+                  {
+                    "type": "NthChildExpressionArgument",
+                    "step": {
+                      "type": "NumberLiteral",
+                      "value": 2
+                    },
+                    "offset": {
+                      "type": "NumberLiteral",
+                      "value": 1
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

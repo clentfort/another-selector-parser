@@ -7,7 +7,6 @@ import Plugin from './plugins/Plugin';
 
 import getCombinatorFromToken from './util/getCombinatorFromToken';
 
-import type { SimpleSelector } from './nodes/SimpleSelectorSequence';
 import type { Token } from '../tokenizer/tokens';
 
 type PluginMap = {
@@ -16,10 +15,14 @@ type PluginMap = {
   };
 };
 
+type ShouldStopAt = (token: Token) => boolean;
+
 export default class Parser {
-  _tokenizer: Tokenizer;
   _currentToken: Token;
   _plugins: PluginMap;
+  _shouldStopAt: ShouldStopAt;
+  _shouldStopAtStack: Array<ShouldStopAt>;
+  _tokenizer: Tokenizer;
 
   constructor(tokenizer: Tokenizer) {
     this._tokenizer = tokenizer;
@@ -30,20 +33,46 @@ export default class Parser {
         'nth-child': new NthChildExpressionParser(this),
       },
     };
+    this._shouldStopAtStack = [];
+    this.pushShouldStopAt((token: Token): boolean => token.type === 'EOF');
+  }
+
+  getTokenizer(): Tokenizer {
+    return this._tokenizer;
   }
 
   getCurrentToken(): Token {
-    return Object.freeze(this._currentToken);
+    return this._currentToken;
   }
 
-  nextToken(): void {
-    this._currentToken = this._tokenizer.nextToken();
+  nextToken(): Token {
+    this._currentToken = Object.freeze(this._tokenizer.nextToken());
+    return this._currentToken;
+  }
+
+  pushShouldStopAt(shouldStopAt: ShouldStopAt): void {
+    this._shouldStopAtStack.push(shouldStopAt);
+    this._shouldStopAt = shouldStopAt;
+  }
+
+  popShouldStopAt(): void {
+    this._shouldStopAtStack.pop();
+    this._shouldStopAt = this._shouldStopAtStack[
+      this._shouldStopAtStack.length - 1
+    ];
   }
 
   parse(): nodes.SelectorsGroup {
+    return this.parseSelectorsGroup();
+  }
+
+  parseSelectorsGroup(): nodes.SelectorsGroup {
     const selectorsGroup = new nodes.SelectorsGroup();
-    while (this._currentToken.type !== 'EOF') {
+    while (!this._shouldStopAt(this._currentToken)) {
       selectorsGroup.body.push(this.parseSelector());
+      if (!this._shouldStopAt(this._currentToken)) {
+        this.nextToken();
+      }
     }
     return selectorsGroup;
   }
@@ -52,8 +81,8 @@ export default class Parser {
     const selector = new nodes.Selector();
     let parseSelector = true;
     while (
-      this._currentToken.type !== 'EOF' &&
-      this._currentToken.type !== 'comma'
+      this._currentToken.type !== 'comma' &&
+      !this._shouldStopAt(this._currentToken)
     ) {
       if (parseSelector) {
         if (this._currentToken.type === 'whitespace') {
@@ -61,13 +90,6 @@ export default class Parser {
           continue;
         }
         selector.body.push(this.parseSimpleSelectorSequence());
-        if (
-          this._currentToken.type === 'EOF' ||
-          this._currentToken.type === 'comma'
-        ) {
-          this.nextToken();
-          break;
-        }
       } else {
         selector.body.push(this.parseCombinator());
         this.nextToken();
@@ -99,11 +121,11 @@ export default class Parser {
     this.nextToken();
 
     while (
-      this._currentToken.type !== 'EOF' &&
       this._currentToken.type !== 'combinator' &&
       this._currentToken.type !== 'comma' &&
       this._currentToken.type !== 'plus' &&
-      this._currentToken.type !== 'whitespace'
+      this._currentToken.type !== 'whitespace' &&
+      !this._shouldStopAt(this._currentToken)
     ) {
       simpleSelectorSequence.body.push(this.parseSimpleSelector2());
       this.nextToken();
@@ -111,7 +133,7 @@ export default class Parser {
     return simpleSelectorSequence;
   }
 
-  parseSimpleSelector1(): SimpleSelector {
+  parseSimpleSelector1(): nodes.SimpleSelector {
     const namespacePrefix = this.parseNamespacePrefix();
     if (this._currentToken.type === 'ident') {
       return new nodes.TypeSelector(new nodes.Identifier(
@@ -124,7 +146,7 @@ export default class Parser {
     return this.parseSimpleSelector2();
   }
 
-  parseSimpleSelector2(): SimpleSelector {
+  parseSimpleSelector2(): nodes.SimpleSelector {
     let selector;
     switch (this._currentToken.type) {
       case 'bracketL':
@@ -175,6 +197,7 @@ export default class Parser {
     if (this._currentToken.type !== 'bracketL') {
       throw new Error();
     }
+    this._tokenizer.emitWhitespace(false);
     this.nextToken();
 
     const namespacePrefix = this.parseNamespacePrefix();
@@ -188,6 +211,7 @@ export default class Parser {
     this.nextToken();
 
     if (this._currentToken.type === 'bracketR') {
+      this._tokenizer.emitWhitespace(true);
       return new nodes.AttributeSelector(attribute);
     } else if (this._currentToken.type !== 'matcher') {
       throw new Error();
@@ -214,6 +238,7 @@ export default class Parser {
     if (this._currentToken.type !== 'bracketR') {
       throw new Error();
     }
+    this._tokenizer.emitWhitespace(true);
 
     return new nodes.AttributeSelectorWithMatcher(
       attribute,
@@ -249,7 +274,7 @@ export default class Parser {
 
       const plugin = this._plugins.CallExpression[name];
       if (plugin) {
-        plugin.parseInto(body);
+        body.params = plugin.parse();
       } else {
         let depth = 1;
         while (depth > 0) {

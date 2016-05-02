@@ -21,10 +21,13 @@ Output:
                 },
                 "params": [
                   {
-                    "type": "TypeSelector",
-                    "value": {
-                      "type": "Identifier",
-                      "value": "element"
+                    "type": "NotExpressionArgument",
+                    "body": {
+                      "type": "TypeSelector",
+                      "value": {
+                        "type": "Identifier",
+                        "value": "element"
+                      }
                     }
                   }
                 ]

@@ -1,8 +1,8 @@
 /* @flow */
 import NamespacePrefix from './NamespacePrefix';
-import Node from './Node';
+import SimpleSelector from './SimpleSelector';
 
-export default class UniversalSelector extends Node {
+export default class UniversalSelector extends SimpleSelector {
   namespace: ?NamespacePrefix;
 
   constructor(namespace: ?NamespacePrefix) {

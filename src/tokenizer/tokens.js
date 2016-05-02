@@ -36,7 +36,7 @@ export type Token =
   { type: 'ident'; loc: ?SourceLocation; value: string; } |
   { type: 'matcher'; loc: ?SourceLocation; value: '=' | '~=' | '|=' | '^=' | '$=' | '*='; } |
   { type: 'minus'; loc: ?SourceLocation; } |
-  { type: 'num'; loc: ?SourceLocation; value: SourceLocation; } |
+  { type: 'num'; loc: ?SourceLocation; value: number; } |
   { type: 'parenL'; loc: ?SourceLocation; } |
   { type: 'parenR'; loc: ?SourceLocation; } |
   { type: 'percentage'; loc: ?SourceLocation; } |
