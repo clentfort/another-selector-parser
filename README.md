@@ -1,7 +1,7 @@
 #Another Selector Parser [![Travis](https://img.shields.io/travis/clentfort/another-selector-parser/master.png?maxAge=2592000?style=flat-square)](https://travis-ci.org/clentfort/another-selector-parser)
 
-A library for parsing and manipulating CSS Selectors. It tries to follow the
-[specification for CSS Selectors](https://www.w3.org/TR/css3-selectors/).
+A library for parsing and manipulating CSS Level 4 Selectors. It tries to follow
+the [specification for CSS Selectors](https://drafts.csswg.org/selectors-4/).
 
 #Usage
 ##Installation 
