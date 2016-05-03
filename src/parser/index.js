@@ -63,23 +63,40 @@ export default class Parser {
     ];
   }
 
+  startNode<T: nodes.Node>(node: T): T {
+    if (this._currentToken.loc) {
+      node.loc = this._currentToken.loc;
+    }
+    return node;
+  }
+
+  finishNode<T: nodes.Node>(node: T, start: ?Token): T {
+    if (start && start.loc && (!node.loc || !node.loc.start)) {
+      node.loc = start.loc;
+    }
+    if (node.loc && this._currentToken.loc) {
+      node.loc.end = this._currentToken.loc.end;
+    }
+    return node;
+  }
+
   parse(): nodes.SelectorsGroup {
     return this.parseSelectorsGroup();
   }
 
   parseSelectorsGroup(): nodes.SelectorsGroup {
-    const selectorsGroup = new nodes.SelectorsGroup();
+    const selectorsGroup = this.startNode(new nodes.SelectorsGroup());
     while (!this._shouldStopAt(this._currentToken)) {
       selectorsGroup.body.push(this.parseSelector());
       if (!this._shouldStopAt(this._currentToken)) {
         this.nextToken();
       }
     }
-    return selectorsGroup;
+    return this.finishNode(selectorsGroup);
   }
 
   parseSelector(): nodes.Selector {
-    const selector = new nodes.Selector();
+    const selector = this.startNode(new nodes.Selector());
     let parseSelector = true;
     while (
       this._currentToken.type !== 'comma' &&
@@ -97,10 +114,11 @@ export default class Parser {
       }
       parseSelector = !parseSelector;
     }
-    return selector;
+    return this.finishNode(selector);
   }
 
   parseCombinator(): nodes.Combinator {
+    const start = this._currentToken;
     if (this._currentToken.type === 'whitespace') {
       this._tokenizer.peek();
       const lookahead = this._tokenizer.nextToken();
@@ -112,11 +130,11 @@ export default class Parser {
       this._tokenizer.backup();
     }
 
-    return getCombinatorFromToken(this._currentToken);
+    return this.finishNode(getCombinatorFromToken(this._currentToken), start);
   }
 
   parseSimpleSelectorSequence(): nodes.SimpleSelectorSequence {
-    const simpleSelectorSequence = new nodes.SimpleSelectorSequence();
+    const simpleSelectorSequence = this.startNode(new nodes.SimpleSelectorSequence());
 
     simpleSelectorSequence.body.push(this.parseSimpleSelector1());
     this.nextToken();
@@ -131,18 +149,22 @@ export default class Parser {
       simpleSelectorSequence.body.push(this.parseSimpleSelector2());
       this.nextToken();
     }
-    return simpleSelectorSequence;
+    return this.finishNode(simpleSelectorSequence);
   }
 
   parseSimpleSelector1(): nodes.SimpleSelector {
+    const start = this._currentToken;
     const namespacePrefix = this.parseNamespacePrefix();
     if (this._currentToken.type === 'ident') {
-      return new nodes.TypeSelector(new nodes.Identifier(
-        this._currentToken.value,
+      return this.finishNode(new nodes.TypeSelector(
+        this.parseIdentifier(),
         namespacePrefix
-      ));
+      ), start);
     } else if (this._currentToken.type === 'star') {
-      return new nodes.UniversalSelector(namespacePrefix);
+      return this.finishNode(
+        new nodes.UniversalSelector(namespacePrefix),
+        start
+      );
     }
     return this.parseSimpleSelector2();
   }
@@ -169,9 +191,10 @@ export default class Parser {
   }
 
   parseNamespacePrefix(): ?nodes.NamespacePrefix {
+    const start = this._currentToken;
     if (this._currentToken.type === 'pipe') {
       this.nextToken();
-      return new nodes.NamespacePrefix();
+      return this.finishNode(new nodes.NamespacePrefix(), start);
     }
 
     let namespacePrefix;
@@ -182,9 +205,11 @@ export default class Parser {
       this._tokenizer.peek();
       const lookahead = this._tokenizer.nextToken();
       if (lookahead.type === 'pipe') {
-        namespacePrefix = new nodes.NamespacePrefix(new nodes.Identifier(
-          this._currentToken.type === 'ident' ? this._currentToken.value : '*'
-        ));
+        namespacePrefix = this.finishNode(new nodes.NamespacePrefix(
+          this.finishNode(new nodes.Identifier(
+            this._currentToken.type === 'ident' ? this._currentToken.value : '*'
+          ), start),
+        ), start);
         this._tokenizer.skip();
         this.nextToken();
       } else {
@@ -195,6 +220,7 @@ export default class Parser {
   }
 
   parseAttributeSelector(): nodes.AttributeSelector {
+    const start = this._currentToken;
     if (this._currentToken.type !== 'bracketL') {
       throw new UnexpectedTokenError(this._currentToken, 'bracketL');
     }
@@ -205,35 +231,32 @@ export default class Parser {
     if (this._currentToken.type !== 'ident') {
       throw new UnexpectedTokenError(this._currentToken, 'ident');
     }
-    const attribute = new nodes.AttributeSelectorAttribute(
-      new nodes.Identifier(this._currentToken.value),
+    const attribute = this.finishNode(new nodes.AttributeSelectorAttribute(
+      this.parseIdentifier(),
       namespacePrefix,
-    );
+    ), this._currentToken);
     this.nextToken();
 
     if (this._currentToken.type === 'bracketR') {
       this._tokenizer.emitWhitespace(true);
-      return new nodes.AttributeSelector(attribute);
+      return this.finishNode(new nodes.AttributeSelector(attribute), start);
     } else if (this._currentToken.type !== 'matcher') {
       throw new UnexpectedTokenError(this._currentToken, 'matcher');
     }
-    const matcher = new nodes.AttributeSelectorMatcher(
+    const matcher = this.finishNode(new nodes.AttributeSelectorMatcher(
       this._currentToken.value
-    );
+    ), this._currentToken);
     this.nextToken();
 
     let value;
     if (this._currentToken.type === 'ident') {
-      value = new nodes.AttributeSelectorValue(new nodes.Identifier(
-        this._currentToken.value,
-      ));
+      value = new nodes.AttributeSelectorValue(this.parseIdentifier());
     } else if (this._currentToken.type === 'string') {
-      value = new nodes.AttributeSelectorValue(new nodes.StringLiteral(
-        this._currentToken.value,
-      ));
+      value = new nodes.AttributeSelectorValue(this.parseStringLiteral());
     } else {
       throw new UnexpectedTokenError(this._currentToken, ['ident', 'string']);
     }
+    value = this.finishNode(value, this._currentToken);
     this.nextToken();
 
     let caseSensitive = true;
@@ -249,15 +272,16 @@ export default class Parser {
       throw new UnexpectedTokenError(this._currentToken, 'bracketR');
     }
     this._tokenizer.emitWhitespace(true);
-    return new nodes.AttributeSelectorWithMatcher(
+    return this.finishNode(new nodes.AttributeSelectorWithMatcher(
       attribute,
       matcher,
       value,
       caseSensitive,
-    );
+    ), start);
   }
 
   parsePseudoSelector(): nodes.PseudoSelector {
+    const start = this._currentToken;
     if (this._currentToken.type !== 'colon') {
       throw new UnexpectedTokenError(this._currentToken, 'colon');
     }
@@ -274,12 +298,12 @@ export default class Parser {
     }
 
     const { value: name } = this._currentToken;
-    let body = new nodes.Identifier(name);
+    let body = this.parseIdentifier();
     this._tokenizer.peek();
     const lookahead = this._tokenizer.nextToken();
     if (lookahead.type === 'parenL') {
       this._tokenizer.skip();
-      body = new nodes.CallExpression(body);
+      body = this.startNode(new nodes.CallExpression(body));
       this.nextToken();
 
       const plugin = this._plugins.CallExpression[name.toLowerCase()];
@@ -293,44 +317,65 @@ export default class Parser {
           } else if (this._currentToken.type === 'parenR') {
             --depth;
           } else if (this._currentToken.type === 'EOF') {
-            throw new UnexpectedEofError();
+            throw new UnexpectedEofError(this._currentToken);
           }
           body.params.push(this._currentToken);
           this.nextToken();
         }
       }
+      body = this.finishNode(body);
     } else {
       this._tokenizer.backup();
     }
 
-    return new nodes.PseudoSelector(pseudoSelectorType, body);
+    return this.finishNode(
+      new nodes.PseudoSelector(pseudoSelectorType, body),
+      start
+    );
   }
 
   parseClassSelector(): nodes.ClassSelector {
+    const dotStart = this._currentToken;
     if (this._currentToken.type !== 'dot') {
       throw new UnexpectedTokenError(this._currentToken, 'dot');
     }
     this.nextToken();
 
-    if (this._currentToken.type !== 'ident') {
-      throw new UnexpectedTokenError(this._currentToken, 'ident');
-    }
-    return new nodes.ClassSelector(new nodes.Identifier(
-      this._currentToken.value
-    ));
+    return this.finishNode(new nodes.ClassSelector(
+      this.parseIdentifier()
+    ), dotStart);
   }
 
   parseHashSelector(): nodes.HashSelector {
+    const hashStart = this._currentToken;
     if (this._currentToken.type !== 'hash') {
       throw new UnexpectedTokenError(this._currentToken, 'hash');
     }
     this.nextToken();
 
+    return this.finishNode(new nodes.HashSelector(
+      this.parseIdentifier()
+    ), hashStart);
+  }
+
+  parseIdentifier(): nodes.Identifier {
     if (this._currentToken.type !== 'ident') {
       throw new UnexpectedTokenError(this._currentToken, 'ident');
     }
-    return new nodes.HashSelector(new nodes.Identifier(
+
+    return this.finishNode(new nodes.Identifier(
       this._currentToken.value
-    ));
+    ), this._currentToken);
   }
+
+  parseStringLiteral(): nodes.StringLiteral {
+    if (this._currentToken.type !== 'string') {
+      throw new UnexpectedTokenError(this._currentToken, 'string');
+    }
+
+    return this.finishNode(new nodes.StringLiteral(
+      this._currentToken.value
+    ), this._currentToken);
+  }
+
 }

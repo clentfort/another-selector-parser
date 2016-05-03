@@ -19,18 +19,98 @@ Output:
                   "type": "NamespacePrefix",
                   "namespace": {
                     "type": "Identifier",
-                    "value": "myNamespace"
+                    "value": "myNamespace",
+                    "loc": {
+                      "start": {
+                        "column": 1,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 12,
+                        "line": 1
+                      }
+                    }
+                  },
+                  "loc": {
+                    "start": {
+                      "column": 1,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 12,
+                      "line": 1
+                    }
                   }
                 },
                 "value": {
                   "type": "Identifier",
-                  "value": "class"
+                  "value": "class",
+                  "loc": {
+                    "start": {
+                      "column": 13,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 18,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 13,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 18,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 20,
+                  "line": 1
                 }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 20,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 20,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 20,
+      "line": 1
+    }
+  }
 }

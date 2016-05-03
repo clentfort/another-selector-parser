@@ -15,12 +15,62 @@ Output:
               "type": "TypeSelector",
               "value": {
                 "type": "Identifier",
-                "value": "span"
+                "value": "span",
+                "loc": {
+                  "start": {
+                    "column": 0,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 5,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 5,
+                  "line": 1
+                }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 5,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 5,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 5,
+      "line": 1
+    }
+  }
 }

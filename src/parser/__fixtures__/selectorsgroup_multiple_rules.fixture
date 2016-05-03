@@ -15,12 +15,52 @@ Output:
               "type": "TypeSelector",
               "value": {
                 "type": "Identifier",
-                "value": "span"
+                "value": "span",
+                "loc": {
+                  "start": {
+                    "column": 0,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 11,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 11,
+                  "line": 1
+                }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 11,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 11,
+          "line": 1
+        }
+      }
     },
     {
       "type": "Selector",
@@ -32,12 +72,62 @@ Output:
               "type": "TypeSelector",
               "value": {
                 "type": "Identifier",
-                "value": "span"
+                "value": "span",
+                "loc": {
+                  "start": {
+                    "column": 6,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 11,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 6,
+                  "line": 1
+                },
+                "end": {
+                  "column": 11,
+                  "line": 1
+                }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 6,
+              "line": 1
+            },
+            "end": {
+              "column": 11,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 5,
+          "line": 1
+        },
+        "end": {
+          "column": 11,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 11,
+      "line": 1
+    }
+  }
 }

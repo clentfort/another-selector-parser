@@ -17,7 +17,17 @@ Output:
                 "type": "CallExpression",
                 "callee": {
                   "type": "Identifier",
-                  "value": "not"
+                  "value": "not",
+                  "loc": {
+                    "start": {
+                      "column": 1,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 12,
+                      "line": 1
+                    }
+                  }
                 },
                 "params": [
                   {
@@ -26,16 +36,86 @@ Output:
                       "type": "PseudoClassSelector",
                       "body": {
                         "type": "Identifier",
-                        "value": "hover"
+                        "value": "hover",
+                        "loc": {
+                          "start": {
+                            "column": 6,
+                            "line": 1
+                          },
+                          "end": {
+                            "column": 11,
+                            "line": 1
+                          }
+                        }
+                      },
+                      "loc": {
+                        "start": {
+                          "column": 5,
+                          "line": 1
+                        },
+                        "end": {
+                          "column": 11,
+                          "line": 1
+                        }
                       }
                     }
                   }
-                ]
+                ],
+                "loc": {
+                  "start": {
+                    "column": 1,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 12,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 13,
+                  "line": 1
+                }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 13,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 13,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 13,
+      "line": 1
+    }
+  }
 }

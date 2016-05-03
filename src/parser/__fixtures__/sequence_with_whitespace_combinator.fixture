@@ -15,16 +15,56 @@ Output:
               "type": "TypeSelector",
               "value": {
                 "type": "Identifier",
-                "value": "span"
+                "value": "span",
+                "loc": {
+                  "start": {
+                    "column": 0,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 11,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 11,
+                  "line": 1
+                }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 11,
+              "line": 1
+            }
+          }
         },
         {
           "type": "Combinator",
           "operator": {
             "type": "CombinatorOperator",
             "value": "whitespace"
+          },
+          "loc": {
+            "start": {
+              "column": 4,
+              "line": 1
+            },
+            "end": {
+              "column": 6,
+              "line": 1
+            }
           }
         },
         {
@@ -34,12 +74,62 @@ Output:
               "type": "TypeSelector",
               "value": {
                 "type": "Identifier",
-                "value": "span"
+                "value": "span",
+                "loc": {
+                  "start": {
+                    "column": 6,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 11,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 6,
+                  "line": 1
+                },
+                "end": {
+                  "column": 11,
+                  "line": 1
+                }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 6,
+              "line": 1
+            },
+            "end": {
+              "column": 11,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 11,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 11,
+      "line": 1
+    }
+  }
 }

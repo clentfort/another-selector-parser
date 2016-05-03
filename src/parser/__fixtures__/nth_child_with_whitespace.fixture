@@ -17,7 +17,17 @@ Output:
                 "type": "CallExpression",
                 "callee": {
                   "type": "Identifier",
-                  "value": "nth-child"
+                  "value": "nth-child",
+                  "loc": {
+                    "start": {
+                      "column": 1,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 19,
+                      "line": 1
+                    }
+                  }
                 },
                 "params": [
                   {
@@ -31,12 +41,62 @@ Output:
                       "value": 1
                     }
                   }
-                ]
+                ],
+                "loc": {
+                  "start": {
+                    "column": 1,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 19,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 19,
+                  "line": 1
+                }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 19,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 19,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 19,
+      "line": 1
+    }
+  }
 }

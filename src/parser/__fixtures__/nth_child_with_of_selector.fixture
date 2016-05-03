@@ -17,7 +17,17 @@ Output:
                 "type": "CallExpression",
                 "callee": {
                   "type": "Identifier",
-                  "value": "nth-child"
+                  "value": "nth-child",
+                  "loc": {
+                    "start": {
+                      "column": 1,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 50,
+                      "line": 1
+                    }
+                  }
                 },
                 "params": [
                   {
@@ -43,12 +53,52 @@ Output:
                                   "type": "ClassSelector",
                                   "value": {
                                     "type": "Identifier",
-                                    "value": "someSelector"
+                                    "value": "someSelector",
+                                    "loc": {
+                                      "start": {
+                                        "column": 20,
+                                        "line": 1
+                                      },
+                                      "end": {
+                                        "column": 32,
+                                        "line": 1
+                                      }
+                                    }
+                                  },
+                                  "loc": {
+                                    "start": {
+                                      "column": 19,
+                                      "line": 1
+                                    },
+                                    "end": {
+                                      "column": 50,
+                                      "line": 1
+                                    }
                                   }
                                 }
-                              ]
+                              ],
+                              "loc": {
+                                "start": {
+                                  "column": 19,
+                                  "line": 1
+                                },
+                                "end": {
+                                  "column": 50,
+                                  "line": 1
+                                }
+                              }
                             }
-                          ]
+                          ],
+                          "loc": {
+                            "start": {
+                              "column": 19,
+                              "line": 1
+                            },
+                            "end": {
+                              "column": 50,
+                              "line": 1
+                            }
+                          }
                         },
                         {
                           "type": "Selector",
@@ -60,17 +110,87 @@ Output:
                                   "type": "TypeSelector",
                                   "value": {
                                     "type": "Identifier",
-                                    "value": "anotherSelector"
+                                    "value": "anotherSelector",
+                                    "loc": {
+                                      "start": {
+                                        "column": 34,
+                                        "line": 1
+                                      },
+                                      "end": {
+                                        "column": 50,
+                                        "line": 1
+                                      }
+                                    }
+                                  },
+                                  "loc": {
+                                    "start": {
+                                      "column": 34,
+                                      "line": 1
+                                    },
+                                    "end": {
+                                      "column": 50,
+                                      "line": 1
+                                    }
                                   }
                                 }
-                              ]
+                              ],
+                              "loc": {
+                                "start": {
+                                  "column": 34,
+                                  "line": 1
+                                },
+                                "end": {
+                                  "column": 50,
+                                  "line": 1
+                                }
+                              }
                             }
-                          ]
+                          ],
+                          "loc": {
+                            "start": {
+                              "column": 33,
+                              "line": 1
+                            },
+                            "end": {
+                              "column": 50,
+                              "line": 1
+                            }
+                          }
                         }
-                      ]
+                      ],
+                      "loc": {
+                        "start": {
+                          "column": 19,
+                          "line": 1
+                        },
+                        "end": {
+                          "column": 50,
+                          "line": 1
+                        }
+                      }
                     }
                   }
-                ]
+                ],
+                "loc": {
+                  "start": {
+                    "column": 1,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 50,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 66,
+                  "line": 1
+                }
               }
             },
             {
@@ -79,13 +199,73 @@ Output:
                 "type": "AttributeSelectorAttribute",
                 "value": {
                   "type": "Identifier",
-                  "value": "someAttribute"
+                  "value": "someAttribute",
+                  "loc": {
+                    "start": {
+                      "column": 51,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 64,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 51,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 64,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 50,
+                  "line": 1
+                },
+                "end": {
+                  "column": 65,
+                  "line": 1
                 }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 66,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 66,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 66,
+      "line": 1
+    }
+  }
 }

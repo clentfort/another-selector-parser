@@ -15,12 +15,89 @@ Output:
               "type": "TypeSelector",
               "value": {
                 "type": "Identifier",
-                "value": "element"
+                "value": "element",
+                "loc": {
+                  "start": {
+                    "column": 2,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 9,
+                    "line": 1
+                  }
+                }
+              },
+              "namespace": {
+                "type": "NamespacePrefix",
+                "namespace": {
+                  "type": "Identifier",
+                  "value": "*",
+                  "loc": {
+                    "start": {
+                      "column": 0,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 10,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 0,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 10,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 10,
+                  "line": 1
+                }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 10,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 10,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 10,
+      "line": 1
+    }
+  }
 }

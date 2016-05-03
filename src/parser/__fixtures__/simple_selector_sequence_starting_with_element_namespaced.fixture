@@ -15,37 +15,134 @@ Output:
               "type": "TypeSelector",
               "value": {
                 "type": "Identifier",
-                "value": "tagname"
+                "value": "tagname",
+                "loc": {
+                  "start": {
+                    "column": 11,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 18,
+                    "line": 1
+                  }
+                }
+              },
+              "namespace": {
+                "type": "NamespacePrefix",
+                "namespace": {
+                  "type": "Identifier",
+                  "value": "aNamespace",
+                  "loc": {
+                    "start": {
+                      "column": 0,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 112,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 0,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 112,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 112,
+                  "line": 1
+                }
               }
             },
             {
               "type": "ClassSelector",
               "value": {
                 "type": "Identifier",
-                "value": "class"
+                "value": "class",
+                "loc": {
+                  "start": {
+                    "column": 19,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 24,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 18,
+                  "line": 1
+                },
+                "end": {
+                  "column": 24,
+                  "line": 1
+                }
               }
             },
             {
               "type": "HashSelector",
               "value": {
                 "type": "Identifier",
-                "value": "id1"
+                "value": "id1",
+                "loc": {
+                  "start": {
+                    "column": 25,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 28,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 24,
+                  "line": 1
+                },
+                "end": {
+                  "column": 28,
+                  "line": 1
+                }
               }
             },
             {
               "type": "HashSelector",
               "value": {
                 "type": "Identifier",
-                "value": "id2"
-              }
-            },
-            {
-              "type": "AttributeSelector",
-              "attribute": {
-                "type": "AttributeSelectorAttribute",
-                "value": {
-                  "type": "Identifier",
-                  "value": "attribute"
+                "value": "id2",
+                "loc": {
+                  "start": {
+                    "column": 29,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 32,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 28,
+                  "line": 1
+                },
+                "end": {
+                  "column": 32,
+                  "line": 1
                 }
               }
             },
@@ -55,21 +152,121 @@ Output:
                 "type": "AttributeSelectorAttribute",
                 "value": {
                   "type": "Identifier",
-                  "value": "attribute"
+                  "value": "attribute",
+                  "loc": {
+                    "start": {
+                      "column": 33,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 42,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 33,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 42,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 32,
+                  "line": 1
+                },
+                "end": {
+                  "column": 43,
+                  "line": 1
+                }
+              }
+            },
+            {
+              "type": "AttributeSelector",
+              "attribute": {
+                "type": "AttributeSelectorAttribute",
+                "value": {
+                  "type": "Identifier",
+                  "value": "attribute",
+                  "loc": {
+                    "start": {
+                      "column": 44,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 53,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 44,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 53,
+                    "line": 1
+                  }
                 }
               },
               "matcher": {
                 "type": "AttributeSelectorMatcher",
-                "value": "="
+                "value": "=",
+                "loc": {
+                  "start": {
+                    "column": 53,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 54,
+                    "line": 1
+                  }
+                }
               },
               "value": {
                 "type": "AttributeSelectorValue",
                 "value": {
                   "type": "StringLiteral",
-                  "value": "test"
+                  "value": "test",
+                  "loc": {
+                    "start": {
+                      "column": 54,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 60,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 54,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 60,
+                    "line": 1
+                  }
                 }
               },
-              "caseSensitive": true
+              "caseSensitive": true,
+              "loc": {
+                "start": {
+                  "column": 43,
+                  "line": 1
+                },
+                "end": {
+                  "column": 61,
+                  "line": 1
+                }
+              }
             },
             {
               "type": "PseudoClassSelector",
@@ -77,7 +274,17 @@ Output:
                 "type": "CallExpression",
                 "callee": {
                   "type": "Identifier",
-                  "value": "not"
+                  "value": "not",
+                  "loc": {
+                    "start": {
+                      "column": 62,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 83,
+                      "line": 1
+                    }
+                  }
                 },
                 "params": [
                   {
@@ -87,35 +294,145 @@ Output:
                       "attribute": {
                         "type": "AttributeSelectorAttribute",
                         "namespace": {
-                          "type": "NamespacePrefix"
+                          "type": "NamespacePrefix",
+                          "loc": {
+                            "start": {
+                              "column": 67,
+                              "line": 1
+                            },
+                            "end": {
+                              "column": 73,
+                              "line": 1
+                            }
+                          }
                         },
                         "value": {
                           "type": "Identifier",
-                          "value": "class"
+                          "value": "class",
+                          "loc": {
+                            "start": {
+                              "column": 68,
+                              "line": 1
+                            },
+                            "end": {
+                              "column": 73,
+                              "line": 1
+                            }
+                          }
+                        },
+                        "loc": {
+                          "start": {
+                            "column": 68,
+                            "line": 1
+                          },
+                          "end": {
+                            "column": 73,
+                            "line": 1
+                          }
                         }
                       },
                       "matcher": {
                         "type": "AttributeSelectorMatcher",
-                        "value": "="
+                        "value": "=",
+                        "loc": {
+                          "start": {
+                            "column": 73,
+                            "line": 1
+                          },
+                          "end": {
+                            "column": 74,
+                            "line": 1
+                          }
+                        }
                       },
                       "value": {
                         "type": "AttributeSelectorValue",
                         "value": {
                           "type": "StringLiteral",
-                          "value": "class"
+                          "value": "class",
+                          "loc": {
+                            "start": {
+                              "column": 74,
+                              "line": 1
+                            },
+                            "end": {
+                              "column": 81,
+                              "line": 1
+                            }
+                          }
+                        },
+                        "loc": {
+                          "start": {
+                            "column": 74,
+                            "line": 1
+                          },
+                          "end": {
+                            "column": 81,
+                            "line": 1
+                          }
                         }
                       },
-                      "caseSensitive": true
+                      "caseSensitive": true,
+                      "loc": {
+                        "start": {
+                          "column": 66,
+                          "line": 1
+                        },
+                        "end": {
+                          "column": 82,
+                          "line": 1
+                        }
+                      }
                     }
                   }
-                ]
+                ],
+                "loc": {
+                  "start": {
+                    "column": 62,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 83,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 61,
+                  "line": 1
+                },
+                "end": {
+                  "column": 83,
+                  "line": 1
+                }
               }
             },
             {
               "type": "PseudoClassSelector",
               "body": {
                 "type": "Identifier",
-                "value": "first"
+                "value": "first",
+                "loc": {
+                  "start": {
+                    "column": 84,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 89,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 83,
+                  "line": 1
+                },
+                "end": {
+                  "column": 89,
+                  "line": 1
+                }
               }
             },
             {
@@ -124,7 +441,17 @@ Output:
                 "type": "CallExpression",
                 "callee": {
                   "type": "Identifier",
-                  "value": "not"
+                  "value": "not",
+                  "loc": {
+                    "start": {
+                      "column": 90,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 111,
+                      "line": 1
+                    }
+                  }
                 },
                 "params": [
                   {
@@ -135,7 +462,17 @@ Output:
                         "type": "CallExpression",
                         "callee": {
                           "type": "Identifier",
-                          "value": "nth-child"
+                          "value": "nth-child",
+                          "loc": {
+                            "start": {
+                              "column": 95,
+                              "line": 1
+                            },
+                            "end": {
+                              "column": 111,
+                              "line": 1
+                            }
+                          }
                         },
                         "params": [
                           {
@@ -149,16 +486,86 @@ Output:
                               "value": 1
                             }
                           }
-                        ]
+                        ],
+                        "loc": {
+                          "start": {
+                            "column": 95,
+                            "line": 1
+                          },
+                          "end": {
+                            "column": 111,
+                            "line": 1
+                          }
+                        }
+                      },
+                      "loc": {
+                        "start": {
+                          "column": 94,
+                          "line": 1
+                        },
+                        "end": {
+                          "column": 111,
+                          "line": 1
+                        }
                       }
                     }
                   }
-                ]
+                ],
+                "loc": {
+                  "start": {
+                    "column": 90,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 111,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 89,
+                  "line": 1
+                },
+                "end": {
+                  "column": 111,
+                  "line": 1
+                }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 112,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 112,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 112,
+      "line": 1
+    }
+  }
 }

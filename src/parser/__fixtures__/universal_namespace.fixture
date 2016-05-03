@@ -17,13 +17,73 @@ Output:
                 "type": "NamespacePrefix",
                 "namespace": {
                   "type": "Identifier",
-                  "value": "myNamespace"
+                  "value": "myNamespace",
+                  "loc": {
+                    "start": {
+                      "column": 0,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 14,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 0,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 14,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 14,
+                  "line": 1
                 }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 14,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 14,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 14,
+      "line": 1
+    }
+  }
 }

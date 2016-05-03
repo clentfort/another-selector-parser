@@ -2,24 +2,35 @@
 import type { Token, TokenType } from '../tokenizer/tokens';
 
 export class UnexpectedEofError extends Error {
-  constructor() {
-    super('Unexpected end of input.');
+  constructor(actual: Token) {
+    let end = '.';
+    if (actual.loc) {
+      const { line, column } = actual.loc.start;
+      end = ` on line ${line}, column ${column}.`;
+    }
+    super(`Unexpected end of input${end}`);
   }
 }
 
 export class UnexpectedTokenError extends Error {
   constructor(actual: Token, expected: TokenType|Array<TokenType>, value: ?any) {
+    const start = `Unexpected token of type "${actual.type}"`;
+    let end = '.';
+    if (actual.loc) {
+      const { line, column } = actual.loc.start;
+      end = ` on line ${line}, column ${column}.`;
+    }
     if (typeof expected === 'string') {
       let withValueOf = '';
       if (value) {
         withValueOf = ` with a value of "${value}"`;
       }
-      super(`Unexpected token of type "${actual.type}", expected a token of type "${expected}"${withValueOf}.`);
+      super(`${start}, expected "${expected}"${withValueOf}${end}`);
     } else if (Array.isArray(expected)) {
       const allExpected = expected.join('", "');
-      super(`Unexpected token of type "${actual.type}", expected one of "${allExpected}".`);
+      super(`${start}, expected one of "${allExpected}"${end}`);
     } else {
-      super(`Unexpected token of type "${actual.type}".`);
+      super(`${start}${end}`);
     }
   }
 }

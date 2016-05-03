@@ -15,12 +15,62 @@ Output:
               "type": "PseudoElementSelector",
               "body": {
                 "type": "Identifier",
-                "value": "pseudoElement"
+                "value": "pseudoElement",
+                "loc": {
+                  "start": {
+                    "column": 2,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 15,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 16,
+                  "line": 1
+                }
               }
             }
-          ]
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 16,
+              "line": 1
+            }
+          }
         }
-      ]
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 16,
+          "line": 1
+        }
+      }
     }
-  ]
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 16,
+      "line": 1
+    }
+  }
 }
