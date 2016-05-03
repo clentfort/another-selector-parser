@@ -68,7 +68,8 @@ Output:
                   "type": "StringLiteral",
                   "value": "test"
                 }
-              }
+              },
+              "caseSensitive": true
             },
             {
               "type": "PseudoClassSelector",
@@ -103,7 +104,8 @@ Output:
                           "type": "StringLiteral",
                           "value": "class"
                         }
-                      }
+                      },
+                      "caseSensitive": true
                     }
                   }
                 ]

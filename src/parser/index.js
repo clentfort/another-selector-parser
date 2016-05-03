@@ -4,6 +4,7 @@ import Tokenizer from '../tokenizer';
 import NotExpressionParser from './plugins/NotExpressionParser';
 import NthChildExpressionParser from './plugins/NthChildExpressionParser';
 import Plugin from './plugins/Plugin';
+import { UnexpectedTokenError, UnexpectedEofError } from './Errors';
 
 import getCombinatorFromToken from './util/getCombinatorFromToken';
 
@@ -162,7 +163,7 @@ export default class Parser {
         selector = this.parseHashSelector();
         break;
       default:
-        throw new Error();
+        throw new UnexpectedTokenError(this._currentToken, ['bracketL', 'colon', 'dot', 'hash']);
     }
     return selector;
   }
@@ -195,18 +196,18 @@ export default class Parser {
 
   parseAttributeSelector(): nodes.AttributeSelector {
     if (this._currentToken.type !== 'bracketL') {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, 'bracketL');
     }
     this._tokenizer.emitWhitespace(false);
     this.nextToken();
 
     const namespacePrefix = this.parseNamespacePrefix();
     if (this._currentToken.type !== 'ident') {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, 'ident');
     }
     const attribute = new nodes.AttributeSelectorAttribute(
       new nodes.Identifier(this._currentToken.value),
-      namespacePrefix
+      namespacePrefix,
     );
     this.nextToken();
 
@@ -214,7 +215,7 @@ export default class Parser {
       this._tokenizer.emitWhitespace(true);
       return new nodes.AttributeSelector(attribute);
     } else if (this._currentToken.type !== 'matcher') {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, 'matcher');
     }
     const matcher = new nodes.AttributeSelectorMatcher(
       this._currentToken.value
@@ -224,32 +225,41 @@ export default class Parser {
     let value;
     if (this._currentToken.type === 'ident') {
       value = new nodes.AttributeSelectorValue(new nodes.Identifier(
-        this._currentToken.value
+        this._currentToken.value,
       ));
     } else if (this._currentToken.type === 'string') {
       value = new nodes.AttributeSelectorValue(new nodes.StringLiteral(
-        this._currentToken.value
+        this._currentToken.value,
       ));
     } else {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, ['ident', 'string']);
     }
     this.nextToken();
 
+    let caseSensitive = true;
+    if (this._currentToken.type === 'ident') {
+      if (this._currentToken.value.toLowerCase() !== 'i') {
+        throw new UnexpectedTokenError(this._currentToken, 'ident', 'i');
+      }
+      caseSensitive = false;
+      this.nextToken();
+    }
+
     if (this._currentToken.type !== 'bracketR') {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, 'bracketR');
     }
     this._tokenizer.emitWhitespace(true);
-
     return new nodes.AttributeSelectorWithMatcher(
       attribute,
       matcher,
-      value
+      value,
+      caseSensitive,
     );
   }
 
   parsePseudoSelector(): nodes.PseudoSelector {
     if (this._currentToken.type !== 'colon') {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, 'colon');
     }
     this.nextToken();
 
@@ -260,7 +270,7 @@ export default class Parser {
     }
 
     if (this._currentToken.type !== 'ident') {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, 'ident');
     }
 
     const { value: name } = this._currentToken;
@@ -272,7 +282,7 @@ export default class Parser {
       body = new nodes.CallExpression(body);
       this.nextToken();
 
-      const plugin = this._plugins.CallExpression[name];
+      const plugin = this._plugins.CallExpression[name.toLowerCase()];
       if (plugin) {
         body.params = plugin.parse();
       } else {
@@ -283,8 +293,7 @@ export default class Parser {
           } else if (this._currentToken.type === 'parenR') {
             --depth;
           } else if (this._currentToken.type === 'EOF') {
-            // @TODO: Unexpected EOF Error
-            throw new Error();
+            throw new UnexpectedEofError();
           }
           body.params.push(this._currentToken);
           this.nextToken();
@@ -299,12 +308,12 @@ export default class Parser {
 
   parseClassSelector(): nodes.ClassSelector {
     if (this._currentToken.type !== 'dot') {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, 'dot');
     }
     this.nextToken();
 
     if (this._currentToken.type !== 'ident') {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, 'ident');
     }
     return new nodes.ClassSelector(new nodes.Identifier(
       this._currentToken.value
@@ -313,12 +322,12 @@ export default class Parser {
 
   parseHashSelector(): nodes.HashSelector {
     if (this._currentToken.type !== 'hash') {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, 'hash');
     }
     this.nextToken();
 
     if (this._currentToken.type !== 'ident') {
-      throw new Error();
+      throw new UnexpectedTokenError(this._currentToken, 'ident');
     }
     return new nodes.HashSelector(new nodes.Identifier(
       this._currentToken.value

@@ -15,7 +15,7 @@ export class NthChildExpressionArgument extends Node {
   }
 }
 
-const offsetRegExp = /^n(-\d+)$/;
+const offsetRegExp = /^n(-\d+)$/i;
 
 export class NthChildExpressionWithOfSelectorArgument extends
 NthChildExpressionArgument {
@@ -64,11 +64,12 @@ export default class NthChildExpressionParser extends Plugin {
     const n = this._parser.nextToken();
     let offset;
     if (n.type === 'ident') {
-      if (n.value === 'n' || n.value === 'n-') {
+      const value = n.value.toLowerCase();
+      if (value === 'n' || value === 'n-') {
         this._parser.nextToken();
         offset = this._parseNextNumber();
       } else {
-        const matching = n.value.match(offsetRegExp);
+        const matching = value.match(offsetRegExp);
         if (!matching) {
           // @TODO Unexpected token
           throw new Error();
@@ -87,7 +88,11 @@ export default class NthChildExpressionParser extends Plugin {
       return [new NthChildExpressionArgument(step, offset)];
     }
 
-    if (possibleParenR.type !== 'ident' || possibleParenR.value !== 'of') {
+
+    if (
+      possibleParenR.type !== 'ident' ||
+      possibleParenR.value.toLowerCase() !== 'of'
+    ) {
       // @TODO Unexpected token or unexpected value
       throw new Error();
     }

@@ -1,0 +1,41 @@
+Input:
+[class="classname" i]
+
+Output:
+{
+  "type": "SelectorsGroup",
+  "body": [
+    {
+      "type": "Selector",
+      "body": [
+        {
+          "type": "SimpleSelectorSequence",
+          "body": [
+            {
+              "type": "AttributeSelector",
+              "attribute": {
+                "type": "AttributeSelectorAttribute",
+                "value": {
+                  "type": "Identifier",
+                  "value": "class"
+                }
+              },
+              "matcher": {
+                "type": "AttributeSelectorMatcher",
+                "value": "="
+              },
+              "value": {
+                "type": "AttributeSelectorValue",
+                "value": {
+                  "type": "StringLiteral",
+                  "value": "classname"
+                }
+              },
+              "caseSensitive": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

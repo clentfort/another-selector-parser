@@ -12,6 +12,7 @@ export default class AttributeSelector extends SimpleSelector {
   attribute: AttributeSelectorAttribute;
   matcher: ?AttributeSelectorMatcher;
   value: ?AttributeSelectorValue;
+  caseSensitive: ?boolean;
 
   constructor(attribute: AttributeSelectorAttribute) {
     super('AttributeSelector');
@@ -23,11 +24,13 @@ export class AttributeSelectorWithMatcher extends AttributeSelector {
   constructor(
     attribute: AttributeSelectorAttribute,
     matcher: AttributeSelectorMatcher,
-    value: AttributeSelectorValue
+    value: AttributeSelectorValue,
+    caseSensitive: boolean,
   ) {
     super(attribute);
     this.matcher = matcher;
     this.value = value;
+    this.caseSensitive = caseSensitive;
   }
 }
 

@@ -30,7 +30,8 @@ Output:
                   "type": "StringLiteral",
                   "value": "classname"
                 }
-              }
+              },
+              "caseSensitive": true
             }
           ]
         }

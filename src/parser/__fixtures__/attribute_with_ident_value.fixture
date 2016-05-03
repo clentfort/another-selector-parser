@@ -30,7 +30,8 @@ Output:
                   "type": "Identifier",
                   "value": "classname"
                 }
-              }
+              },
+              "caseSensitive": true
             }
           ]
         }
