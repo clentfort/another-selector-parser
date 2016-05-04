@@ -1,0 +1,5 @@
+instrumentation:
+  excludes:
+    - src/parser/Errors.js
+    - parser/Errors.js
+
