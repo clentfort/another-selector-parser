@@ -21,7 +21,7 @@ Output:
                     "line": 1
                   },
                   "end": {
-                    "column": 3,
+                    "column": 2,
                     "line": 1
                   }
                 }
@@ -32,7 +32,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 3,
+                  "column": 2,
                   "line": 1
                 }
               }

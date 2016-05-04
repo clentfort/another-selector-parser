@@ -72,10 +72,11 @@ export default class Parser {
 
   finishNode<T: nodes.Node>(node: T, start: ?Token): T {
     if (start && start.loc && (!node.loc || !node.loc.start)) {
-      node.loc = start.loc;
+      node.loc = start.loc.clone();
     }
     if (node.loc && this._currentToken.loc) {
-      node.loc.end = this._currentToken.loc.end;
+      // $FlowFixMe
+      node.loc.end = this._currentToken.loc.end.clone();
     }
     return node;
   }
@@ -124,7 +125,7 @@ export default class Parser {
       const lookahead = this._tokenizer.nextToken();
       if (lookahead.type === 'combinator' || lookahead.type === 'plus') {
         this._tokenizer.skip();
-        return getCombinatorFromToken(lookahead);
+        return this.finishNode(getCombinatorFromToken(lookahead), start);
       }
 
       this._tokenizer.backup();
@@ -205,12 +206,17 @@ export default class Parser {
       this._tokenizer.peek();
       const lookahead = this._tokenizer.nextToken();
       if (lookahead.type === 'pipe') {
-        namespacePrefix = this.finishNode(new nodes.NamespacePrefix(
-          this.finishNode(new nodes.Identifier(
-            this._currentToken.type === 'ident' ? this._currentToken.value : '*'
-          ), start),
+        const prefix = this.finishNode(new nodes.Identifier(
+          this._currentToken.type === 'ident' ? this._currentToken.value : '*'
         ), start);
+        // @TODO Maybe wrap skip in a parser internal method so we dont have to
+        // reassign `_currentToken`
         this._tokenizer.skip();
+        this._currentToken = lookahead;
+        namespacePrefix = this.finishNode(
+          new nodes.NamespacePrefix(prefix),
+          start,
+        );
         this.nextToken();
       } else {
         this._tokenizer.backup();

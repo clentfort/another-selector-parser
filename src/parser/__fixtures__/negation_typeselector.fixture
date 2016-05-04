@@ -24,7 +24,7 @@ Output:
                       "line": 1
                     },
                     "end": {
-                      "column": 13,
+                      "column": 4,
                       "line": 1
                     }
                   }
@@ -78,7 +78,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 14,
+                  "column": 13,
                   "line": 1
                 }
               }

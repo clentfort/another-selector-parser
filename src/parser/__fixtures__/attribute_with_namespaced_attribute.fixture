@@ -37,7 +37,7 @@ Output:
                       "line": 1
                     },
                     "end": {
-                      "column": 12,
+                      "column": 13,
                       "line": 1
                     }
                   }
@@ -73,7 +73,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 20,
+                  "column": 19,
                   "line": 1
                 }
               }

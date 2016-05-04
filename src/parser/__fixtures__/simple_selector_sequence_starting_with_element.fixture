@@ -22,7 +22,7 @@ Output:
                     "line": 1
                   },
                   "end": {
-                    "column": 100,
+                    "column": 7,
                     "line": 1
                   }
                 }
@@ -33,7 +33,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 100,
+                  "column": 7,
                   "line": 1
                 }
               }
@@ -254,7 +254,7 @@ Output:
                       "line": 1
                     },
                     "end": {
-                      "column": 71,
+                      "column": 54,
                       "line": 1
                     }
                   }
@@ -408,7 +408,7 @@ Output:
                       "line": 1
                     },
                     "end": {
-                      "column": 99,
+                      "column": 81,
                       "line": 1
                     }
                   }
@@ -429,7 +429,7 @@ Output:
                               "line": 1
                             },
                             "end": {
-                              "column": 99,
+                              "column": 92,
                               "line": 1
                             }
                           }
