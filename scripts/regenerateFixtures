@@ -48,6 +48,7 @@ import fs from 'fs';
 import path from 'path';
 
 import readFixtures from '../src/tools/readFixtures';
+import AnotherSelectorParserError from '../src/util/Error';
 
 function writeFixture(fixturePath, text) {
   fs.writeFileSync(fixturePath, text, 'utf8');
@@ -84,6 +85,35 @@ function genFixtures(fixturePath) {
             e.message,
             e.stack
           );
+        }
+      } else if(filename.indexOf('error') >= 0 && fixture.error !== undefined) {
+        try {
+          generate(fixture.input, filename);
+        } catch (e) {
+          if (e.AnotherSelectorParserError) {
+            writeFixture(
+              path.join(fixturePath, filename),
+              [
+                'Input:',
+                fixture.input,
+                '', // newline
+                'Error:',
+                JSON.stringify({
+                  message: e.message,
+                  stack: e.stack,
+                }, null, 2),
+                '', // newline
+              ].join('\n')
+            );
+          console.log('Updated fixture `%s`.', filename);
+          } else {
+            console.error(
+              'Failed to transform fixture `%s`: %s: %s',
+              filename,
+              e.message,
+              e.stack
+            );
+          }
         }
       } // else: fixture for invalid code, nothing to update
     });

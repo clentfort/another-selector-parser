@@ -11,7 +11,7 @@ import {
   UnexpectedEofError,
   UnterminatedCommentError,
   UnterminatedStringError,
-} from './Errors';
+} from './util/Errors';
 
 import type { Token, TokenType } from './tokens';
 import { Position, SourceLocation } from '../util/location';

@@ -1,7 +1,9 @@
 /* @flow */
-import type { Token, TokenType } from '../tokenizer/tokens';
+import AnotherSelectorParserError from '../../util/Error';
 
-export class UnexpectedEofError extends Error {
+import type { Token, TokenType } from '../../tokenizer/tokens';
+
+export class UnexpectedEofError extends AnotherSelectorParserError {
   constructor(actual: Token) {
     let end = '.';
     if (actual.loc) {
@@ -12,7 +14,7 @@ export class UnexpectedEofError extends Error {
   }
 }
 
-export class UnexpectedTokenError extends Error {
+export class UnexpectedTokenError extends AnotherSelectorParserError {
   constructor(actual: Token, expected: TokenType|Array<TokenType>, value: ?any) {
     const start = `Unexpected token of type "${actual.type}"`;
     let end = '.';

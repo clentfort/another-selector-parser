@@ -1,0 +1,33 @@
+Input:
+~=
+
+Output:
+[
+  {
+    "type": "matcher",
+    "loc": {
+      "start": {
+        "column": 0,
+        "line": 1
+      },
+      "end": {
+        "column": 2,
+        "line": 1
+      }
+    },
+    "value": "~="
+  },
+  {
+    "type": "EOF",
+    "loc": {
+      "start": {
+        "column": 2,
+        "line": 1
+      },
+      "end": {
+        "column": 3,
+        "line": 1
+      }
+    }
+  }
+]

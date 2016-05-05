@@ -1,0 +1,8 @@
+Input:
+/ * some invalid comment start
+
+Error:
+{
+  "message": "Unexpected char \" \" at position 1, expected \"*\".",
+  "stack": "Error: Unexpected char \" \" at position 1, expected \"*\".\n    at UnexpectedCharacterError.Error (native)\n    at UnexpectedCharacterError.AnotherSelectorParserError (Error.js:1:22)\n    at new UnexpectedCharacterError (Errors.js:9:14)\n    at Tokenizer._skipComment (index.js:429:13)\n    at Tokenizer.nextToken (index.js:90:14)\n    at generate (generator.js:10:23)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)\n    at genFixtures (regenerateFixtures:64:23)\n    at Object.<anonymous> (regenerateFixtures:129:1)"
+}

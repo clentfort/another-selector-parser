@@ -1,0 +1,8 @@
+Input:
+$
+
+Error:
+{
+  "message": "Unexpected end of input at position 1.",
+  "stack": "Error: Unexpected end of input at position 1.\n    at UnexpectedEofError.Error (native)\n    at UnexpectedEofError.AnotherSelectorParserError (Error.js:1:22)\n    at new UnexpectedEofError (Errors.js:19:14)\n    at Tokenizer._getCharCodeOrThrowEof (index.js:142:13)\n    at Tokenizer._readAttrMatcher (index.js:200:27)\n    at Tokenizer._getTokenFromCode (index.js:183:21)\n    at Tokenizer.nextToken (index.js:95:28)\n    at generate (generator.js:10:23)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)"
+}

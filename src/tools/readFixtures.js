@@ -95,6 +95,11 @@ export default function readFixtures(fixturePath) {
         input: parts[1].trim(),
         error: parts[2].trim(),
       };
+      try {
+        fixtures[name].error = JSON.parse(fixtures[name].error);
+      } catch (e) {
+        //
+      }
       return;
     }
 

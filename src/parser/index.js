@@ -4,7 +4,7 @@ import Tokenizer from '../tokenizer';
 import NotExpressionParser from './plugins/NotExpressionParser';
 import NthChildExpressionParser from './plugins/NthChildExpressionParser';
 import Plugin from './plugins/Plugin';
-import { UnexpectedTokenError, UnexpectedEofError } from './Errors';
+import { UnexpectedTokenError, UnexpectedEofError } from './util/Errors';
 
 import getCombinatorFromToken from './util/getCombinatorFromToken';
 

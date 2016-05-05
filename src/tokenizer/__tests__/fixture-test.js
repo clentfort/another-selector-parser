@@ -100,7 +100,7 @@ describe('tokenizer', () => {
         } catch (e) {
           expected = e;
         }
-        if (!expected || expected.message !== fixtures.error.message) {
+        if (!expected || expected.message !== fixture.error.message) {
           ConsoleErrorQueue.flush();
           expect(() => {
             if (expected) {

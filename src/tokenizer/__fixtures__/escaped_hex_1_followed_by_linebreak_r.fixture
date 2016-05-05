@@ -1,0 +1,33 @@
+Input:
+\1someIdent
+
+Output:
+[
+  {
+    "type": "ident",
+    "loc": {
+      "start": {
+        "column": 0,
+        "line": 1
+      },
+      "end": {
+        "column": 12,
+        "line": 1
+      }
+    },
+    "value": "\u0001someIdent"
+  },
+  {
+    "type": "EOF",
+    "loc": {
+      "start": {
+        "column": 12,
+        "line": 1
+      },
+      "end": {
+        "column": 13,
+        "line": 1
+      }
+    }
+  }
+]
