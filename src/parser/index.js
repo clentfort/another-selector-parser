@@ -6,7 +6,7 @@ import NthChildExpressionParser from './plugins/NthChildExpressionParser';
 import Plugin from './plugins/Plugin';
 import { UnexpectedTokenError, UnexpectedEofError } from './util/Errors';
 
-import getCombinatorFromToken from './util/getCombinatorFromToken';
+import getCombinatorTypeFromToken from './util/getCombinatorTypeFromToken';
 
 import type { Token } from '../tokenizer/tokens';
 
@@ -126,13 +126,17 @@ export default class Parser {
       const lookahead = this._tokenizer.nextToken();
       if (lookahead.type === 'combinator' || lookahead.type === 'plus') {
         this._tokenizer.skip();
-        return this.finishNode(getCombinatorFromToken(lookahead), start);
+        return this.finishNode(new nodes.Combinator(
+          getCombinatorTypeFromToken(lookahead)
+        ), start);
       }
 
       this._tokenizer.backup();
     }
 
-    return this.finishNode(getCombinatorFromToken(this._currentToken), start);
+    return this.finishNode(new nodes.Combinator(
+      getCombinatorTypeFromToken(this._currentToken)
+    ), start);
   }
 
   parseSimpleSelectorList(): nodes.SimpleSelectorList {

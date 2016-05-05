@@ -7,10 +7,7 @@ export {
   AttributeSelectorWithMatcher,
 } from './AttributeSelector';
 export { default as ClassSelector } from './ClassSelector';
-export {
-  default as Combinator,
-  CombinatorOperator,
-} from './Combinator';
+export { default as Combinator } from './Combinator';
 export { default as HashSelector } from './HashSelector';
 export { default as Identifier } from './Identifier';
 export { default as NamespacePrefix } from './NamespacePrefix';

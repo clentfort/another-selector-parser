@@ -4,5 +4,5 @@ Input:
 Error:
 {
   "message": "Unterminated comment at position 2.",
-  "stack": "Error: Unterminated comment at position 2.\n    at UnterminatedCommentError.Error (native)\n    at UnterminatedCommentError.AnotherSelectorParserError (Error.js:1:22)\n    at new UnterminatedCommentError (Errors.js:29:14)\n    at Tokenizer._skipComment (index.js:438:13)\n    at Tokenizer.nextToken (index.js:90:14)\n    at generate (generator.js:10:23)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)\n    at genFixtures (regenerateFixtures:64:23)\n    at Object.<anonymous> (regenerateFixtures:129:1)"
+  "stack": "Error: Unterminated comment at position 2.\n    at UnterminatedCommentError.Error (native)\n    at UnterminatedCommentError.AnotherSelectorParserError (Error.js:1:22)\n    at new UnterminatedCommentError (Errors.js:29:14)\n    at Tokenizer._skipComment (index.js:447:13)\n    at Tokenizer.nextToken (index.js:90:14)\n    at generate (generator.js:10:23)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)\n    at genFixtures (regenerateFixtures:64:23)\n    at Object.<anonymous> (regenerateFixtures:129:1)"
 }

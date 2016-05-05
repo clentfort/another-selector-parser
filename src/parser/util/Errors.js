@@ -15,7 +15,11 @@ export class UnexpectedEofError extends AnotherSelectorParserError {
 }
 
 export class UnexpectedTokenError extends AnotherSelectorParserError {
-  constructor(actual: Token, expected: TokenType|Array<TokenType>, value: ?any) {
+  constructor(
+    actual: Token,
+    expected: ?TokenType|Array<TokenType>,
+    value: ?any
+  ) {
     const start = `Unexpected token of type "${actual.type}"`;
     let end = '.';
     if (actual.loc) {

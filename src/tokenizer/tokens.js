@@ -29,7 +29,7 @@ export type Token =
   { type: 'bracketL'; loc: ?SourceLocation; } |
   { type: 'bracketR'; loc: ?SourceLocation; } |
   { type: 'colon'; loc: ?SourceLocation; } |
-  { type: 'combinator'; loc: ?SourceLocation; value: '>' | '~'; } |
+  { type: 'combinator'; loc: ?SourceLocation; value: '>' | '>>' | '~'; } |
   { type: 'comma'; loc: ?SourceLocation; } |
   { type: 'dot'; loc: ?SourceLocation; } |
   { type: 'hash'; loc: ?SourceLocation; } |
@@ -44,4 +44,4 @@ export type Token =
   { type: 'plus'; loc: ?SourceLocation; } |
   { type: 'star'; loc: ?SourceLocation; } |
   { type: 'string'; loc: ?SourceLocation; value: string; } |
-  { type: 'whitespace'; loc: ?SourceLocation; value: string; };
+  { type: 'whitespace'; loc: ?SourceLocation; };

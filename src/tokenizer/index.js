@@ -164,8 +164,6 @@ export default class Tokenizer {
         ++this._state.currentPosition; return this._createToken('percentage');
       case 43: /* "+" */
         ++this._state.currentPosition; return this._createToken('plus');
-      case 62: /* ">" */
-        ++this._state.currentPosition; return this._createToken('combinator', '>');
       case 61: /* "=" */
         ++this._state.currentPosition; return this._createToken('matcher', '=');
       case 42: /* "*" */
@@ -178,6 +176,8 @@ export default class Tokenizer {
         return this._readDot();
       case 45: /* "-" */
         return this._readMinus();
+      case 62: /* ">" */
+        return this._readGreater();
       case 36: /* "$" */
       case 94: /* "^" */
         return this._readAttrMatcher();
@@ -216,6 +216,15 @@ export default class Tokenizer {
     }
     ++this._state.currentPosition;
     return this._createToken('dot');
+  }
+
+  _readGreater(): Token {
+    const nextCharCode = this._state.input.charCodeAt(++this._state.currentPosition);
+    if (nextCharCode === 62) {
+      ++this._state.currentPosition;
+      return this._createToken('combinator', '>>');
+    }
+    return this._createToken('combinator', '>');
   }
 
   _readIdentifier(): Token {
