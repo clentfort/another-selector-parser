@@ -3,13 +3,13 @@ Input:
 
 Output:
 {
-  "type": "SelectorsGroup",
+  "type": "SelectorList",
   "body": [
     {
       "type": "Selector",
       "body": [
         {
-          "type": "SimpleSelectorSequence",
+          "type": "SimpleSelectorList",
           "body": [
             {
               "type": "PseudoClassSelector",
@@ -41,13 +41,13 @@ Output:
                       "value": 2
                     },
                     "of": {
-                      "type": "SelectorsGroup",
+                      "type": "SelectorList",
                       "body": [
                         {
                           "type": "Selector",
                           "body": [
                             {
-                              "type": "SimpleSelectorSequence",
+                              "type": "SimpleSelectorList",
                               "body": [
                                 {
                                   "type": "ClassSelector",
@@ -83,7 +83,7 @@ Output:
                                   "line": 1
                                 },
                                 "end": {
-                                  "column": 50,
+                                  "column": 33,
                                   "line": 1
                                 }
                               }
@@ -95,7 +95,7 @@ Output:
                               "line": 1
                             },
                             "end": {
-                              "column": 50,
+                              "column": 33,
                               "line": 1
                             }
                           }
@@ -104,7 +104,7 @@ Output:
                           "type": "Selector",
                           "body": [
                             {
-                              "type": "SimpleSelectorSequence",
+                              "type": "SimpleSelectorList",
                               "body": [
                                 {
                                   "type": "TypeSelector",

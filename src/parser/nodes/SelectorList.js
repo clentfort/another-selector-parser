@@ -2,11 +2,11 @@
 import Node from './Node';
 import Selector from './Selector';
 
-export default class SelectorsGroup extends Node {
+export default class SelectorList extends Node {
   body: Array<Selector>;
 
   constructor() {
-    super('SelectorsGroup');
+    super('SelectorList');
     this.body = [];
   }
 }

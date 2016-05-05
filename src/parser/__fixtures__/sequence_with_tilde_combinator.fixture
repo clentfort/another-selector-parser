@@ -3,13 +3,13 @@ span ~ span
 
 Output:
 {
-  "type": "SelectorsGroup",
+  "type": "SelectorList",
   "body": [
     {
       "type": "Selector",
       "body": [
         {
-          "type": "SimpleSelectorSequence",
+          "type": "SimpleSelectorList",
           "body": [
             {
               "type": "TypeSelector",
@@ -45,7 +45,7 @@ Output:
               "line": 1
             },
             "end": {
-              "column": 12,
+              "column": 5,
               "line": 1
             }
           }
@@ -68,7 +68,7 @@ Output:
           }
         },
         {
-          "type": "SimpleSelectorSequence",
+          "type": "SimpleSelectorList",
           "body": [
             {
               "type": "TypeSelector",

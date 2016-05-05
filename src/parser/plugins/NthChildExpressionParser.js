@@ -1,5 +1,5 @@
 /* @flow */
-import { Node, NumberLiteral, SelectorsGroup } from '../nodes';
+import { Node, NumberLiteral, SelectorList } from '../nodes';
 import Plugin from './Plugin';
 
 import type { Token } from '../../tokenizer/tokens';
@@ -19,11 +19,11 @@ const offsetRegExp = /^n(-\d+)$/i;
 
 export class NthChildExpressionWithOfSelectorArgument extends
 NthChildExpressionArgument {
-  of: SelectorsGroup;
+  of: SelectorList;
   constructor(
     step: NumberLiteral,
     offset: NumberLiteral,
-    of: SelectorsGroup,
+    of: SelectorList,
   ) {
     super(step, offset);
     this.of = of;
@@ -103,13 +103,13 @@ export default class NthChildExpressionParser extends Plugin {
     this._parser.pushShouldStopAt(
       (token: Token): boolean => token.type === 'parenR'
     );
-    const selectorsGroup = this._parser.parseSelectorsGroup();
+    const selectorList = this._parser.parseSelectorList();
     this._parser.popShouldStopAt();
 
     return [new NthChildExpressionWithOfSelectorArgument(
       offset,
       step,
-      selectorsGroup,
+      selectorList,
     )];
   }
 }

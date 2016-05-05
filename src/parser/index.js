@@ -63,16 +63,17 @@ export default class Parser {
     ];
   }
 
-  startNode<T: nodes.Node>(node: T): T {
-    if (this._currentToken.loc) {
-      node.loc = this._currentToken.loc;
+  // $FlowFixMe
+  startNode<T: nodes.Node>(node: T, start: Token = this._currentToken): T {
+    if (start.loc) {
+      node.loc = start.loc.clone();
     }
     return node;
   }
 
   finishNode<T: nodes.Node>(node: T, start: ?Token): T {
-    if (start && start.loc && (!node.loc || !node.loc.start)) {
-      node.loc = start.loc.clone();
+    if (start) {
+      this.startNode(node, start);
     }
     if (node.loc && this._currentToken.loc) {
       // $FlowFixMe
@@ -81,19 +82,19 @@ export default class Parser {
     return node;
   }
 
-  parse(): nodes.SelectorsGroup {
-    return this.parseSelectorsGroup();
+  parse(): nodes.SelectorList {
+    return this.parseSelectorList();
   }
 
-  parseSelectorsGroup(): nodes.SelectorsGroup {
-    const selectorsGroup = this.startNode(new nodes.SelectorsGroup());
+  parseSelectorList(): nodes.SelectorList {
+    const selectorList = this.startNode(new nodes.SelectorList());
     while (!this._shouldStopAt(this._currentToken)) {
-      selectorsGroup.body.push(this.parseSelector());
+      selectorList.body.push(this.parseSelector());
       if (!this._shouldStopAt(this._currentToken)) {
         this.nextToken();
       }
     }
-    return this.finishNode(selectorsGroup);
+    return this.finishNode(selectorList);
   }
 
   parseSelector(): nodes.Selector {
@@ -108,7 +109,7 @@ export default class Parser {
           this.nextToken();
           continue;
         }
-        selector.body.push(this.parseSimpleSelectorSequence());
+        selector.body.push(this.parseSimpleSelectorList());
       } else {
         selector.body.push(this.parseCombinator());
         this.nextToken();
@@ -134,10 +135,10 @@ export default class Parser {
     return this.finishNode(getCombinatorFromToken(this._currentToken), start);
   }
 
-  parseSimpleSelectorSequence(): nodes.SimpleSelectorSequence {
-    const simpleSelectorSequence = this.startNode(new nodes.SimpleSelectorSequence());
+  parseSimpleSelectorList(): nodes.SimpleSelectorList {
+    const simpleSelectorList = this.startNode(new nodes.SimpleSelectorList());
 
-    simpleSelectorSequence.body.push(this.parseSimpleSelector1());
+    simpleSelectorList.body.push(this.parseSimpleSelector1());
     this.nextToken();
 
     while (
@@ -147,10 +148,10 @@ export default class Parser {
       this._currentToken.type !== 'whitespace' &&
       !this._shouldStopAt(this._currentToken)
     ) {
-      simpleSelectorSequence.body.push(this.parseSimpleSelector2());
+      simpleSelectorList.body.push(this.parseSimpleSelector2());
       this.nextToken();
     }
-    return this.finishNode(simpleSelectorSequence);
+    return this.finishNode(simpleSelectorList);
   }
 
   parseSimpleSelector1(): nodes.SimpleSelector {

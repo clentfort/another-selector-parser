@@ -18,14 +18,14 @@ export { default as Node } from './Node';
 export { default as NumberLiteral } from './NumberLiteral';
 export {
   default as PseudoSelector,
+  CallExpression,
   PseudoClassSelector,
   PseudoElementSelector,
-  CallExpression,
 } from './PseudoSelector';
 export { default as Selector } from './Selector';
+export { default as SelectorList } from './SelectorList';
 export { default as SimpleSelector } from './SimpleSelector';
-export { default as SimpleSelectorSequence } from './SimpleSelectorSequence';
-export { default as SelectorsGroup } from './SelectorsGroup';
+export { default as SimpleSelectorList } from './SimpleSelectorList';
 export { default as StringLiteral } from './StringLiteral';
 export { default as TypeSelector } from './TypeSelector';
 export { default as UniversalSelector } from './UniversalSelector';

@@ -1,10 +1,10 @@
 /* @flow */
 import Combinator from './Combinator';
 import Node from './Node';
-import SimpleSelectorSequence from './SimpleSelectorSequence';
+import SimpleSelectorList from './SimpleSelectorList';
 
 export default class Selector extends Node {
-  body: Array<SimpleSelectorSequence|Combinator>;
+  body: Array<SimpleSelectorList|Combinator>;
 
   constructor() {
     super('Selector');
