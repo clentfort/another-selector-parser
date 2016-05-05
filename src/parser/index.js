@@ -63,7 +63,7 @@ export default class Parser {
     ];
   }
 
-  // $FlowFixMe
+  // $FlowIssue #1234
   startNode<T: nodes.Node>(node: T, start: Token = this._currentToken): T {
     if (start.loc) {
       node.loc = start.loc.clone();
@@ -76,7 +76,7 @@ export default class Parser {
       this.startNode(node, start);
     }
     if (node.loc && this._currentToken.loc) {
-      // $FlowFixMe
+      // $FlowIssue #1747
       node.loc.end = this._currentToken.loc.end.clone();
     }
     return node;
