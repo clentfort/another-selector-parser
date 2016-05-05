@@ -1,0 +1,8 @@
+Input:
+[attr=value A]
+
+Error:
+{
+  "message": "Unexpected token of type \"ident\", expected \"ident\" with a value of \"i\" on line 1, column 12.",
+  "stack": "Error: Unexpected token of type \"ident\", expected \"ident\" with a value of \"i\" on line 1, column 12.\n    at UnexpectedTokenError.Error (native)\n    at UnexpectedTokenError.AnotherSelectorParserError (Error.js:1:22)\n    at new UnexpectedTokenError (Errors.js:17:14)\n    at Parser.parseAttributeSelector (index.js:272:15)\n    at Parser.parseSimpleSelector2 (index.js:178:25)\n    at Parser.parseSimpleSelector1 (index.js:171:17)\n    at Parser.parseSimpleSelectorList (index.js:141:39)\n    at Parser.parseSelector (index.js:112:33)\n    at Parser.parseSelectorList (index.js:92:35)\n    at Parser.parse (index.js:86:17)"
+}

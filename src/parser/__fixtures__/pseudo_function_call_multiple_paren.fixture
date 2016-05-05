@@ -1,0 +1,144 @@
+Input:
+:someCall((call))
+
+Output:
+{
+  "type": "SelectorList",
+  "body": [
+    {
+      "type": "Selector",
+      "body": [
+        {
+          "type": "SimpleSelectorList",
+          "body": [
+            {
+              "type": "PseudoClassSelector",
+              "body": {
+                "type": "CallExpression",
+                "callee": {
+                  "type": "Identifier",
+                  "value": "someCall",
+                  "loc": {
+                    "start": {
+                      "column": 1,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 9,
+                      "line": 1
+                    }
+                  }
+                },
+                "params": [
+                  {
+                    "type": "parenL",
+                    "loc": {
+                      "start": {
+                        "column": 10,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 11,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "ident",
+                    "loc": {
+                      "start": {
+                        "column": 11,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 15,
+                        "line": 1
+                      }
+                    },
+                    "value": "call"
+                  },
+                  {
+                    "type": "parenR",
+                    "loc": {
+                      "start": {
+                        "column": 15,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 16,
+                        "line": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "parenR",
+                    "loc": {
+                      "start": {
+                        "column": 16,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 17,
+                        "line": 1
+                      }
+                    }
+                  }
+                ],
+                "loc": {
+                  "start": {
+                    "column": 1,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 18,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 18,
+                  "line": 1
+                }
+              }
+            }
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 18,
+              "line": 1
+            }
+          }
+        }
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 18,
+          "line": 1
+        }
+      }
+    }
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 18,
+      "line": 1
+    }
+  }
+}
