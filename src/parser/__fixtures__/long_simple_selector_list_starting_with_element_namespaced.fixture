@@ -383,6 +383,16 @@ Output:
                           "line": 1
                         }
                       }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 66,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 83,
+                        "line": 1
+                      }
                     }
                   }
                 ],
@@ -504,6 +514,16 @@ Output:
                                   "line": 1
                                 }
                               }
+                            },
+                            "loc": {
+                              "start": {
+                                "column": 105,
+                                "line": 1
+                              },
+                              "end": {
+                                "column": 110,
+                                "line": 1
+                              }
                             }
                           }
                         ],
@@ -527,6 +547,16 @@ Output:
                           "column": 111,
                           "line": 1
                         }
+                      }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 94,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 111,
+                        "line": 1
                       }
                     }
                   }

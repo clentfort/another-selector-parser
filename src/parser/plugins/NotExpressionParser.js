@@ -25,9 +25,12 @@ export default class NotExpressionParser extends Plugin {
     const params = [];
     while (this._parser.getCurrentToken().type !== 'parenR') {
       const start = this._parser.getCurrentToken();
-      params.push(this._parser.finishNode(new NotExpressionArgument(
-        this._parser.parseSimpleSelector1()
-      ), start));
+      const simpleSelector = this._parser.parseSimpleSelector1();
+      params.push(this._parser.finishNode(
+        new NotExpressionArgument(simpleSelector),
+        simpleSelector,
+        start,
+      ));
       if (this._parser.getCurrentToken().type === 'comma') {
         this._parser.nextToken();
       } else if (this._parser.getCurrentToken().type !== 'parenR') {

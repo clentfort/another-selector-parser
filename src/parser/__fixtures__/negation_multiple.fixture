@@ -58,6 +58,16 @@ Output:
                           "line": 1
                         }
                       }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 5,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 6,
+                        "line": 1
+                      }
                     }
                   },
                   {
@@ -87,6 +97,16 @@ Output:
                           "column": 9,
                           "line": 1
                         }
+                      }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 8,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 9,
+                        "line": 1
                       }
                     }
                   }

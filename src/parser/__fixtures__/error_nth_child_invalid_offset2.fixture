@@ -1,0 +1,8 @@
+Input:
+:nth-child(2n-a)
+
+Error:
+{
+  "message": "Unexpected token of type \"ident\", expected \"ident\" with a value of \"n\" on line 1, column 12.",
+  "stack": "Error: Unexpected token of type \"ident\", expected \"ident\" with a value of \"n\" on line 1, column 12.\n    at UnexpectedTokenError.Error (native)\n    at UnexpectedTokenError.AnotherSelectorParserError (Error.js:1:22)\n    at new UnexpectedTokenError (Errors.js:17:14)\n    at NthChildExpressionParser.parse (NthChildExpressionParser.js:85:15)\n    at Parser.parsePseudoSelector (index.js:391:30)\n    at Parser.parseSimpleSelector2 (index.js:233:25)\n    at Parser.parseSimpleSelector1 (index.js:223:17)\n    at Parser.parseSimpleSelectorList (index.js:191:39)\n    at Parser.parseSelector (index.js:137:35)\n    at Parser.parseSelectorList (index.js:118:35)"
+}

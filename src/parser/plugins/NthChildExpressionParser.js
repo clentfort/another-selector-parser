@@ -68,24 +68,26 @@ export default class NthChildExpressionParser extends Plugin {
     });
     const start = this._parser.getCurrentToken();
     const step = this._parseNextNumber();
+    const startToken = this._parser.getCurrentToken();
     const n = this._parser.parseIdentifier();
     let offset;
     const value = n.value.toLowerCase();
-    if (value === 'n' || value === 'n-') {
+    if (value === 'n') {
       offset = this._parseNextNumber();
-      if (value[1] === '-') {
-        offset.value = -offset.value;
-      }
+    } else if (value === 'n-') {
+      offset = this._parseNextNumber();
+      offset.value = -offset.value;
     } else {
       const matching = value.match(offsetRegExp);
-      if (!matching) {
+      if (matching && matching[1]) {
+        offset = new NumberLiteral(-parseInt(matching[1], 10));
+      } else {
         throw new UnexpectedTokenError(
-          this._parser.getCurrentToken(),
+          startToken,
           'ident',
           'n',
         );
       }
-      offset = new NumberLiteral(-parseInt(matching[1], 10));
     }
 
     const possibleParenR = this._parser.getCurrentToken();
@@ -94,6 +96,7 @@ export default class NthChildExpressionParser extends Plugin {
       this._parser.popContext('NthChildExpressionParser.parse');
       return [this._parser.finishNode(
         new NthChildExpressionArgument(step, offset),
+        possibleParenR,
         start,
       )];
     }
@@ -117,11 +120,13 @@ export default class NthChildExpressionParser extends Plugin {
       shouldStopAt: (token: Token): boolean => token.type === 'parenR',
     });
     const selectorList = this._parser.parseSelectorList();
-    this._parser.nextToken();
+    const parenR = this._parser.nextToken();
+
     this._parser.popContext('NthChildExpressionParser.parseOf');
 
     return [this._parser.finishNode(
       new NthChildExpressionWithOfSelectorArgument(step, offset, selectorList),
+      parenR,
       start
     )];
   }

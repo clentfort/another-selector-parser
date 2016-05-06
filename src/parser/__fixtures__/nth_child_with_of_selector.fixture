@@ -188,6 +188,16 @@ Output:
                           "line": 1
                         }
                       }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 11,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 51,
+                        "line": 1
+                      }
                     }
                   }
                 ],
