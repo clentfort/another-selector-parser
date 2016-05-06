@@ -59,16 +59,6 @@ Output:
                           "line": 1
                         }
                       }
-                    },
-                    "loc": {
-                      "start": {
-                        "column": 11,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 19,
-                        "line": 1
-                      }
                     }
                   }
                 ],

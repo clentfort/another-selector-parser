@@ -49,16 +49,6 @@ Output:
                     "offset": {
                       "type": "NumberLiteral",
                       "value": 1
-                    },
-                    "loc": {
-                      "start": {
-                        "column": 11,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 17,
-                        "line": 1
-                      }
                     }
                   }
                 ],

@@ -91,7 +91,7 @@ Output:
                                       "line": 1
                                     },
                                     "end": {
-                                      "column": 33,
+                                      "column": 32,
                                       "line": 1
                                     }
                                   }
@@ -103,7 +103,7 @@ Output:
                                   "line": 1
                                 },
                                 "end": {
-                                  "column": 33,
+                                  "column": 32,
                                   "line": 1
                                 }
                               }
@@ -115,7 +115,7 @@ Output:
                               "line": 1
                             },
                             "end": {
-                              "column": 34,
+                              "column": 32,
                               "line": 1
                             }
                           }
@@ -148,7 +148,7 @@ Output:
                                       "line": 1
                                     },
                                     "end": {
-                                      "column": 50,
+                                      "column": 49,
                                       "line": 1
                                     }
                                   }
@@ -160,7 +160,7 @@ Output:
                                   "line": 1
                                 },
                                 "end": {
-                                  "column": 50,
+                                  "column": 49,
                                   "line": 1
                                 }
                               }
@@ -172,7 +172,7 @@ Output:
                               "line": 1
                             },
                             "end": {
-                              "column": 50,
+                              "column": 49,
                               "line": 1
                             }
                           }
@@ -184,19 +184,9 @@ Output:
                           "line": 1
                         },
                         "end": {
-                          "column": 50,
+                          "column": 49,
                           "line": 1
                         }
-                      }
-                    },
-                    "loc": {
-                      "start": {
-                        "column": 11,
-                        "line": 1
-                      },
-                      "end": {
-                        "column": 51,
-                        "line": 1
                       }
                     }
                   }
@@ -243,11 +233,11 @@ Output:
                 },
                 "loc": {
                   "start": {
-                    "column": 64,
+                    "column": 51,
                     "line": 1
                   },
                   "end": {
-                    "column": 65,
+                    "column": 64,
                     "line": 1
                   }
                 }

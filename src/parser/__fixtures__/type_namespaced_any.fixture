@@ -49,7 +49,7 @@ Output:
                     "line": 1
                   },
                   "end": {
-                    "column": 2,
+                    "column": 1,
                     "line": 1
                   }
                 }
@@ -60,7 +60,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 10,
+                  "column": 1,
                   "line": 1
                 }
               }
@@ -72,7 +72,7 @@ Output:
               "line": 1
             },
             "end": {
-              "column": 10,
+              "column": 1,
               "line": 1
             }
           }
@@ -84,7 +84,7 @@ Output:
           "line": 1
         },
         "end": {
-          "column": 10,
+          "column": 1,
           "line": 1
         }
       }
@@ -96,7 +96,7 @@ Output:
       "line": 1
     },
     "end": {
-      "column": 10,
+      "column": 1,
       "line": 1
     }
   }

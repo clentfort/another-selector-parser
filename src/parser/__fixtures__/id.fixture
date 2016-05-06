@@ -33,7 +33,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 6,
+                  "column": 5,
                   "line": 1
                 }
               }
@@ -45,7 +45,7 @@ Output:
               "line": 1
             },
             "end": {
-              "column": 6,
+              "column": 5,
               "line": 1
             }
           }
@@ -57,7 +57,7 @@ Output:
           "line": 1
         },
         "end": {
-          "column": 6,
+          "column": 5,
           "line": 1
         }
       }
@@ -69,7 +69,7 @@ Output:
       "line": 1
     },
     "end": {
-      "column": 6,
+      "column": 5,
       "line": 1
     }
   }

@@ -33,7 +33,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 5,
+                  "column": 4,
                   "line": 1
                 }
               }
@@ -45,7 +45,7 @@ Output:
               "line": 1
             },
             "end": {
-              "column": 5,
+              "column": 4,
               "line": 1
             }
           }
@@ -59,7 +59,7 @@ Output:
               "line": 1
             },
             "end": {
-              "column": 7,
+              "column": 6,
               "line": 1
             }
           }
@@ -89,7 +89,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 12,
+                  "column": 11,
                   "line": 1
                 }
               }
@@ -101,7 +101,7 @@ Output:
               "line": 1
             },
             "end": {
-              "column": 12,
+              "column": 11,
               "line": 1
             }
           }
@@ -113,7 +113,7 @@ Output:
           "line": 1
         },
         "end": {
-          "column": 12,
+          "column": 11,
           "line": 1
         }
       }
@@ -125,7 +125,7 @@ Output:
       "line": 1
     },
     "end": {
-      "column": 12,
+      "column": 11,
       "line": 1
     }
   }
