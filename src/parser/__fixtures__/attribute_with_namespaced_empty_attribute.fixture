@@ -44,11 +44,11 @@ Output:
                 },
                 "loc": {
                   "start": {
-                    "column": 2,
+                    "column": 7,
                     "line": 1
                   },
                   "end": {
-                    "column": 7,
+                    "column": 8,
                     "line": 1
                   }
                 }
@@ -59,7 +59,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 8,
+                  "column": 9,
                   "line": 1
                 }
               }

@@ -34,11 +34,31 @@ Output:
                     "type": "NthChildExpressionArgument",
                     "step": {
                       "type": "NumberLiteral",
-                      "value": 1
+                      "value": 2,
+                      "loc": {
+                        "start": {
+                          "column": 11,
+                          "line": 1
+                        },
+                        "end": {
+                          "column": 12,
+                          "line": 1
+                        }
+                      }
                     },
                     "offset": {
                       "type": "NumberLiteral",
-                      "value": 2
+                      "value": 1,
+                      "loc": {
+                        "start": {
+                          "column": 14,
+                          "line": 1
+                        },
+                        "end": {
+                          "column": 15,
+                          "line": 1
+                        }
+                      }
                     },
                     "of": {
                       "type": "SelectorList",
@@ -71,7 +91,7 @@ Output:
                                       "line": 1
                                     },
                                     "end": {
-                                      "column": 32,
+                                      "column": 33,
                                       "line": 1
                                     }
                                   }
@@ -95,7 +115,7 @@ Output:
                               "line": 1
                             },
                             "end": {
-                              "column": 33,
+                              "column": 34,
                               "line": 1
                             }
                           }
@@ -128,7 +148,7 @@ Output:
                                       "line": 1
                                     },
                                     "end": {
-                                      "column": 49,
+                                      "column": 50,
                                       "line": 1
                                     }
                                   }
@@ -168,16 +188,26 @@ Output:
                           "line": 1
                         }
                       }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 11,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 51,
+                        "line": 1
+                      }
                     }
                   }
                 ],
                 "loc": {
                   "start": {
-                    "column": 1,
+                    "column": 11,
                     "line": 1
                   },
                   "end": {
-                    "column": 50,
+                    "column": 51,
                     "line": 1
                   }
                 }
@@ -188,7 +218,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 50,
+                  "column": 51,
                   "line": 1
                 }
               }
@@ -213,11 +243,11 @@ Output:
                 },
                 "loc": {
                   "start": {
-                    "column": 51,
+                    "column": 64,
                     "line": 1
                   },
                   "end": {
-                    "column": 64,
+                    "column": 65,
                     "line": 1
                   }
                 }
@@ -228,7 +258,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 65,
+                  "column": 66,
                   "line": 1
                 }
               }

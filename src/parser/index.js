@@ -4,7 +4,12 @@ import Tokenizer from '../tokenizer';
 import NotExpressionParser from './plugins/NotExpressionParser';
 import NthChildExpressionParser from './plugins/NthChildExpressionParser';
 import Plugin from './plugins/Plugin';
-import { UnexpectedTokenError, UnexpectedEofError } from './util/Errors';
+import {
+  InvalidContextError,
+  UnexpectedTokenError,
+  UnexpectedEofError,
+  UnfinishedSelectorError,
+} from './util/Errors';
 
 import getCombinatorTypeFromToken from './util/getCombinatorTypeFromToken';
 
@@ -17,12 +22,27 @@ type PluginMap = {
 };
 
 type ShouldStopAt = (token: Token) => boolean;
+type Context = {
+  [key: string]: any;
+  emitWhitespace: boolean;
+  name: string;
+  shouldStopAt: ShouldStopAt;
+};
+type PartialContext = {
+  [key: string]: any;
+  name: string;
+};
+
+const defaultContext = {
+  name: 'AnotherSelectorParserParser',
+  emitWhitespace: true,
+  shouldStopAt: (token: Token): boolean => token.type === 'EOF',
+};
 
 export default class Parser {
   _currentToken: Token;
   _plugins: PluginMap;
-  _shouldStopAt: ShouldStopAt;
-  _shouldStopAtStack: Array<ShouldStopAt>;
+  _contextStack: Array<Context>;
   _tokenizer: Tokenizer;
 
   constructor(tokenizer: Tokenizer) {
@@ -34,12 +54,7 @@ export default class Parser {
         'nth-child': new NthChildExpressionParser(this),
       },
     };
-    this._shouldStopAtStack = [];
-    this.pushShouldStopAt((token: Token): boolean => token.type === 'EOF');
-  }
-
-  getTokenizer(): Tokenizer {
-    return this._tokenizer;
+    this._contextStack = [defaultContext];
   }
 
   getCurrentToken(): Token {
@@ -51,16 +66,24 @@ export default class Parser {
     return this._currentToken;
   }
 
-  pushShouldStopAt(shouldStopAt: ShouldStopAt): void {
-    this._shouldStopAtStack.push(shouldStopAt);
-    this._shouldStopAt = shouldStopAt;
+  getCurrentContext(): Context {
+    return this._contextStack[this._contextStack.length - 1];
   }
 
-  popShouldStopAt(): void {
-    this._shouldStopAtStack.pop();
-    this._shouldStopAt = this._shouldStopAtStack[
-      this._shouldStopAtStack.length - 1
-    ];
+  pushContext(context: PartialContext): void {
+    // console.log('New context', context.name);
+    const newContext = { ...this.getCurrentContext(), ...context };
+    this._contextStack.push(newContext);
+    this._setContext(newContext);
+  }
+
+  popContext(name: string): void {
+    // console.log('Leaving context', name);
+    if (this.getCurrentContext().name !== name) {
+      throw new Invalid(name, this.getCurrentContext().name);
+    }
+    this._contextStack.pop();
+    this._setContext(this.getCurrentContext());
   }
 
   // $FlowIssue #1234
@@ -88,11 +111,8 @@ export default class Parser {
 
   parseSelectorList(): nodes.SelectorList {
     const selectorList = this.startNode(new nodes.SelectorList());
-    while (!this._shouldStopAt(this._currentToken)) {
+    while (!this.getCurrentContext().shouldStopAt(this._currentToken)) {
       selectorList.body.push(this.parseSelector());
-      if (!this._shouldStopAt(this._currentToken)) {
-        this.nextToken();
-      }
     }
     return this.finishNode(selectorList);
   }
@@ -102,40 +122,57 @@ export default class Parser {
     let parseSelector = true;
     while (
       this._currentToken.type !== 'comma' &&
-      !this._shouldStopAt(this._currentToken)
+      !this.getCurrentContext().shouldStopAt(this._currentToken)
     ) {
       if (parseSelector) {
         if (this._currentToken.type === 'whitespace') {
           this.nextToken();
-          continue;
+        } else {
+          selector.body.push(this.parseSimpleSelectorList());
+          parseSelector = false;
         }
-        selector.body.push(this.parseSimpleSelectorList());
       } else {
         selector.body.push(this.parseCombinator());
-        this.nextToken();
+        parseSelector = true;
       }
-      parseSelector = !parseSelector;
+    }
+
+    if (!this.getCurrentContext().shouldStopAt(this._currentToken)) {
+      this.nextToken();
+    }
+
+    if (parseSelector) {
+      // Can't finish with a combinator
+      throw new UnfinishedSelectorError();
     }
     return this.finishNode(selector);
   }
 
   parseCombinator(): nodes.Combinator {
-    const start = this._currentToken;
-    if (this._currentToken.type === 'whitespace') {
-      this._tokenizer.peek();
-      const lookahead = this._tokenizer.nextToken();
-      if (lookahead.type === 'combinator' || lookahead.type === 'plus') {
-        this._tokenizer.skip();
-        return this.finishNode(new nodes.Combinator(
-          getCombinatorTypeFromToken(lookahead)
-        ), start);
-      }
-
-      this._tokenizer.backup();
+    if (
+      this._currentToken.type !== 'combinator' &&
+      this._currentToken.type !== 'plus' &&
+      this._currentToken.type !== 'whitespace'
+    ) {
+      throw new UnexpectedTokenError(
+        this._currentToken,
+        ['combinator', 'plus', 'whitespace']
+      );
     }
-
+    let start = this._currentToken;
+    this.nextToken();
+    if (
+      start.type === 'whitespace' &&
+      (
+        this._currentToken.type === 'combinator' ||
+        this._currentToken.type === 'plus'
+      )
+    ) {
+      start = this._currentToken;
+      this.nextToken();
+    }
     return this.finishNode(new nodes.Combinator(
-      getCombinatorTypeFromToken(this._currentToken)
+      getCombinatorTypeFromToken(start)
     ), start);
   }
 
@@ -143,17 +180,15 @@ export default class Parser {
     const simpleSelectorList = this.startNode(new nodes.SimpleSelectorList());
 
     simpleSelectorList.body.push(this.parseSimpleSelector1());
-    this.nextToken();
 
     while (
       this._currentToken.type !== 'combinator' &&
       this._currentToken.type !== 'comma' &&
       this._currentToken.type !== 'plus' &&
       this._currentToken.type !== 'whitespace' &&
-      !this._shouldStopAt(this._currentToken)
+      !this.getCurrentContext().shouldStopAt(this._currentToken)
     ) {
       simpleSelectorList.body.push(this.parseSimpleSelector2());
-      this.nextToken();
     }
     return this.finishNode(simpleSelectorList);
   }
@@ -167,6 +202,7 @@ export default class Parser {
         namespacePrefix
       ), start);
     } else if (this._currentToken.type === 'star') {
+      this.nextToken();
       return this.finishNode(
         new nodes.UniversalSelector(namespacePrefix),
         start
@@ -235,7 +271,10 @@ export default class Parser {
     if (this._currentToken.type !== 'bracketL') {
       throw new UnexpectedTokenError(this._currentToken, 'bracketL');
     }
-    this._tokenizer.emitWhitespace(false);
+    this.pushContext({
+      name: 'AnotherSelectorParserParser.parseAttributeSelector',
+      emitWhitespace: false,
+    });
     this.nextToken();
 
     const namespacePrefix = this.parseNamespacePrefix();
@@ -246,10 +285,10 @@ export default class Parser {
       this.parseIdentifier(),
       namespacePrefix,
     ), this._currentToken);
-    this.nextToken();
 
     if (this._currentToken.type === 'bracketR') {
-      this._tokenizer.emitWhitespace(true);
+      this.nextToken();
+      this.popContext('AnotherSelectorParserParser.parseAttributeSelector');
       return this.finishNode(new nodes.AttributeSelector(attribute), start);
     } else if (this._currentToken.type !== 'matcher') {
       throw new UnexpectedTokenError(this._currentToken, 'matcher');
@@ -268,7 +307,6 @@ export default class Parser {
       throw new UnexpectedTokenError(this._currentToken, ['ident', 'string']);
     }
     value = this.finishNode(value, this._currentToken);
-    this.nextToken();
 
     let caseSensitive = true;
     if (this._currentToken.type === 'ident') {
@@ -282,7 +320,8 @@ export default class Parser {
     if (this._currentToken.type !== 'bracketR') {
       throw new UnexpectedTokenError(this._currentToken, 'bracketR');
     }
-    this._tokenizer.emitWhitespace(true);
+    this.nextToken();
+    this.popContext('AnotherSelectorParserParser.parseAttributeSelector');
     return this.finishNode(new nodes.AttributeSelectorWithMatcher(
       attribute,
       matcher,
@@ -310,14 +349,12 @@ export default class Parser {
 
     const { value: name } = this._currentToken;
     let body = this.parseIdentifier();
-    this._tokenizer.peek();
-    const lookahead = this._tokenizer.nextToken();
-    if (lookahead.type === 'parenL') {
-      this._tokenizer.skip();
-      body = this.startNode(new nodes.CallExpression(body));
+    if (this._currentToken.type === 'parenL') {
       this.nextToken();
 
+      body = this.startNode(new nodes.CallExpression(body));
       const plugin = this._plugins.CallExpression[name.toLowerCase()];
+
       if (plugin) {
         body.params = plugin.parse();
       } else {
@@ -335,8 +372,6 @@ export default class Parser {
         }
       }
       body = this.finishNode(body);
-    } else {
-      this._tokenizer.backup();
     }
 
     return this.finishNode(
@@ -374,19 +409,37 @@ export default class Parser {
       throw new UnexpectedTokenError(this._currentToken, 'ident');
     }
 
-    return this.finishNode(new nodes.Identifier(
+    const node = this.finishNode(new nodes.Identifier(
       this._currentToken.value
     ), this._currentToken);
+    this.nextToken();
+    return node;
   }
 
   parseStringLiteral(): nodes.StringLiteral {
     if (this._currentToken.type !== 'string') {
       throw new UnexpectedTokenError(this._currentToken, 'string');
     }
-
-    return this.finishNode(new nodes.StringLiteral(
+    const node = this.finishNode(new nodes.StringLiteral(
       this._currentToken.value
     ), this._currentToken);
+    this.nextToken();
+    return node;
   }
 
+  parseNumberLiteral(): nodes.NumberLiteral {
+    if (this._currentToken.type !== 'num') {
+      throw new UnexpectedTokenError(this._currentToken, 'num');
+    }
+
+    const node = this.finishNode(new nodes.NumberLiteral(
+      this._currentToken.value
+    ), this._currentToken);
+    this.nextToken();
+    return node;
+  }
+
+  _setContext(context: Context): void {
+    this._tokenizer.emitWhitespace(context.emitWhitespace);
+  }
 }

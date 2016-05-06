@@ -1,5 +1,6 @@
 /* @flow */
 import { Node, NumberLiteral, SelectorList } from '../nodes';
+import { UnexpectedTokenError } from '../util/Errors';
 import Plugin from './Plugin';
 
 import type { Token } from '../../tokenizer/tokens';
@@ -7,6 +8,7 @@ import type { Token } from '../../tokenizer/tokens';
 export class NthChildExpressionArgument extends Node {
   step: NumberLiteral;
   offset: NumberLiteral;
+  of: ?SelectorList;
 
   constructor(step: NumberLiteral, offset: NumberLiteral) {
     super('NthChildExpressionArgument');
@@ -19,7 +21,6 @@ const offsetRegExp = /^n(-\d+)$/i;
 
 export class NthChildExpressionWithOfSelectorArgument extends
 NthChildExpressionArgument {
-  of: SelectorList;
   constructor(
     step: NumberLiteral,
     offset: NumberLiteral,
@@ -38,78 +39,90 @@ export default class NthChildExpressionParser extends Plugin {
   _parseNextNumber(): NumberLiteral {
     const prefix = this._parser.getCurrentToken();
     if (prefix.type === 'num') {
-      return new NumberLiteral(prefix.value);
+      return this._parser.parseNumberLiteral();
     }
     if (prefix.type === 'ident' && prefix.value[0] === '-') {
-      return new NumberLiteral(parseInt(prefix.value, 10));
+      const node = this._parser.finishNode(
+        new NumberLiteral(parseInt(prefix.value, 10)),
+        prefix,
+      );
+      this._parser.nextToken();
+      return node;
     }
     if (prefix.type !== 'plus' && prefix.type !== 'minus') {
-      // @TODO Unexpected token
-      throw new Error();
+      throw new UnexpectedTokenError(prefix, ['plus', 'minus']);
     }
-    const num = this._parser.nextToken();
-    if (num.type !== 'num') {
-      // @TODO Unexpected token
-      throw new Error();
+    this._parser.nextToken();
+    const number = this._parser.parseNumberLiteral();
+    if (prefix.type === 'minus') {
+      number.value = -number.value;
     }
-    return new NumberLiteral(
-      (prefix.type === 'plus' ? 1 : -1) * num.value
-    );
+    return number;
   }
 
   // $FlowFixMe
   parse(): Array<NthChildExpressionArgument> {
-    this._parser.getTokenizer().emitWhitespace(false);
+    this._parser.pushContext({
+      emitWhitespace: false,
+      name: 'NthChildExpressionParser.parse',
+    });
+    const start = this._parser.getCurrentToken();
     const step = this._parseNextNumber();
-    const n = this._parser.nextToken();
+    const n = this._parser.parseIdentifier();
     let offset;
-    if (n.type === 'ident') {
-      const value = n.value.toLowerCase();
-      if (value === 'n' || value === 'n-') {
-        this._parser.nextToken();
-        offset = this._parseNextNumber();
-      } else {
-        const matching = value.match(offsetRegExp);
-        if (!matching) {
-          // @TODO Unexpected token
-          throw new Error();
-        }
-        offset = new NumberLiteral(-parseInt(matching[1], 10));
+    const value = n.value.toLowerCase();
+    if (value === 'n' || value === 'n-') {
+      offset = this._parseNextNumber();
+      if (value[1] === '-') {
+        offset.value = -offset.value;
       }
     } else {
-      // @TODO Unexpected token
-      throw new Error();
+      const matching = value.match(offsetRegExp);
+      if (!matching) {
+        throw new UnexpectedTokenError(
+          this._parser.getCurrentToken(),
+          'ident',
+          'n',
+        );
+      }
+      offset = new NumberLiteral(-parseInt(matching[1], 10));
     }
 
-    const possibleParenR = this._parser.nextToken();
+    const possibleParenR = this._parser.getCurrentToken();
     if (possibleParenR.type === 'parenR') {
       this._parser.nextToken();
-      this._parser.getTokenizer().emitWhitespace(true);
-      return [new NthChildExpressionArgument(step, offset)];
+      this._parser.popContext('NthChildExpressionParser.parse');
+      return [this._parser.finishNode(
+        new NthChildExpressionArgument(step, offset),
+        start,
+      )];
     }
-
 
     if (
       possibleParenR.type !== 'ident' ||
       possibleParenR.value.toLowerCase() !== 'of'
     ) {
-      // @TODO Unexpected token or unexpected value
-      throw new Error();
+      throw new UnexpectedTokenError(
+        this._parser.getCurrentToken(),
+        'ident',
+        'of',
+      );
     }
-
     this._parser.nextToken();
 
-    this._parser.getTokenizer().emitWhitespace(true);
-    this._parser.pushShouldStopAt(
-      (token: Token): boolean => token.type === 'parenR'
-    );
+    this._parser.popContext('NthChildExpressionParser.parse');
+    this._parser.pushContext({
+      name: 'NthChildExpressionParser.parseOf',
+      emitWhitespace: true,
+      shouldStopAt: (token: Token): boolean => token.type === 'parenR',
+    });
     const selectorList = this._parser.parseSelectorList();
-    this._parser.popShouldStopAt();
+    this._parser.nextToken();
+    this._parser.popContext('NthChildExpressionParser.parseOf');
 
-    return [new NthChildExpressionWithOfSelectorArgument(
-      offset,
-      step,
-      selectorList,
+    return [this._parser.finishNode(
+      new NthChildExpressionWithOfSelectorArgument(step, offset, selectorList),
+      start
     )];
   }
 }

@@ -46,7 +46,11 @@ import path from 'path';
 
 export default function readFixtures(fixturePath) {
   /* eslint-disable prefer-template */
-  const fileNames = fs.readdirSync(fixturePath);
+  let fileNames = fs.readdirSync(fixturePath);
+  const filtered = fileNames.filter(f => f.indexOf('FOCUS_') >= 0);
+  if (filtered.length > 0) {
+    fileNames = filtered;
+  }
   const fixtures = {};
   fileNames.forEach(filename => {
     const match = filename.match(/^\w+\.fixture$/);

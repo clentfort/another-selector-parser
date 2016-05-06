@@ -32,7 +32,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 2,
+                  "column": 3,
                   "line": 1
                 }
               }

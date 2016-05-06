@@ -34,17 +34,37 @@ Output:
                     "type": "NthChildExpressionArgument",
                     "step": {
                       "type": "NumberLiteral",
-                      "value": 2
+                      "value": 2,
+                      "loc": {
+                        "start": {
+                          "column": 11,
+                          "line": 1
+                        },
+                        "end": {
+                          "column": 12,
+                          "line": 1
+                        }
+                      }
                     },
                     "offset": {
                       "type": "NumberLiteral",
                       "value": 1
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 11,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 17,
+                        "line": 1
+                      }
                     }
                   }
                 ],
                 "loc": {
                   "start": {
-                    "column": 1,
+                    "column": 11,
                     "line": 1
                   },
                   "end": {

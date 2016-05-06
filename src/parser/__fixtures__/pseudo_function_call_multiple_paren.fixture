@@ -86,7 +86,7 @@ Output:
                 ],
                 "loc": {
                   "start": {
-                    "column": 1,
+                    "column": 10,
                     "line": 1
                   },
                   "end": {

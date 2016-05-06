@@ -33,7 +33,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 7,
+                  "column": 8,
                   "line": 1
                 }
               }
@@ -60,7 +60,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 13,
+                  "column": 14,
                   "line": 1
                 }
               }
@@ -87,7 +87,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 17,
+                  "column": 18,
                   "line": 1
                 }
               }
@@ -114,7 +114,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 21,
+                  "column": 22,
                   "line": 1
                 }
               }
@@ -139,11 +139,11 @@ Output:
                 },
                 "loc": {
                   "start": {
-                    "column": 22,
+                    "column": 31,
                     "line": 1
                   },
                   "end": {
-                    "column": 31,
+                    "column": 32,
                     "line": 1
                   }
                 }
@@ -154,7 +154,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 32,
+                  "column": 33,
                   "line": 1
                 }
               }
@@ -179,11 +179,11 @@ Output:
                 },
                 "loc": {
                   "start": {
-                    "column": 33,
+                    "column": 42,
                     "line": 1
                   },
                   "end": {
-                    "column": 42,
+                    "column": 43,
                     "line": 1
                   }
                 }
@@ -220,11 +220,11 @@ Output:
                 },
                 "loc": {
                   "start": {
-                    "column": 43,
+                    "column": 49,
                     "line": 1
                   },
                   "end": {
-                    "column": 49,
+                    "column": 50,
                     "line": 1
                   }
                 }
@@ -236,7 +236,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 50,
+                  "column": 51,
                   "line": 1
                 }
               }
@@ -282,11 +282,11 @@ Output:
                         },
                         "loc": {
                           "start": {
-                            "column": 56,
+                            "column": 61,
                             "line": 1
                           },
                           "end": {
-                            "column": 61,
+                            "column": 62,
                             "line": 1
                           }
                         }
@@ -323,11 +323,11 @@ Output:
                         },
                         "loc": {
                           "start": {
-                            "column": 62,
+                            "column": 69,
                             "line": 1
                           },
                           "end": {
-                            "column": 69,
+                            "column": 70,
                             "line": 1
                           }
                         }
@@ -339,20 +339,30 @@ Output:
                           "line": 1
                         },
                         "end": {
-                          "column": 70,
+                          "column": 71,
                           "line": 1
                         }
+                      }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 55,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 71,
+                        "line": 1
                       }
                     }
                   }
                 ],
                 "loc": {
                   "start": {
-                    "column": 51,
+                    "column": 55,
                     "line": 1
                   },
                   "end": {
-                    "column": 71,
+                    "column": 72,
                     "line": 1
                   }
                 }
@@ -363,7 +373,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 71,
+                  "column": 72,
                   "line": 1
                 }
               }
@@ -390,7 +400,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 77,
+                  "column": 78,
                   "line": 1
                 }
               }
@@ -439,17 +449,47 @@ Output:
                             "type": "NthChildExpressionArgument",
                             "step": {
                               "type": "NumberLiteral",
-                              "value": 2
+                              "value": 2,
+                              "loc": {
+                                "start": {
+                                  "column": 93,
+                                  "line": 1
+                                },
+                                "end": {
+                                  "column": 94,
+                                  "line": 1
+                                }
+                              }
                             },
                             "offset": {
                               "type": "NumberLiteral",
-                              "value": 1
+                              "value": 1,
+                              "loc": {
+                                "start": {
+                                  "column": 96,
+                                  "line": 1
+                                },
+                                "end": {
+                                  "column": 97,
+                                  "line": 1
+                                }
+                              }
+                            },
+                            "loc": {
+                              "start": {
+                                "column": 93,
+                                "line": 1
+                              },
+                              "end": {
+                                "column": 99,
+                                "line": 1
+                              }
                             }
                           }
                         ],
                         "loc": {
                           "start": {
-                            "column": 83,
+                            "column": 93,
                             "line": 1
                           },
                           "end": {
@@ -468,16 +508,26 @@ Output:
                           "line": 1
                         }
                       }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 82,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 99,
+                        "line": 1
+                      }
                     }
                   }
                 ],
                 "loc": {
                   "start": {
-                    "column": 78,
+                    "column": 82,
                     "line": 1
                   },
                   "end": {
-                    "column": 99,
+                    "column": 100,
                     "line": 1
                   }
                 }
@@ -488,7 +538,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 99,
+                  "column": 100,
                   "line": 1
                 }
               }

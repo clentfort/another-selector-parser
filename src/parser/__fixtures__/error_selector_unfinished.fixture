@@ -1,0 +1,8 @@
+Input:
+span +
+
+Error:
+{
+  "message": "Unfinished selector",
+  "stack": "Error: Unfinished selector\n    at UnfinishedSelectorError.Error (native)\n    at UnfinishedSelectorError.AnotherSelectorParserError (Error.js:1:22)\n    at new UnfinishedSelectorError (Errors.js:44:14)\n    at Parser.parseSelector (index.js:146:13)\n    at Parser.parseSelectorList (index.js:115:35)\n    at Parser.parse (index.js:109:17)\n    at parse (generator.js:7:43)\n    at generate (generator.js:11:25)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)"
+}

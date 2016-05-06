@@ -33,7 +33,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 4,
+                  "column": 5,
                   "line": 1
                 }
               }
@@ -55,11 +55,11 @@ Output:
           "combinatorType": "child",
           "loc": {
             "start": {
-              "column": 4,
+              "column": 5,
               "line": 1
             },
             "end": {
-              "column": 5,
+              "column": 7,
               "line": 1
             }
           }
@@ -89,7 +89,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 11,
+                  "column": 12,
                   "line": 1
                 }
               }

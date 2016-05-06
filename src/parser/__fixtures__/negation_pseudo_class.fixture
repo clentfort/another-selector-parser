@@ -54,20 +54,30 @@ Output:
                           "line": 1
                         },
                         "end": {
-                          "column": 11,
+                          "column": 12,
                           "line": 1
                         }
+                      }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 5,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 12,
+                        "line": 1
                       }
                     }
                   }
                 ],
                 "loc": {
                   "start": {
-                    "column": 1,
+                    "column": 5,
                     "line": 1
                   },
                   "end": {
-                    "column": 12,
+                    "column": 13,
                     "line": 1
                   }
                 }
@@ -78,7 +88,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 12,
+                  "column": 13,
                   "line": 1
                 }
               }

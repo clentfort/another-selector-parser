@@ -58,11 +58,11 @@ Output:
                 },
                 "loc": {
                   "start": {
-                    "column": 13,
+                    "column": 18,
                     "line": 1
                   },
                   "end": {
-                    "column": 18,
+                    "column": 19,
                     "line": 1
                   }
                 }
@@ -73,7 +73,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 19,
+                  "column": 20,
                   "line": 1
                 }
               }

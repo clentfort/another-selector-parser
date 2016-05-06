@@ -40,3 +40,15 @@ export class UnexpectedTokenError extends AnotherSelectorParserError {
     }
   }
 }
+
+export class UnfinishedSelectorError extends AnotherSelectorParserError {
+  constructor() {
+    super('Unfinished selector');
+  }
+}
+
+export class InvalidContextError extends AnotherSelectorParserError {
+  constructor(name: string, current: string) {
+    super(`Trying to pop context with name "${name}", but the current context is "${current}"`);
+  }
+}

@@ -60,7 +60,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 18,
+                  "column": 19,
                   "line": 1
                 }
               }
@@ -87,7 +87,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 24,
+                  "column": 25,
                   "line": 1
                 }
               }
@@ -114,7 +114,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 28,
+                  "column": 29,
                   "line": 1
                 }
               }
@@ -141,7 +141,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 32,
+                  "column": 33,
                   "line": 1
                 }
               }
@@ -166,11 +166,11 @@ Output:
                 },
                 "loc": {
                   "start": {
-                    "column": 33,
+                    "column": 42,
                     "line": 1
                   },
                   "end": {
-                    "column": 42,
+                    "column": 43,
                     "line": 1
                   }
                 }
@@ -181,7 +181,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 43,
+                  "column": 44,
                   "line": 1
                 }
               }
@@ -206,11 +206,11 @@ Output:
                 },
                 "loc": {
                   "start": {
-                    "column": 44,
+                    "column": 53,
                     "line": 1
                   },
                   "end": {
-                    "column": 53,
+                    "column": 54,
                     "line": 1
                   }
                 }
@@ -247,11 +247,11 @@ Output:
                 },
                 "loc": {
                   "start": {
-                    "column": 54,
+                    "column": 60,
                     "line": 1
                   },
                   "end": {
-                    "column": 60,
+                    "column": 61,
                     "line": 1
                   }
                 }
@@ -263,7 +263,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 61,
+                  "column": 62,
                   "line": 1
                 }
               }
@@ -322,11 +322,11 @@ Output:
                         },
                         "loc": {
                           "start": {
-                            "column": 68,
+                            "column": 73,
                             "line": 1
                           },
                           "end": {
-                            "column": 73,
+                            "column": 74,
                             "line": 1
                           }
                         }
@@ -363,11 +363,11 @@ Output:
                         },
                         "loc": {
                           "start": {
-                            "column": 74,
+                            "column": 81,
                             "line": 1
                           },
                           "end": {
-                            "column": 81,
+                            "column": 82,
                             "line": 1
                           }
                         }
@@ -379,20 +379,30 @@ Output:
                           "line": 1
                         },
                         "end": {
-                          "column": 82,
+                          "column": 83,
                           "line": 1
                         }
+                      }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 66,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 83,
+                        "line": 1
                       }
                     }
                   }
                 ],
                 "loc": {
                   "start": {
-                    "column": 62,
+                    "column": 66,
                     "line": 1
                   },
                   "end": {
-                    "column": 83,
+                    "column": 84,
                     "line": 1
                   }
                 }
@@ -403,7 +413,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 83,
+                  "column": 84,
                   "line": 1
                 }
               }
@@ -430,7 +440,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 89,
+                  "column": 90,
                   "line": 1
                 }
               }
@@ -479,17 +489,47 @@ Output:
                             "type": "NthChildExpressionArgument",
                             "step": {
                               "type": "NumberLiteral",
-                              "value": 2
+                              "value": 2,
+                              "loc": {
+                                "start": {
+                                  "column": 105,
+                                  "line": 1
+                                },
+                                "end": {
+                                  "column": 106,
+                                  "line": 1
+                                }
+                              }
                             },
                             "offset": {
                               "type": "NumberLiteral",
-                              "value": 1
+                              "value": 1,
+                              "loc": {
+                                "start": {
+                                  "column": 108,
+                                  "line": 1
+                                },
+                                "end": {
+                                  "column": 109,
+                                  "line": 1
+                                }
+                              }
+                            },
+                            "loc": {
+                              "start": {
+                                "column": 105,
+                                "line": 1
+                              },
+                              "end": {
+                                "column": 111,
+                                "line": 1
+                              }
                             }
                           }
                         ],
                         "loc": {
                           "start": {
-                            "column": 95,
+                            "column": 105,
                             "line": 1
                           },
                           "end": {
@@ -508,16 +548,26 @@ Output:
                           "line": 1
                         }
                       }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 94,
+                        "line": 1
+                      },
+                      "end": {
+                        "column": 111,
+                        "line": 1
+                      }
                     }
                   }
                 ],
                 "loc": {
                   "start": {
-                    "column": 90,
+                    "column": 94,
                     "line": 1
                   },
                   "end": {
-                    "column": 111,
+                    "column": 112,
                     "line": 1
                   }
                 }
@@ -528,7 +578,7 @@ Output:
                   "line": 1
                 },
                 "end": {
-                  "column": 111,
+                  "column": 112,
                   "line": 1
                 }
               }
