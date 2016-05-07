@@ -111,7 +111,7 @@ export default class Tokenizer {
       this._state.previousPosition - this._state.previousLineStart,
     );
     const end = new Position(
-      this._state.previousLine,
+      this._state.currentLine,
       this._state.currentPosition - this._state.currentLineStart,
     );
 
