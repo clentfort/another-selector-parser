@@ -46,7 +46,7 @@
 jest.disableAutomock();
 
 import path from 'path';
-import readFixtures from '../../tools/readFixtures';
+import readFixtures from '../../../helper/readFixtures';
 
 import Tokenizer from '../index';
 

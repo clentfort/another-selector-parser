@@ -47,7 +47,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import readFixtures from '../src/tools/readFixtures';
+import readFixtures from '../helper/readFixtures';
 import AnotherSelectorParserError from '../src/util/Error';
 
 function writeFixture(fixturePath, text) {
