@@ -8,6 +8,7 @@ FIXTURES := $(foreach fixture,$(FIXTURES),fixtures_$(fixture))
 
 all: $(LIB)
 lib/%.js: src/%.js .babelrc
+	@echo Compiling $<
 	@mkdir -p $(@D)
 	@babel \
 		--out-file $@ \
