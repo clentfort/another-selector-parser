@@ -1,0 +1,26 @@
+{
+  "name": "another-selector-parser-benchmarks",
+  "version": "1.0.0",
+  "description": "Benchmarks for Another-Selector-Parser",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/clentfort/another-selector-parser"
+  },
+  "author": "Christian Lentfort @_chris_lent_",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clentfort/another-selector-parser/issues"
+  },
+  "homepage": "https://github.com/clentfort/another-selector-parser",
+  "dependencies": {
+    "another-selector-parser": "../../",
+    "babel-cli": "^6.8.0",
+    "benchmark": "^2.1.0",
+    "microtime": "^2.1.1",
+    "postcss-selector-parser": "^2.0.0"
+  }
+}
