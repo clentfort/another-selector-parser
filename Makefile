@@ -1,12 +1,19 @@
-SRC := $(shell find src/ -iname '*.js' -and -not \( -path '*__tests__*' -or -path '*__fixtures__*' \))
-LIB := $(SRC:src/%.js=lib/%.js)
+FIND := $(patsubst src/%.js,lib/%.js,$(shell find src/$(1) -iname '*.js' -and -not \( -path '*__tests__*' -or -path '*__fixtures__*' \)))
+
+PARSER := $(call FIND,parser)
+TOKENIZER := $(call FIND,tokenizer)
+UTIL := $(call FIND,util)
 
 FIXTURES := parser tokenizer
 FIXTURES := $(foreach fixture,$(FIXTURES),fixtures_$(fixture))
 
 .PHONY: clean fixtures
 
-all: $(LIB)
+all: util tokenizer parser
+parser: $(PARSER)
+tokenizer: $(TOKENIZER)
+util: $(UTIL)
+
 lib/%.js: src/%.js .babelrc
 	@echo Compiling $<
 	@mkdir -p $(@D)
