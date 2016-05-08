@@ -1,6 +1,8 @@
 /* @flow */
-import Identifier from './Identifier';
 import SimpleSelector from './SimpleSelector';
+
+import type Identifier from './Identifier';
+import type Visitor from '../../traverser/visitor';
 
 export default class ClassSelector extends SimpleSelector {
   value: Identifier;
@@ -8,5 +10,9 @@ export default class ClassSelector extends SimpleSelector {
   constructor(value: Identifier) {
     super('ClassSelector');
     this.value = value;
+  }
+
+  accept(visitor: Visitor): void {
+    visitor.visit(this.value);
   }
 }

@@ -1,6 +1,8 @@
 /* @flow */
-import Identifier from './Identifier';
 import Node from './Node';
+
+import type Identifier from './Identifier';
+import type Visitor from '../../traverser/visitor';
 
 export default class NamespacePrefix extends Node {
   namespace: ?Identifier;
@@ -8,5 +10,11 @@ export default class NamespacePrefix extends Node {
   constructor(namespace: ?Identifier) {
     super('NamespacePrefix');
     this.namespace = namespace;
+  }
+
+  accept(visitor: Visitor): void {
+    if (this.namespace) {
+      visitor.visit(this.namespace);
+    }
   }
 }

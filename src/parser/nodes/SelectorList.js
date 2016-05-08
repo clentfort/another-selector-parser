@@ -1,6 +1,8 @@
 /* @flow */
 import Node from './Node';
-import Selector from './Selector';
+
+import type Selector from './Selector';
+import type Visitor from '../../traverser/visitor';
 
 export default class SelectorList extends Node {
   body: Array<Selector>;
@@ -8,5 +10,9 @@ export default class SelectorList extends Node {
   constructor() {
     super('SelectorList');
     this.body = [];
+  }
+
+  accept(visitor: Visitor): void {
+    this.body.forEach(child => visitor.visit(child));
   }
 }

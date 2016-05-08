@@ -1,7 +1,9 @@
 /* @flow */
-import Identifier from './Identifier';
-import NamespacePrefix from './NamespacePrefix';
 import SimpleSelector from './SimpleSelector';
+
+import type Identifier from './Identifier';
+import type NamespacePrefix from './NamespacePrefix';
+import type Visitor from '../../traverser/visitor';
 
 export default class TypeSelector extends SimpleSelector {
   namespace: ?NamespacePrefix;
@@ -11,5 +13,12 @@ export default class TypeSelector extends SimpleSelector {
     super('TypeSelector');
     this.value = value;
     this.namespace = namespace;
+  }
+
+  accept(visitor: Visitor): void {
+    visitor.visit(this.value);
+    if (this.namespace) {
+      visitor.visit(this.namespace);
+    }
   }
 }
