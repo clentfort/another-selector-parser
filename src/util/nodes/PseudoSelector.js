@@ -3,33 +3,32 @@ import Node from './Node';
 import SimpleSelector from './SimpleSelector';
 
 import type Identifier from './Identifier';
-import type Visitor from '../../traverser/visitor';
+import type { DefaultTraverser } from '../../traverser';
 
 type PseudoSelectorType = 'PseudoClassSelector' | 'PseudoElementSelector';
-// $FlowIssue
-type PseudoSelectorBody = CallExpression | Identifier;
+type PseudoSelectorValue = CallExpression | Identifier;
 
 export default class PseudoSelector extends SimpleSelector {
-  body: PseudoSelectorBody;
+  value: PseudoSelectorValue;
 
-  constructor(type: PseudoSelectorType, body: PseudoSelectorBody) {
+  constructor(type: PseudoSelectorType, value: PseudoSelectorValue) {
     super(type);
-    this.body = body;
+    this.value = value;
   }
 
-  accept(visitor: Visitor): void {
-    visitor.visit(this.body);
+  accept(traverser: DefaultTraverser): void {
+    traverser.visit(this.value);
   }
 }
 
 export class PseudoClassSelector extends PseudoSelector {
-  constructor(body: PseudoSelectorBody) {
+  constructor(body: PseudoSelectorValue) {
     super('PseudoClassSelector', body);
   }
 }
 
 export class PseudoElementSelector extends PseudoSelector {
-  constructor(body: PseudoSelectorBody) {
+  constructor(body: PseudoSelectorValue) {
     super('PseudoElementSelector', body);
   }
 }
@@ -38,14 +37,14 @@ export class CallExpression extends Node {
   callee: Identifier;
   params: Array<any>;
 
-  constructor(callee: Identifier) {
+  constructor(callee: Identifier, params: Array<any> = []) {
     super('CallExpression');
     this.callee = callee;
-    this.params = [];
+    this.params = params;
   }
 
-  accept(visitor: Visitor): void {
-    visitor.visit(this.callee);
-    this.params.forEach(param => visitor.visit(param));
+  accept(traverser: DefaultTraverser): void {
+    traverser.visit(this.callee);
+    this.params.forEach(param => traverser.visit(param));
   }
 }

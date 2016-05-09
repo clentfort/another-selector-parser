@@ -10,6 +10,7 @@ export { default as ClassSelector } from './ClassSelector';
 export { default as Combinator } from './Combinator';
 export { default as HashSelector } from './HashSelector';
 export { default as Identifier } from './Identifier';
+export { default as Literal } from './Literal';
 export { default as NamespacePrefix } from './NamespacePrefix';
 export { default as Node } from './Node';
 export { default as NumberLiteral } from './NumberLiteral';
@@ -27,3 +28,4 @@ export { default as StringLiteral } from './StringLiteral';
 export { default as TypeSelector } from './TypeSelector';
 export { default as UniversalSelector } from './UniversalSelector';
 
+export type NodeType = string;

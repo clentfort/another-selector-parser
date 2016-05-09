@@ -1,8 +1,8 @@
 /* @flow */
 import AnotherSelectorParserError from '../../util/Error';
 
-import type { CombinatorType } from '../nodes/Combinator';
 import type { Token } from '../../tokenizer/tokens';
+import type { CombinatorType } from '../../util/nodes/Combinator';
 
 export class UnknownCombinatorTypeValue extends AnotherSelectorParserError {
   constructor() {

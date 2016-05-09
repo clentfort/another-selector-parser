@@ -44,6 +44,7 @@
 import fs from 'fs';
 import path from 'path';
 
+/* istanbul ignore next */
 export default function readFixtures(fixturePath) {
   /* eslint-disable prefer-template */
   let fileNames = fs.readdirSync(fixturePath);

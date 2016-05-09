@@ -4,5 +4,5 @@ $*
 Error:
 {
   "message": "Unexpected char \"*\" at position 1, expected \"=\".",
-  "stack": "Error: Unexpected char \"*\" at position 1, expected \"=\".\n    at UnexpectedCharacterError.Error (native)\n    at UnexpectedCharacterError.AnotherSelectorParserError (Error.js:2:26)\n    at new UnexpectedCharacterError (Errors.js:11:21)\n    at Tokenizer._readAttrMatcher (index.js:205:11)\n    at Tokenizer._getTokenFromCode (index.js:183:21)\n    at Tokenizer.nextToken (index.js:95:28)\n    at generate (generator.js:10:23)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)\n    at genFixtures (regenerateFixtures:64:23)"
+  "stack": "Error: Unexpected char \"*\" at position 1, expected \"=\".\n    at UnexpectedCharacterError.Error (native)\n    at UnexpectedCharacterError.AnotherSelectorParserError (Error.js:2:26)\n    at new UnexpectedCharacterError (Errors.js:11:21)\n    at Tokenizer._readAttrMatcher (Tokenizer.js:205:11)\n    at Tokenizer._getTokenFromCode (Tokenizer.js:183:21)\n    at Tokenizer.nextToken (Tokenizer.js:95:28)\n    at generate (generator.js:10:23)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)\n    at genFixtures (regenerateFixtures:64:23)"
 }

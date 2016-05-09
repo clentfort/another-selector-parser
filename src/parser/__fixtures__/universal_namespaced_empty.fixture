@@ -13,7 +13,7 @@ Output:
           "body": [
             {
               "type": "UniversalSelector",
-              "namespace": {
+              "namespacePrefix": {
                 "type": "NamespacePrefix",
                 "loc": {
                   "start": {

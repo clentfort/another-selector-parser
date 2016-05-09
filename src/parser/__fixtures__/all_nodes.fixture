@@ -1,0 +1,629 @@
+Input:
+*#someId.someClass[someAttribute][someAttributeWithMatcher="someAttributeValue"]:somePseudoClass::somePseudoElement,
+someNamespace|someType:not(:nth-child(2n+3 of *)) + someOtherType
+
+Output:
+{
+  "type": "SelectorList",
+  "body": [
+    {
+      "type": "Selector",
+      "body": [
+        {
+          "type": "SimpleSelectorList",
+          "body": [
+            {
+              "type": "UniversalSelector",
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 1
+                },
+                "end": {
+                  "column": 1,
+                  "line": 1
+                }
+              }
+            },
+            {
+              "type": "HashSelector",
+              "value": {
+                "type": "Identifier",
+                "value": "someId",
+                "loc": {
+                  "start": {
+                    "column": 2,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 8,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 1,
+                  "line": 1
+                },
+                "end": {
+                  "column": 8,
+                  "line": 1
+                }
+              }
+            },
+            {
+              "type": "ClassSelector",
+              "value": {
+                "type": "Identifier",
+                "value": "someClass",
+                "loc": {
+                  "start": {
+                    "column": 9,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 18,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 8,
+                  "line": 1
+                },
+                "end": {
+                  "column": 18,
+                  "line": 1
+                }
+              }
+            },
+            {
+              "type": "AttributeSelector",
+              "attribute": {
+                "type": "AttributeSelectorAttribute",
+                "value": {
+                  "type": "Identifier",
+                  "value": "someAttribute",
+                  "loc": {
+                    "start": {
+                      "column": 19,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 32,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 19,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 32,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 18,
+                  "line": 1
+                },
+                "end": {
+                  "column": 34,
+                  "line": 1
+                }
+              }
+            },
+            {
+              "type": "AttributeSelector",
+              "attribute": {
+                "type": "AttributeSelectorAttribute",
+                "value": {
+                  "type": "Identifier",
+                  "value": "someAttributeWithMatcher",
+                  "loc": {
+                    "start": {
+                      "column": 34,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 58,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 34,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 58,
+                    "line": 1
+                  }
+                }
+              },
+              "matcher": {
+                "type": "AttributeSelectorMatcher",
+                "value": "=",
+                "loc": {
+                  "start": {
+                    "column": 58,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 59,
+                    "line": 1
+                  }
+                }
+              },
+              "value": {
+                "type": "AttributeSelectorValue",
+                "value": {
+                  "type": "StringLiteral",
+                  "value": "someAttributeValue",
+                  "loc": {
+                    "start": {
+                      "column": 59,
+                      "line": 1
+                    },
+                    "end": {
+                      "column": 79,
+                      "line": 1
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 59,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 79,
+                    "line": 1
+                  }
+                }
+              },
+              "caseSensitive": true,
+              "loc": {
+                "start": {
+                  "column": 33,
+                  "line": 1
+                },
+                "end": {
+                  "column": 81,
+                  "line": 1
+                }
+              }
+            },
+            {
+              "type": "PseudoClassSelector",
+              "value": {
+                "type": "Identifier",
+                "value": "somePseudoClass",
+                "loc": {
+                  "start": {
+                    "column": 81,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 96,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 80,
+                  "line": 1
+                },
+                "end": {
+                  "column": 96,
+                  "line": 1
+                }
+              }
+            },
+            {
+              "type": "PseudoElementSelector",
+              "value": {
+                "type": "Identifier",
+                "value": "somePseudoElement",
+                "loc": {
+                  "start": {
+                    "column": 98,
+                    "line": 1
+                  },
+                  "end": {
+                    "column": 115,
+                    "line": 1
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 96,
+                  "line": 1
+                },
+                "end": {
+                  "column": 115,
+                  "line": 1
+                }
+              }
+            }
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 1
+            },
+            "end": {
+              "column": 115,
+              "line": 1
+            }
+          }
+        }
+      ],
+      "loc": {
+        "start": {
+          "column": 0,
+          "line": 1
+        },
+        "end": {
+          "column": 115,
+          "line": 1
+        }
+      }
+    },
+    {
+      "type": "Selector",
+      "body": [
+        {
+          "type": "SimpleSelectorList",
+          "body": [
+            {
+              "type": "TypeSelector",
+              "value": {
+                "type": "Identifier",
+                "value": "someType",
+                "loc": {
+                  "start": {
+                    "column": 14,
+                    "line": 2
+                  },
+                  "end": {
+                    "column": 22,
+                    "line": 2
+                  }
+                }
+              },
+              "namespacePrefix": {
+                "type": "NamespacePrefix",
+                "value": {
+                  "type": "Identifier",
+                  "value": "someNamespace",
+                  "loc": {
+                    "start": {
+                      "column": 0,
+                      "line": 2
+                    },
+                    "end": {
+                      "column": 13,
+                      "line": 2
+                    }
+                  }
+                },
+                "loc": {
+                  "start": {
+                    "column": 0,
+                    "line": 2
+                  },
+                  "end": {
+                    "column": 13,
+                    "line": 2
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 0,
+                  "line": 2
+                },
+                "end": {
+                  "column": 13,
+                  "line": 2
+                }
+              }
+            },
+            {
+              "type": "PseudoClassSelector",
+              "value": {
+                "type": "CallExpression",
+                "callee": {
+                  "type": "Identifier",
+                  "value": "not",
+                  "loc": {
+                    "start": {
+                      "column": 23,
+                      "line": 2
+                    },
+                    "end": {
+                      "column": 26,
+                      "line": 2
+                    }
+                  }
+                },
+                "params": [
+                  {
+                    "type": "NotExpressionArgument",
+                    "value": {
+                      "type": "PseudoClassSelector",
+                      "value": {
+                        "type": "CallExpression",
+                        "callee": {
+                          "type": "Identifier",
+                          "value": "nth-child",
+                          "loc": {
+                            "start": {
+                              "column": 28,
+                              "line": 2
+                            },
+                            "end": {
+                              "column": 37,
+                              "line": 2
+                            }
+                          }
+                        },
+                        "params": [
+                          {
+                            "type": "NthChildExpressionArgument",
+                            "step": {
+                              "type": "NumberLiteral",
+                              "value": 2,
+                              "loc": {
+                                "start": {
+                                  "column": 38,
+                                  "line": 2
+                                },
+                                "end": {
+                                  "column": 39,
+                                  "line": 2
+                                }
+                              }
+                            },
+                            "offset": {
+                              "type": "NumberLiteral",
+                              "value": 3,
+                              "loc": {
+                                "start": {
+                                  "column": 41,
+                                  "line": 2
+                                },
+                                "end": {
+                                  "column": 42,
+                                  "line": 2
+                                }
+                              }
+                            },
+                            "of": {
+                              "type": "SelectorList",
+                              "body": [
+                                {
+                                  "type": "Selector",
+                                  "body": [
+                                    {
+                                      "type": "SimpleSelectorList",
+                                      "body": [
+                                        {
+                                          "type": "UniversalSelector",
+                                          "loc": {
+                                            "start": {
+                                              "column": 46,
+                                              "line": 2
+                                            },
+                                            "end": {
+                                              "column": 47,
+                                              "line": 2
+                                            }
+                                          }
+                                        }
+                                      ],
+                                      "loc": {
+                                        "start": {
+                                          "column": 46,
+                                          "line": 2
+                                        },
+                                        "end": {
+                                          "column": 47,
+                                          "line": 2
+                                        }
+                                      }
+                                    }
+                                  ],
+                                  "loc": {
+                                    "start": {
+                                      "column": 46,
+                                      "line": 2
+                                    },
+                                    "end": {
+                                      "column": 47,
+                                      "line": 2
+                                    }
+                                  }
+                                }
+                              ],
+                              "loc": {
+                                "start": {
+                                  "column": 46,
+                                  "line": 2
+                                },
+                                "end": {
+                                  "column": 47,
+                                  "line": 2
+                                }
+                              }
+                            },
+                            "loc": {
+                              "start": {
+                                "column": 38,
+                                "line": 2
+                              },
+                              "end": {
+                                "column": 49,
+                                "line": 2
+                              }
+                            }
+                          }
+                        ],
+                        "loc": {
+                          "start": {
+                            "column": 38,
+                            "line": 2
+                          },
+                          "end": {
+                            "column": 49,
+                            "line": 2
+                          }
+                        }
+                      },
+                      "loc": {
+                        "start": {
+                          "column": 27,
+                          "line": 2
+                        },
+                        "end": {
+                          "column": 49,
+                          "line": 2
+                        }
+                      }
+                    },
+                    "loc": {
+                      "start": {
+                        "column": 27,
+                        "line": 2
+                      },
+                      "end": {
+                        "column": 49,
+                        "line": 2
+                      }
+                    }
+                  }
+                ],
+                "loc": {
+                  "start": {
+                    "column": 27,
+                    "line": 2
+                  },
+                  "end": {
+                    "column": 51,
+                    "line": 2
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 22,
+                  "line": 2
+                },
+                "end": {
+                  "column": 51,
+                  "line": 2
+                }
+              }
+            }
+          ],
+          "loc": {
+            "start": {
+              "column": 0,
+              "line": 2
+            },
+            "end": {
+              "column": 51,
+              "line": 2
+            }
+          }
+        },
+        {
+          "type": "Combinator",
+          "combinatorType": "sibling-next",
+          "loc": {
+            "start": {
+              "column": 50,
+              "line": 2
+            },
+            "end": {
+              "column": 51,
+              "line": 2
+            }
+          }
+        },
+        {
+          "type": "SimpleSelectorList",
+          "body": [
+            {
+              "type": "TypeSelector",
+              "value": {
+                "type": "Identifier",
+                "value": "someOtherType",
+                "loc": {
+                  "start": {
+                    "column": 52,
+                    "line": 2
+                  },
+                  "end": {
+                    "column": 65,
+                    "line": 2
+                  }
+                }
+              },
+              "loc": {
+                "start": {
+                  "column": 52,
+                  "line": 2
+                },
+                "end": {
+                  "column": 65,
+                  "line": 2
+                }
+              }
+            }
+          ],
+          "loc": {
+            "start": {
+              "column": 52,
+              "line": 2
+            },
+            "end": {
+              "column": 65,
+              "line": 2
+            }
+          }
+        }
+      ],
+      "loc": {
+        "start": {
+          "column": 116,
+          "line": 1
+        },
+        "end": {
+          "column": 65,
+          "line": 2
+        }
+      }
+    }
+  ],
+  "loc": {
+    "start": {
+      "column": 0,
+      "line": 1
+    },
+    "end": {
+      "column": 65,
+      "line": 2
+    }
+  }
+}

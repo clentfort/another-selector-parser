@@ -13,7 +13,7 @@ Output:
           "body": [
             {
               "type": "PseudoClassSelector",
-              "body": {
+              "value": {
                 "type": "CallExpression",
                 "callee": {
                   "type": "Identifier",

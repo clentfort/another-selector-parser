@@ -5,7 +5,7 @@ import SimpleSelector from './SimpleSelector';
 import type Identifier from './Identifier';
 import type NamespacePrefix from './NamespacePrefix';
 import type StringLiteral from './StringLiteral';
-import type Visitor from '../../traverser/visitor';
+import type { DefaultTraverser } from '../../traverser';
 
 // @TODO Generalize with tokenizer
 export type AttributeSelectorMatcherValue = '=' | '~=' | '|=' | '^=' | '$=' | '*=';
@@ -18,8 +18,8 @@ export default class AttributeSelector extends SimpleSelector {
     this.attribute = attribute;
   }
 
-  accept(visitor: Visitor): void {
-    visitor.visit(this.attribute);
+  accept(traverser: DefaultTraverser): void {
+    traverser.visit(this.attribute);
   }
 }
 
@@ -40,27 +40,27 @@ export class AttributeSelectorWithMatcher extends AttributeSelector {
     this.caseSensitive = caseSensitive;
   }
 
-  accept(visitor: Visitor): void {
-    visitor.visit(this.attribute);
-    visitor.visit(this.matcher);
-    visitor.visit(this.value);
+  accept(traverser: DefaultTraverser): void {
+    super.accept(traverser);
+    traverser.visit(this.matcher);
+    traverser.visit(this.value);
   }
 }
 
 export class AttributeSelectorAttribute extends Node {
-  namespace: ?NamespacePrefix;
+  namespacePrefix: ?NamespacePrefix;
   value: Identifier;
 
-  constructor(value: Identifier, namespace: ?NamespacePrefix) {
+  constructor(value: Identifier, namespacePrefix: ?NamespacePrefix) {
     super('AttributeSelectorAttribute');
-    this.namespace = namespace;
+    this.namespacePrefix = namespacePrefix;
     this.value = value;
   }
 
-  accept(visitor: Visitor): void {
-    visitor.visit(this.value);
-    if (this.namespace) {
-      visitor.visit(this.namespace);
+  accept(traverser: DefaultTraverser): void {
+    traverser.visit(this.value);
+    if (this.namespacePrefix) {
+      traverser.visit(this.namespacePrefix);
     }
   }
 }
@@ -82,7 +82,7 @@ export class AttributeSelectorValue extends Node {
     this.value = value;
   }
 
-  accept(visitor: Visitor): void {
-    visitor.visit(this.value);
+  accept(traverser: DefaultTraverser): void {
+    traverser.visit(this.value);
   }
 }

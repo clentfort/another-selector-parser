@@ -4,5 +4,5 @@ Input:
 Error:
 {
   "message": "Invalid number starting at position 0.",
-  "stack": "Error: Invalid number starting at position 0.\n    at InvalidNumberError.Error (native)\n    at InvalidNumberError.AnotherSelectorParserError (Error.js:2:26)\n    at new InvalidNumberError (Errors.js:4:33)\n    at Tokenizer._readNumber (index.js:287:15)\n    at Tokenizer._readDot (index.js:215:19)\n    at Tokenizer._getTokenFromCode (index.js:176:21)\n    at Tokenizer.nextToken (index.js:95:28)\n    at generate (generator.js:10:23)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)"
+  "stack": "Error: Invalid number starting at position 0.\n    at InvalidNumberError.Error (native)\n    at InvalidNumberError.AnotherSelectorParserError (Error.js:2:26)\n    at new InvalidNumberError (Errors.js:4:33)\n    at Tokenizer._readNumber (Tokenizer.js:287:15)\n    at Tokenizer._readDot (Tokenizer.js:215:19)\n    at Tokenizer._getTokenFromCode (Tokenizer.js:176:21)\n    at Tokenizer.nextToken (Tokenizer.js:95:28)\n    at generate (generator.js:10:23)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)"
 }

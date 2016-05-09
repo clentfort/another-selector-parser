@@ -13,7 +13,7 @@ Output:
           "body": [
             {
               "type": "PseudoElementSelector",
-              "body": {
+              "value": {
                 "type": "Identifier",
                 "value": "pseudoElement",
                 "loc": {

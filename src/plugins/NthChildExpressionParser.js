@@ -1,26 +1,32 @@
 /* @flow */
-import { Node, NumberLiteral, SelectorList } from '../nodes';
-import { UnexpectedTokenError } from '../util/Errors';
 import Plugin from './Plugin';
+import { UnexpectedTokenError } from '../parser/util/Errors';
+import { Node, NumberLiteral, SelectorList } from '../util/nodes';
 
-import type { Token } from '../../tokenizer/tokens';
+import type { Token } from '../tokenizer/tokens';
+import type { DefaultTraverser } from '../traverser';
+import type { NodeType } from '../util/nodes';
 
 export class NthChildExpressionArgument extends Node {
   step: NumberLiteral;
   offset: NumberLiteral;
-  of: ?SelectorList;
 
   constructor(step: NumberLiteral, offset: NumberLiteral) {
     super('NthChildExpressionArgument');
     this.step = step;
     this.offset = offset;
   }
-}
 
-const offsetRegExp = /^n(-\d+)$/i;
+  accept(traverser: DefaultTraverser): void {
+    traverser.visit(this.step);
+    traverser.visit(this.offset);
+  }
+}
 
 export class NthChildExpressionWithOfSelectorArgument extends
 NthChildExpressionArgument {
+  of: SelectorList;
+
   constructor(
     step: NumberLiteral,
     offset: NumberLiteral,
@@ -29,7 +35,14 @@ NthChildExpressionArgument {
     super(step, offset);
     this.of = of;
   }
+
+  accept(traverser: DefaultTraverser): void {
+    super.accept(traverser);
+    traverser.visit(this.of);
+  }
 }
+
+const offsetRegExp = /^n(-\d+)$/i;
 
 export default class NthChildExpressionParser extends Plugin {
   // } {
@@ -129,5 +142,20 @@ export default class NthChildExpressionParser extends Plugin {
       parenR,
       start
     )];
+  }
+
+  static getTargetNode(): NodeType {
+    return 'CallExpression';
+  }
+
+  static getTargetExpression(): string {
+    return 'nth-child';
+  }
+
+  static getNewAstNodes(): Array<any> {
+    return [
+      NthChildExpressionArgument,
+      NthChildExpressionWithOfSelectorArgument,
+    ];
   }
 }

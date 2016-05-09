@@ -27,9 +27,9 @@ Output:
                   }
                 }
               },
-              "namespace": {
+              "namespacePrefix": {
                 "type": "NamespacePrefix",
-                "namespace": {
+                "value": {
                   "type": "Identifier",
                   "value": "myNamespace",
                   "loc": {

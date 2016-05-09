@@ -2,7 +2,7 @@
 import SimpleSelector from './SimpleSelector';
 
 import type Identifier from './Identifier';
-import type Visitor from '../../traverser/visitor';
+import type { DefaultTraverser } from '../../traverser';
 
 export default class HashSelector extends SimpleSelector {
   value: Identifier;
@@ -12,8 +12,8 @@ export default class HashSelector extends SimpleSelector {
     this.value = value;
   }
 
-  accept(visitor: Visitor): void {
-    visitor.visit(this.value);
+  accept(traverser: DefaultTraverser): void {
+    traverser.visit(this.value);
   }
 }
 

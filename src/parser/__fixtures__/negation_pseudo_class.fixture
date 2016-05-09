@@ -13,7 +13,7 @@ Output:
           "body": [
             {
               "type": "PseudoClassSelector",
-              "body": {
+              "value": {
                 "type": "CallExpression",
                 "callee": {
                   "type": "Identifier",
@@ -32,9 +32,9 @@ Output:
                 "params": [
                   {
                     "type": "NotExpressionArgument",
-                    "body": {
+                    "value": {
                       "type": "PseudoClassSelector",
-                      "body": {
+                      "value": {
                         "type": "Identifier",
                         "value": "hover",
                         "loc": {

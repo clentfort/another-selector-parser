@@ -1,21 +1,26 @@
 /* @flow */
 import Plugin from './Plugin';
-import { Node, SimpleSelector } from '../nodes';
-import { UnexpectedTokenError } from '../util/Errors';
+import { UnexpectedTokenError } from '../parser/util/Errors';
+import { Node, SimpleSelector } from '../util/nodes';
+
+import type { DefaultTraverser } from '../traverser';
+import type { NodeType } from '../util/nodes';
 
 export class NotExpressionArgument extends Node {
-  body: SimpleSelector;
+  value: SimpleSelector;
 
-  constructor(body: SimpleSelector) {
+  constructor(value: SimpleSelector) {
     super('NotExpressionArgument');
-    this.body = body;
+    this.value = value;
+  }
+
+  accept(traverser: DefaultTraverser) {
+    traverser.visit(this.value);
   }
 }
 
 export default class NotExpressionParser extends Plugin {
-  // }
-
-  // $FlowFixMe
+  // $FlowIssue
   parse(): Array<NotExpressionArgument> {
     this._parser.pushContext({
       name: 'NotExpressionParser.parse',
@@ -44,5 +49,19 @@ export default class NotExpressionParser extends Plugin {
 
     this._parser.popContext('NotExpressionParser.parse');
     return params;
+  }
+
+  static getTargetNode(): NodeType {
+    return 'CallExpression';
+  }
+
+  static getTargetExpression(): string {
+    return 'not';
+  }
+
+  static getNewAstNodes(): Array<any> {
+    return [
+      NotExpressionArgument,
+    ];
   }
 }

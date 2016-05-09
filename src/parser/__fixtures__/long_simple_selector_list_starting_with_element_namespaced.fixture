@@ -27,9 +27,9 @@ Output:
                   }
                 }
               },
-              "namespace": {
+              "namespacePrefix": {
                 "type": "NamespacePrefix",
-                "namespace": {
+                "value": {
                   "type": "Identifier",
                   "value": "aNamespace",
                   "loc": {
@@ -270,7 +270,7 @@ Output:
             },
             {
               "type": "PseudoClassSelector",
-              "body": {
+              "value": {
                 "type": "CallExpression",
                 "callee": {
                   "type": "Identifier",
@@ -289,11 +289,11 @@ Output:
                 "params": [
                   {
                     "type": "NotExpressionArgument",
-                    "body": {
+                    "value": {
                       "type": "AttributeSelector",
                       "attribute": {
                         "type": "AttributeSelectorAttribute",
-                        "namespace": {
+                        "namespacePrefix": {
                           "type": "NamespacePrefix",
                           "loc": {
                             "start": {
@@ -420,7 +420,7 @@ Output:
             },
             {
               "type": "PseudoClassSelector",
-              "body": {
+              "value": {
                 "type": "Identifier",
                 "value": "first",
                 "loc": {
@@ -447,7 +447,7 @@ Output:
             },
             {
               "type": "PseudoClassSelector",
-              "body": {
+              "value": {
                 "type": "CallExpression",
                 "callee": {
                   "type": "Identifier",
@@ -466,9 +466,9 @@ Output:
                 "params": [
                   {
                     "type": "NotExpressionArgument",
-                    "body": {
+                    "value": {
                       "type": "PseudoClassSelector",
-                      "body": {
+                      "value": {
                         "type": "CallExpression",
                         "callee": {
                           "type": "Identifier",

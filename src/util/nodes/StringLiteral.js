@@ -1,7 +1,7 @@
 /* @flow */
-import Node from './Node';
+import Literal from './Literal';
 
-export default class StringLiteral extends Node {
+export default class StringLiteral extends Literal {
   value: string;
 
   constructor(value: string) {

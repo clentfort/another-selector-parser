@@ -4,5 +4,5 @@ span +
 Error:
 {
   "message": "Unfinished selector",
-  "stack": "Error: Unfinished selector\n    at UnfinishedSelectorError.Error (native)\n    at UnfinishedSelectorError.AnotherSelectorParserError (Error.js:2:26)\n    at new UnfinishedSelectorError (Errors.js:45:17)\n    at Parser.parseSelector (index.js:152:13)\n    at Parser.parseSelectorList (index.js:118:35)\n    at Parser.parse (index.js:112:17)\n    at parse (generator.js:7:43)\n    at generate (generator.js:11:25)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)"
+  "stack": "Error: Unfinished selector\n    at UnfinishedSelectorError.Error (native)\n    at UnfinishedSelectorError.AnotherSelectorParserError (Error.js:2:26)\n    at new UnfinishedSelectorError (Errors.js:45:17)\n    at _class.parseSelector (Parser.js:143:13)\n    at _class.parseSelectorList (Parser.js:109:35)\n    at _class.parse (Parser.js:103:17)\n    at parse (generator.js:7:43)\n    at generate (generator.js:11:25)\n    at regenerateFixtures:92:11\n    at Array.forEach (native)"
 }
