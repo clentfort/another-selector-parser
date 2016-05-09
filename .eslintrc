@@ -2,9 +2,15 @@
   "extends": "airbnb/base",
   "parser": "babel-eslint",
   "plugins": [
+    "flow-vars"
   ],
   "rules": {
+    "flow-vars/define-flow-type": 1,
+    "flow-vars/use-flow-type": 1,
+    "import/no-duplicates": 0,
     "no-cond-assign": "off",
+    "no-extra-parens": "off",
+    "no-duplicate-imports": "off",
     "no-param-reassign": ["error", { "props": false }],
     "no-restricted-syntax": "off",
     "no-underscore-dangle": "off",

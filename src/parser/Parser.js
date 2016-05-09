@@ -13,7 +13,6 @@ import type { Context, PartialContext } from './context';
 import type Plugin from '../plugins';
 import type Tokenizer from '../tokenizer';
 import type { Token } from '../tokenizer/tokens';
-import type { NodeType } from '../util/nodes';
 
 type PluginSubMap = {[key: string]: Plugin};
 type PluginMap = {[key: string]: PluginSubMap;};

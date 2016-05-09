@@ -5,7 +5,7 @@ the [specification for CSS Selectors](https://drafts.csswg.org/selectors-4/).
 
 #Usage
 ##Installation 
-This project is still in alpha and not yet available from NPM.
+This project is still in alpha and the API is unstable.
 
 #Questions
 ##Why another parser for CSS Selectors?

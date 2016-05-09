@@ -4,10 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "flow": "./node_modules/.bin/flow check",
+    "lint": "./node_modules/.bin/eslint src/**/*.js",
+    "pretest": "npm run flow && npm run lint",
     "test": "NODE_ENV=test ./node_modules/.bin/jest --coverage",
-    "prepublish": "make -j4",
     "regenerateFixtures:Tokenizer": "make fixtures_tokenizer",
-    "regenerateFixtures:Parser": "make fixtures_parser"
+    "regenerateFixtures:Parser": "make fixtures_parser",
+    "preversion": "npm test",
+    "version": "make all -j4 && git add -A dist",
+    "postversion": "git push && git push --tags"
   },
   "files": [
     "lib/"
@@ -17,16 +22,15 @@
     "url": "clentfort/another-selector-parser.git"
   },
   "keywords": [
+    "ast",
     "css",
-    "selector",
+    "node",
     "parser",
-    "css",
+    "plugin",
     "selector",
-    "parser",
-    "css",
-    "parser",
-    "selector",
-    "parser"
+    "transform",
+    "traverse",
+    "visitor"
   ],
   "author": "Christian Lentfort @_chris_lent_",
   "license": "MIT",
@@ -42,7 +46,9 @@
     "coveralls": "^2.11.9",
     "eslint": "^2.9.0",
     "eslint-config-airbnb": "^9.0.0",
+    "eslint-plugin-flow-vars": "^0.4.0",
     "eslint-plugin-import": "^1.7.0",
+    "flow-bin": "^0.24.2",
     "jest-cli": "^12.0.2"
   },
   "jest": {
