@@ -85,7 +85,7 @@ export default class Parser {
   finishNode<T: nodes.Node>(
     node: T,
     // $FlowIssue #1234
-    copyEndFrom: (nodes.Node | Token) = this._currentToken,
+    copyEndFrom: nodes.Node | Token = this._currentToken,
     copyStartFrom: ?(nodes.Node | Token)
   ): T {
     if (copyStartFrom) {

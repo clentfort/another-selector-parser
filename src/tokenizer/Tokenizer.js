@@ -105,7 +105,7 @@ export default class Tokenizer {
     return this._createToken('EOF');
   }
 
-  _createToken(type: TokenType, value:? any): Token {
+  _createToken(type: TokenType, value: ?any): Token {
     const start = new Position(
       this._state.previousLine,
       this._state.previousPosition - this._state.previousLineStart,

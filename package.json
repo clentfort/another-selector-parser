@@ -47,6 +47,7 @@
     "eslint": "^2.9.0",
     "eslint-config-airbnb": "^9.0.0",
     "eslint-plugin-flow-vars": "^0.4.0",
+    "eslint-plugin-flowtype": "^2.2.7",
     "eslint-plugin-import": "^1.7.0",
     "flow-bin": "^0.24.2",
     "jest-cli": "^12.0.2"
