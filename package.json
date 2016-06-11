@@ -35,7 +35,7 @@
   "author": "Christian Lentfort @_chris_lent_",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.8.0",
+    "babel-cli": "^6.10.1",
     "babel-core": "^6.8.0",
     "babel-eslint": "^6.0.4",
     "babel-jest": "^12.0.2",
